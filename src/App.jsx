@@ -50,7 +50,7 @@ function App() {
   return (
     <div className="login-container">
       <div className="login-form">
-        <h2>{isLogin ? 'Inicio de la cuenta' : 'Registro de Usuario'}</h2>
+        <h2>{isLogin ? 'Inicio de Sesión' : 'Registro de Usuario'}</h2>
         <div className="toggle-buttons">
           <button className={isUser ? 'active' : ''} onClick={() => setIsUser(true)}>
             Usuario
