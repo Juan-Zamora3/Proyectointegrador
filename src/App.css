@@ -108,7 +108,7 @@ h2 {
 /* Contenedor para la imagen de la derecha */
 .login-image {
   flex: 1;
-  background-color: #0026b3;
+  background-color: #b3002d;
   display: flex;
   justify-content: center;
   align-items: center;
