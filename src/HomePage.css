@@ -1,59 +1,131 @@
+/* Estilos generales */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal */
 .container {
-    display: flex;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-  }
-  
-  .sidebar {
-    width: 250px;
-    background-color: #2C3E50;
-    padding: 20px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .profile {
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-  
-  nav ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  nav ul li {
-    margin: 20px 0;
-  }
-  
-  nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-  }
-  
-  nav ul li a:hover {
-    text-decoration: underline;
-  }
-  
-  .settings {
-    margin-top: auto;
-  }
-  
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #ECF0F1;
-  }
-  
-  h1 {
-    margin-top: 0;
-  }
-  
+  display: flex;
+  height: 100vh;
+  background-color: #ECF0F1;
+}
+
+/* Barra lateral (sidebar) */
+.sidebar {
+  width: 250px;
+  background-color: #1C2833;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profile {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.profile h4 {
+  font-size: 18px;
+}
+
+.profile p {
+  font-size: 14px;
+  color: #bdc3c7;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 15px 0;
+}
+
+nav ul li a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 0;
+  transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: #34495E;
+  border-radius: 5px;
+}
+
+nav ul li a svg {
+  margin-right: 10px;
+}
+
+nav ul li a span {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+nav ul li a:hover svg {
+  transform: rotate(20deg);
+  color: #2980B9;
+}
+
+nav ul li a:hover span {
+  transform: translateX(10px);
+  opacity: 0.9;
+}
+
+/* Ajustes (settings) */
+.settings {
+  margin-top: auto;
+}
+
+.settings a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.settings a:hover {
+  text-decoration: underline;
+  color: #2980B9;
+}
+
+.settings a:hover svg {
+  transform: rotate(20deg);
+}
+
+.settings a svg {
+  margin-right: 10px;
+}
+
+/* Contenido principal */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ECF0F1;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 24px;
+}

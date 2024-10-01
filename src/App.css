@@ -1,19 +1,17 @@
-/* src/App.css */
-
 /* Configuración general de márgenes, padding y fuente */
 body, html, #root {
   margin: 0;
   padding: 0;
-  height: 100%; /* Asegura que el contenedor ocupe toda la altura */
-  width: 100%; /* Asegura que el contenedor ocupe toda la anchura */
+  height: 100%;
+  width: 100%;
   font-family: Arial, sans-serif;
 }
 
 /* Contenedor principal de la pantalla de inicio de sesión */
 .login-container {
   display: flex;
-  height: 100vh; /* Asegura que el contenedor ocupe toda la altura visible del navegador */
-  width: 100vw; /* Asegura que el contenedor ocupe toda la anchura visible del navegador */
+  height: 100vh;
+  width: 100vw;
 }
 
 /* Estilo para el formulario de inicio de sesión */
@@ -23,34 +21,13 @@ body, html, #root {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px; /* Mayor padding para más espacio */
-  background-color: #ffffff; /* Color de fondo blanco */
+  padding: 40px;
+  background-color: #ffffff;
 }
 
 /* Encabezado del formulario */
 h2 {
   margin-bottom: 20px;
-}
-
-/* Botones de selección de usuario y administrador */
-.toggle-buttons {
-  display: flex;
-  margin-bottom: 20px;
-}
-
-.toggle-buttons button {
-  padding: 10px 20px;
-  margin: 0 10px;
-  border: none;
-  border-radius: 5px; /* Bordes redondeados */
-  background-color: #e0e0e0;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Efecto de transición */
-}
-
-.toggle-buttons .active {
-  background-color: #007bff;
-  color: #ffffff;
 }
 
 /* Agrupación de entradas de texto */
@@ -87,22 +64,7 @@ h2 {
 }
 
 .login-button:hover {
-  background-color: #007bff;
-}
-
-/* Estilo para el enlace de recuperación de contraseña */
-.forgot-password {
-  margin-top: 10px;
-  font-size: 12px;
-}
-
-.forgot-password a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.forgot-password a:hover {
-  text-decoration: underline;
+  background-color: #0056b3;
 }
 
 /* Contenedor para la imagen de la derecha */
@@ -112,13 +74,123 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px; /* Añadir padding para evitar que la imagen se quede pegada a los bordes */
+  padding: 20px;
 }
 
 .login-image img {
-  width: 80%; /* Ajusta el tamaño de la imagen a un 80% del contenedor */
-  max-width: 300px; /* Asegura un tamaño máximo de la imagen */
-  height: auto; /* Mantiene las proporciones de la imagen */
-  border-radius: 10px; /* Bordes redondeados para la imagen */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para la imagen */
+  width: 80%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle para cambiar entre login y registro */
+.toggle-form {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.toggle-form button {
+  background-color: transparent;
+  border: 1px solid #007bff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: #007bff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-form button:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+/* Alertas */
+.alert {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Estilo responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .login-form, .login-image {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+/* Estilos para la página principal (sidebar) */
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2C3E50;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profile {
+  text-align: center;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 20px 0;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+.settings {
+  margin-top: auto;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ECF0F1;
+}
+
+h1 {
+  margin-top: 0;
 }
