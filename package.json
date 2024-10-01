@@ -5,6 +5,7 @@
   "homepage": "https://Juan-Zamora3.github.io/Proyectointegrador",
   "type": "module",
   "scripts": {
+    "start": "npm run dev", 
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",

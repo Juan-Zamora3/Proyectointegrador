@@ -87,7 +87,7 @@ h2 {
 }
 
 .login-button:hover {
-  background-color: #b30000;
+  background-color: #007bff;
 }
 
 /* Estilo para el enlace de recuperación de contraseña */
@@ -97,7 +97,7 @@ h2 {
 }
 
 .forgot-password a {
-  color: #ff0000;
+  color: #007bff;
   text-decoration: none;
 }
 
