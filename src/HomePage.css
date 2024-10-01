@@ -27,7 +27,7 @@ body, html, #root {
 
 .profile {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px; /* Más espacio debajo del perfil */
 }
 
 .avatar {
@@ -39,39 +39,46 @@ body, html, #root {
 
 .profile h4 {
   font-size: 18px;
+  margin: 10px 0; /* Más espacio entre el nombre y el correo */
 }
 
 .profile p {
   font-size: 14px;
   color: #bdc3c7;
+  margin-top: 5px;
 }
 
+/* Estilo del menú */
 nav ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 nav ul li {
-  margin: 15px 0;
+  margin: 20px 0; /* Más espacio entre los elementos del menú */
 }
 
 nav ul li a {
   display: flex;
   align-items: center;
   color: white;
-  text-decoration: none;
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
   font-size: 16px;
   padding: 10px 0;
   transition: all 0.3s ease;
+  outline: none; /* Elimina cualquier borde al hacer clic */
+  border-bottom: none; /* Eliminar cualquier borde inferior */
 }
 
 nav ul li a:hover {
   background-color: #34495E;
   border-radius: 5px;
+  text-decoration: none; /* Asegurar que no haya subrayado al hacer hover */
 }
 
 nav ul li a svg {
-  margin-right: 10px;
+  margin-right: 15px; /* Más espacio entre el ícono y el texto */
 }
 
 nav ul li a span {
@@ -103,6 +110,7 @@ nav ul li a:hover span {
   font-size: 16px;
   margin: 10px 0;
   transition: all 0.3s ease;
+  outline: none;
 }
 
 .settings a:hover {
@@ -110,12 +118,12 @@ nav ul li a:hover span {
   color: #2980B9;
 }
 
-.settings a:hover svg {
-  transform: rotate(20deg);
+.settings a svg {
+  margin-right: 15px;
 }
 
-.settings a svg {
-  margin-right: 10px;
+.settings a:hover svg {
+  transform: rotate(20deg);
 }
 
 /* Contenido principal */

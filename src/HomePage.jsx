@@ -10,23 +10,53 @@ function HomePage() {
     <div className="container">
       <aside className="sidebar">
         <div className="profile">
-          <img src="https://via.placeholder.com/50" alt="Avatar" className="avatar" />
+          <img src="https://via.placeholder.com/50" alt="Avatar de Usuario" className="avatar" />
           <h4>Nombre de Usuario</h4>
           <p>correo@ejemplo.com</p>
         </div>
         <nav>
           <ul>
-            <li><Link to="/home"><FontAwesomeIcon icon={faBook} /><span>Cursos</span></Link></li>
-            <li><Link to="/listas"><FontAwesomeIcon icon={faList} /><span>Listas</span></Link></li>
-            <li><Link to="/asistencias"><FontAwesomeIcon icon={faCheckSquare} /><span>Asistencias</span></Link></li>
-            <li><Link to="/graficas"><FontAwesomeIcon icon={faChartBar} /><span>Gráficas</span></Link></li>
-            <li><Link to="/reportes"><FontAwesomeIcon icon={faFileAlt} /><span>Reportes</span></Link></li>
-            <li><Link to="/constancias"><FontAwesomeIcon icon={faFileContract} /><span>Constancias</span></Link></li>
-            <li><Link to="/personal"><FontAwesomeIcon icon={faUsers} /><span>Personal</span></Link></li>
+            <li>
+              <Link to="/home" aria-label="Ir a Cursos">
+                <FontAwesomeIcon icon={faBook} /><span>Cursos</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/listas" aria-label="Ir a Listas">
+                <FontAwesomeIcon icon={faList} /><span>Listas</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/asistencias" aria-label="Ir a Asistencias">
+                <FontAwesomeIcon icon={faCheckSquare} /><span>Asistencias</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/graficas" aria-label="Ir a Gráficas">
+                <FontAwesomeIcon icon={faChartBar} /><span>Gráficas</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/reportes" aria-label="Ir a Reportes">
+                <FontAwesomeIcon icon={faFileAlt} /><span>Reportes</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/constancias" aria-label="Ir a Constancias">
+                <FontAwesomeIcon icon={faFileContract} /><span>Constancias</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/personal" aria-label="Ir a Personal">
+                <FontAwesomeIcon icon={faUsers} /><span>Personal</span>
+              </Link>
+            </li>
           </ul>
         </nav>
         <div className="settings">
-          <Link to="/"><FontAwesomeIcon icon={faSignOutAlt} /><span>Cerrar Sesión</span></Link>
+          <Link to="/" aria-label="Cerrar Sesión">
+            <FontAwesomeIcon icon={faSignOutAlt} /><span>Cerrar Sesión</span>
+          </Link>
         </div>
       </aside>
       <main className="main-content">
