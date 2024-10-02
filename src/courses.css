@@ -1,0 +1,97 @@
+/* src/Courses.css */
+.courses-container {
+  padding: 20px;
+  background-color: #FFFFFF; /* Fondo completamente blanco */
+  width: 100%; /* Asegúrate de que ocupe el 100% del ancho */
+  box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.title-courses {
+  font-size: 24px; /* Título más grande */
+  font-weight: bold; /* Título en negritas */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.search-container {
+  display: flex; /* Flex para alinear input y botón de búsqueda */
+  margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
+}
+
+.search-input {
+  border-radius: 20px; /* Borde redondeado */
+  width: calc(100% - 100px); /* Abarca casi todo el espacio */
+  padding: 10px;
+  margin-right: 10px; /* Espacio entre el input y el botón */
+  border: 1px solid #00d9ff; /* Borde azul claro */
+  font-size: 16px; /* Tamaño de letra adecuado */
+}
+
+.search-button {
+  padding: 10px 15px; /* Espaciado interno del botón */
+  background-color: #001aff; /* Color de fondo más oscuro */
+  color: white; /* Color del texto en blanco */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  font-weight: bold; /* Texto en negritas */
+}
+
+.main-content {
+  display: flex; /* Flex para alinear acciones y tabla */
+  width: 100%; /* Asegura que el contenido principal ocupe todo el ancho */
+}
+
+.actions-container {
+  display: flex; /* Flex para alinear los botones en línea */
+  flex-direction: column; /* Coloca los botones en vertical */
+  margin-right: 20px; /* Espacio a la derecha para separar de la tabla */
+}
+
+.action-button {
+  margin-bottom: 10px; /* Espacio entre los botones */
+  padding: 8px 12px; /* Espaciado interno de los botones */
+  display: flex; /* Permite alinear íconos y texto */
+  align-items: center; /* Centra verticalmente el texto y el ícono */
+  background-color: #001aff; /* Color azul claro */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  font-weight: bold; /* Texto en negritas */
+  color: white; /* Color del texto en blanco */
+  font-size: 16px; /* Tamaño de letra más grande */
+}
+
+.action-button .fa-icon {
+  font-size: 1.5em; /* Tamaño del ícono más grande */
+  margin-right: 5px; /* Espacio entre el ícono y el texto */
+}
+
+.table-container {
+  margin-top: 20px;
+  overflow: auto; /* Permitir desplazamiento si la tabla es grande */
+  flex-grow: 1; /* Permite que la tabla ocupe el espacio restante */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #003cff; /* Borde azul claro */
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #001aff; /* Fondo azul para el encabezado */
+  color: white; /* Color del texto en blanco */
+}
+
+tr:nth-child(even) {
+  background-color: #ffffff; /* Fondo blanco para filas pares */
+}
+
+tr:hover {
+  background-color: #f1f1f1; /* Fondo gris claro al pasar el mouse */
+}

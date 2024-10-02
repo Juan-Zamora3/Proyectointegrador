@@ -1,0 +1,42 @@
+/* Attendance.css */
+.attendance-container {
+    padding: 20px;
+    background-color: #FFFFFF; /* Fondo completamente blanco */
+    width: 100%; /* Asegúrate de que ocupe el 100% del ancho */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.title-attendance {
+    font-size: 24px; /* Título más grande */
+    font-weight: bold; /* Título en negritas */
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow: auto; /* Permitir desplazamiento si la tabla es grande */
+}
+
+table {
+    width: 100%; /* Ocupa todo el ancho */
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 15px solid #0011ff;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #2980B9; /* Color de fondo de encabezado */
+    color: white; /* Color de texto en encabezado */
+}
+
+tr:nth-child(even) {
+    background-color: #0400ff; /* Color de fondo alterno */
+}
+
+tr:hover {
+    background-color: #ddd; /* Color al pasar el ratón */
+}

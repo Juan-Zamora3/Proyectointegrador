@@ -1,11 +1,20 @@
 // src/HomePage.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import Courses from './courses'; // Importa el componente Courses
+import Lists from './Lists'; // Importa el nuevo componente Lists
+import Asistencias from './Asistencias'; // Importa el componente Asistencias
 import './HomePage.css'; // Estilos para el sidebar y el contenido
 
 function HomePage() {
+  const [selectedMenu, setSelectedMenu] = useState('');
+
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+  };
+
   return (
     <div className="container">
       <aside className="sidebar">
@@ -16,38 +25,38 @@ function HomePage() {
         </div>
         <nav>
           <ul>
-            <li>
-              <Link to="/home" aria-label="Ir a Cursos">
+            <li onClick={() => handleMenuClick('Cursos')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faBook} /><span>Cursos</span>
               </Link>
             </li>
-            <li>
-              <Link to="/listas" aria-label="Ir a Listas">
+            <li onClick={() => handleMenuClick('Listas')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faList} /><span>Listas</span>
               </Link>
             </li>
-            <li>
-              <Link to="/asistencias" aria-label="Ir a Asistencias">
+            <li onClick={() => handleMenuClick('Asistencias')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faCheckSquare} /><span>Asistencias</span>
               </Link>
             </li>
-            <li>
-              <Link to="/graficas" aria-label="Ir a Gráficas">
+            <li onClick={() => handleMenuClick('Graficas')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faChartBar} /><span>Gráficas</span>
               </Link>
             </li>
-            <li>
-              <Link to="/reportes" aria-label="Ir a Reportes">
+            <li onClick={() => handleMenuClick('Reportes')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faFileAlt} /><span>Reportes</span>
               </Link>
             </li>
-            <li>
-              <Link to="/constancias" aria-label="Ir a Constancias">
+            <li onClick={() => handleMenuClick('Constancias')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faFileContract} /><span>Constancias</span>
               </Link>
             </li>
-            <li>
-              <Link to="/personal" aria-label="Ir a Personal">
+            <li onClick={() => handleMenuClick('Personal')}>
+              <Link to="" aria-label="">
                 <FontAwesomeIcon icon={faUsers} /><span>Personal</span>
               </Link>
             </li>
@@ -60,8 +69,14 @@ function HomePage() {
         </div>
       </aside>
       <main className="main-content">
-        <h1>Bienvenido al Panel</h1>
-        <p>Aquí puedes ver el contenido seleccionado desde el menú.</p>
+        {/* Eliminar el h1 de bienvenida */}
+        {selectedMenu === 'Cursos' && <Courses />} {/* Usa el componente Courses */}
+        {selectedMenu === 'Listas' && <Lists />} {/* Usa el nuevo componente Lists */}
+        {selectedMenu === 'Asistencias' && <Asistencias />} {/* Usa el componente Asistencias */}
+        {selectedMenu === 'Graficas' && <p>Contenido para Gráficas</p>}
+        {selectedMenu === 'Reportes' && <p>Contenido para Reportes</p>}
+        {selectedMenu === 'Constancias' && <p>Contenido para Constancias</p>}
+        {selectedMenu === 'Personal' && <p>Contenido para Personal</p>}
       </main>
     </div>
   );
