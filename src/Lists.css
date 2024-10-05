@@ -28,7 +28,7 @@
   
   .search-button {
     padding: 10px 15px; /* Espaciado interno del botón */
-    background-color: #2980B9; /* Color de fondo más oscuro */
+    background-color: #001aff !important; /* Color de fondo más oscuro */
     color: white; /* Color del texto en blanco */
     border: none; /* Sin borde */
     border-radius: 5px; /* Bordes redondeados */
@@ -59,7 +59,7 @@ th, td {
 }
 
 th {
-    background-color: #2980B9; /* Color de fondo de encabezado */
+    background-color: #001aff !important; /* Forzar el fondo azul */
     color: white; /* Color de texto en encabezado */
 }
 
@@ -74,7 +74,7 @@ tr:hover {
 /* Estilos para el botón de regresar */
 .back-button {
     padding: 10px 15px; /* Espaciado interno del botón */
-    background-color: #2980B9; /* Color de fondo */
+    background-color: #001aff!important; /* Color de fondo */
     color: white; /* Color del texto en blanco */
     border: none; /* Sin borde */
     border-radius: 5px; /* Bordes redondeados */

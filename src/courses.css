@@ -18,17 +18,17 @@
 }
 
 .search-input {
-  border-radius: 20px; /* Borde redondeado */
+  border-radius: 200px; /* Borde redondeado */
   width: calc(100% - 100px); /* Abarca casi todo el espacio */
   padding: 10px;
   margin-right: 10px; /* Espacio entre el input y el botón */
-  border: 1px solid #00d9ff; /* Borde azul claro */
+  border: 10px solid #003cff; /* Borde azul claro */
   font-size: 16px; /* Tamaño de letra adecuado */
 }
 
 .search-button {
   padding: 10px 15px; /* Espaciado interno del botón */
-  background-color: #001aff; /* Color de fondo más oscuro */
+  background-color:#001aff !important; /* Color de fondo más oscuro */
   color: white; /* Color del texto en blanco */
   border: none; /* Sin borde */
   border-radius: 5px; /* Bordes redondeados */
@@ -84,9 +84,10 @@ th, td {
 }
 
 th {
-  background-color: #001aff; /* Fondo azul para el encabezado */
-  color: white; /* Color del texto en blanco */
+  background-color: #001aff !important; /* Forzar el fondo azul */
+  color: white !important; /* Forzar el color del texto blanco */
 }
+
 
 tr:nth-child(even) {
   background-color: #ffffff; /* Fondo blanco para filas pares */

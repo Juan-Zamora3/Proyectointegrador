@@ -11,7 +11,7 @@ function Attendance({ onBack }) {
         <table>
           <thead>
             <tr>
-              <th>Asistencia</th>
+              <th>Asistencia </th> 
               <th>Nombre</th>
               <th>Apellido Paterno</th>
               <th>Apellido Materno</th>

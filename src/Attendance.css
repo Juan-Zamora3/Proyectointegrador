@@ -29,7 +29,7 @@ th, td {
 }
 
 th {
-    background-color: #2980B9; /* Color de fondo de encabezado */
+    background-color: #001aff !important; /* Forzar el fondo azul */
     color: white; /* Color de texto en encabezado */
 }
 

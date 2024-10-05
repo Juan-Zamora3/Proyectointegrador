@@ -1,0 +1,83 @@
+/* Constancias.css */
+.constancias-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+    background-color: #ffffff;
+    border-radius: 10px;}
+
+.form-section {
+    width: 80%; /* Mantener el ancho para la sección de formulario */
+    flex-direction: column;
+    padding: 50px; /* Agrega un padding para dar espacio alrededor */
+    background-color: #ffffff; /* Fondo blanco para el formulario */
+    border-radius: 10px; /* Esquinas redondeadas */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.form-section h2 {
+    margin-bottom: 20px;
+}
+
+.form-section label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.form-section input,
+.form-section select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 110%;
+}
+
+.listas {
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-section {
+    width: 70%; /* Aumenta el ancho de la sección de vista previa */
+    background-color: #ffffff; /* Fondo blanco para la vista previa */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    margin-left: 400px; /* Agrega margen izquierdo para separar de listas */
+}
+
+
+.preview-image {
+    width: 100%;
+    max-width: 100%; 
+    max-height: 550px; /* Ajusta la altura máxima a lo que desees */
+    height: auto; /* Mantiene la proporción de la imagen */
+    margin-bottom: 20px;
+}
+
+
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.cancel-button,
+.create-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: red;
+    color: white;
+}
+
+.create-button {
+    background-color: green;
+    color: white;
+}

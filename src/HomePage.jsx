@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import Courses from './courses'; // Importa el componente Courses
+import Courses from './Courses'; // Importa el componente Courses
 import Lists from './Lists'; // Importa el nuevo componente Lists
 import Asistencias from './Asistencias'; // Importa el componente Asistencias
+import Constancias from './Constancias'; // Importa el nuevo componente Constancias
 import './HomePage.css'; // Estilos para el sidebar y el contenido
 
 function HomePage() {
@@ -69,13 +70,12 @@ function HomePage() {
         </div>
       </aside>
       <main className="main-content">
-        {/* Eliminar el h1 de bienvenida */}
         {selectedMenu === 'Cursos' && <Courses />} {/* Usa el componente Courses */}
         {selectedMenu === 'Listas' && <Lists />} {/* Usa el nuevo componente Lists */}
         {selectedMenu === 'Asistencias' && <Asistencias />} {/* Usa el componente Asistencias */}
         {selectedMenu === 'Graficas' && <p>Contenido para Gráficas</p>}
         {selectedMenu === 'Reportes' && <p>Contenido para Reportes</p>}
-        {selectedMenu === 'Constancias' && <p>Contenido para Constancias</p>}
+        {selectedMenu === 'Constancias' && <Constancias />} {/* Usa el componente Constancias */}
         {selectedMenu === 'Personal' && <p>Contenido para Personal</p>}
       </main>
     </div>
