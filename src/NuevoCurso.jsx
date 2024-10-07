@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
-import './NuevoCurso.css'; // Asegúrate de tener este archivo CSS
+import React, { useState, useEffect } from 'react';
+import './NuevoCurso.css';
+import { db } from './firebaseConfig'; 
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore'; 
 
-const NuevoCurso = () => {
+const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   const [cursoNombre, setCursoNombre] = useState('');
   const [asesor, setAsesor] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [listas, setListas] = useState([]);
+
+  // Si cursoSeleccionado cambia, cargamos sus datos en el formulario
+  useEffect(() => {
+    if (cursoSeleccionado) {
+      setCursoNombre(cursoSeleccionado.cursoNombre || '');
+      setAsesor(cursoSeleccionado.asesor || '');
+      setFechaInicio(cursoSeleccionado.fechaInicio || '');
+      setFechaFin(cursoSeleccionado.fechaFin || '');
+      setListas(cursoSeleccionado.listas || []);
+    }
+  }, [cursoSeleccionado]);
 
   const handleListChange = (e) => {
     const { value, checked } = e.target;
@@ -15,22 +28,53 @@ const NuevoCurso = () => {
     );
   };
 
-  const handleCrear = () => {
-    // Lógica para crear el curso
-    console.log({
-      cursoNombre,
-      asesor,
-      fechaInicio,
-      fechaFin,
-      listas,
-    });
+  const handleCrearOActualizar = async () => {
+    if (!cursoNombre || !asesor || !fechaInicio || !fechaFin) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
+    if (cursoSeleccionado) {
+      // Si cursoSeleccionado existe, actualiza el curso
+      const cursoActualizado = {
+        cursoNombre,
+        asesor,
+        fechaInicio,
+        fechaFin,
+        listas,
+      };
+      onActualizarCurso(cursoSeleccionado.id, cursoActualizado);
+    } else {
+      // Si no hay cursoSeleccionado, crea uno nuevo
+      try {
+        await addDoc(collection(db, 'cursos'), {
+          cursoNombre,
+          asesor,
+          fechaInicio,
+          fechaFin,
+          listas,
+        });
+        alert('Curso creado exitosamente');
+      } catch (error) {
+        console.error("Error al crear el curso: ", error);
+        alert('Hubo un error al crear el curso.');
+      }
+    }
+
+    // Limpiar el formulario
+    setCursoNombre('');
+    setAsesor('');
+    setFechaInicio('');
+    setFechaFin('');
+    setListas([]);
+    onCancelar(); // Cierra el formulario
   };
 
   return (
     <div className="nuevo-curso-page">
       <div className="nuevo-curso-container">
         <div className="form-section">
-          <h2>Nuevo curso</h2>
+          <h2>{cursoSeleccionado ? 'Editar Curso' : 'Nuevo Curso'}</h2>
           <label>Nombre del curso</label>
           <input
             type="text"
@@ -73,6 +117,7 @@ const NuevoCurso = () => {
                           type="checkbox"
                           value="Academia de Sistemas"
                           onChange={handleListChange}
+                          checked={listas.includes("Academia de Sistemas")}
                         />
                         Academia de Sistemas
                       </label>
@@ -85,6 +130,7 @@ const NuevoCurso = () => {
                           type="checkbox"
                           value="Academia de Administración"
                           onChange={handleListChange}
+                          checked={listas.includes("Academia de Administración")}
                         />
                         Academia de Administración
                       </label>
@@ -97,6 +143,7 @@ const NuevoCurso = () => {
                           type="checkbox"
                           value="Academia de Civil"
                           onChange={handleListChange}
+                          checked={listas.includes("Academia de Civil")}
                         />
                         Academia de Civil
                       </label>
@@ -109,30 +156,10 @@ const NuevoCurso = () => {
         </div>
 
         <div className="preview-section">
-          <h3>Vista Previa</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Área</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Alejandro</td>
-                <td>Fernández</td>
-                <td>Gómez</td>
-                <td>Recursos Humanos</td>
-              </tr>
-              {/* Más filas */}
-            </tbody>
-          </table>
-          <div className="actions">
-            <button className="cancel-button">Cancelar</button>
-            <button className="create-button" onClick={handleCrear}>Crear</button>
-          </div>
+          <button className="cancel-button" onClick={onCancelar}>Cancelar</button>
+          <button className="create-button" onClick={handleCrearOActualizar}>
+            {cursoSeleccionado ? 'Actualizar' : 'Crear'}
+          </button>
         </div>
       </div>
     </div>

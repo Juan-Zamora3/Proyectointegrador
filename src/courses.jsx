@@ -1,11 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Courses.css'; // Mantén el estilo de Cursos
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faPlus, faEdit, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
 import NuevoCurso from './NuevoCurso'; // Importa el nuevo componente
+import { collection, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'; // Importa las funciones necesarias de Firestore
+import { db } from './firebaseConfig'; // Importa la configuración correcta de Firebase
 
 const Courses = () => {
   const [nuevoCursoVisible, setNuevoCursoVisible] = useState(false);
+  const [cursos, setCursos] = useState([]);
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
+
+  // Función para obtener los cursos desde Firestore
+  const obtenerCursos = async () => {
+    const querySnapshot = await getDocs(collection(db, 'cursos'));
+    const cursosObtenidos = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setCursos(cursosObtenidos);
+  };
+
+  // Efecto para cargar los cursos al montar el componente
+  useEffect(() => {
+    // Usamos onSnapshot para obtener los cambios en tiempo real
+    const unsubscribe = onSnapshot(collection(db, 'cursos'), (snapshot) => {
+      const cursosActualizados = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCursos(cursosActualizados);
+    });
+
+    // Limpiar el snapshot cuando se desmonta el componente
+    return () => unsubscribe();
+  }, []);
+
+  // Función para eliminar un curso
+  const handleEliminar = async (cursoId) => {
+    const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este curso?");
+    if (confirmacion) {
+      try {
+        await deleteDoc(doc(db, 'cursos', cursoId));
+        alert('Curso eliminado exitosamente');
+      } catch (error) {
+        console.error("Error al eliminar el curso: ", error);
+      }
+    }
+  };
+
+  // Función para seleccionar un curso para editar
+  const handleEditar = (curso) => {
+    setCursoSeleccionado(curso); // Selecciona el curso para editar
+    setNuevoCursoVisible(true); // Muestra el formulario de edición
+  };
+
+  // Función para actualizar el curso
+  const handleActualizarCurso = async (cursoId, updatedCurso) => {
+    try {
+      const cursoRef = doc(db, 'cursos', cursoId);
+      await updateDoc(cursoRef, updatedCurso);
+      alert('Curso actualizado exitosamente');
+      setCursoSeleccionado(null); // Limpia el curso seleccionado
+      setNuevoCursoVisible(false); // Cierra el formulario de edición
+    } catch (error) {
+      console.error("Error al actualizar el curso: ", error);
+    }
+  };
 
   return (
     <div className="courses-container">
@@ -23,15 +84,6 @@ const Courses = () => {
               <button className="action-button" onClick={() => setNuevoCursoVisible(true)}>
                 <FontAwesomeIcon icon={faPlus} className="fa-icon" /> Agregar
               </button>
-              <button className="action-button">
-                <FontAwesomeIcon icon={faEdit} className="fa-icon" /> Editar
-              </button>
-              <button className="action-button">
-                <FontAwesomeIcon icon={faTrash} className="fa-icon" /> Eliminar
-              </button>
-              <button className="action-button">
-                <FontAwesomeIcon icon={faEye} className="fa-icon" /> Visualizar
-              </button>
             </div>
             <div className="table-container">
               <table>
@@ -40,29 +92,40 @@ const Courses = () => {
                     <th>ID curso</th>
                     <th>Nombre</th>
                     <th>Asesor</th>
-                    <th>Fecha</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Finalización</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Curso 1</td>
-                    <td>Asesor 1</td>
-                    <td>01/01/2024</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Curso 2</td>
-                    <td>Asesor 2</td>
-                    <td>02/01/2024</td>
-                  </tr>
+                  {cursos.map((curso) => (
+                    <tr key={curso.id}>
+                      <td>{curso.id}</td>
+                      <td>{curso.cursoNombre}</td>
+                      <td>{curso.asesor}</td>
+                      <td>{curso.fechaInicio}</td>
+                      <td>{curso.fechaFin}</td>
+                      <td>
+                        <button className="action-button" onClick={() => handleEditar(curso)}>
+                          <FontAwesomeIcon icon={faEdit} /> Editar
+                        </button>
+                        <button className="action-button" onClick={() => handleEliminar(curso.id)}>
+                          <FontAwesomeIcon icon={faTrash} /> Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
         </>
       ) : (
-        <NuevoCurso />
+        <NuevoCurso
+          cursoSeleccionado={cursoSeleccionado}
+          onActualizarCurso={handleActualizarCurso}
+          onCancelar={() => setNuevoCursoVisible(false)}
+        />
       )}
     </div>
   );
