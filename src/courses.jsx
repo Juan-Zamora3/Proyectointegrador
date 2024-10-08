@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Courses.css'; // Mantén el estilo de Cursos
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearchPlus, faPlus, faEdit, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import NuevoCurso from './NuevoCurso'; // Importa el nuevo componente
 import { collection, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'; // Importa las funciones necesarias de Firestore
 import { db } from './firebaseConfig'; // Importa la configuración correcta de Firebase
@@ -10,6 +10,7 @@ const Courses = () => {
   const [nuevoCursoVisible, setNuevoCursoVisible] = useState(false);
   const [cursos, setCursos] = useState([]);
   const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // Nuevo estado para manejar la búsqueda
 
   // Función para obtener los cursos desde Firestore
   const obtenerCursos = async () => {
@@ -23,7 +24,6 @@ const Courses = () => {
 
   // Efecto para cargar los cursos al montar el componente
   useEffect(() => {
-    // Usamos onSnapshot para obtener los cambios en tiempo real
     const unsubscribe = onSnapshot(collection(db, 'cursos'), (snapshot) => {
       const cursosActualizados = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -68,13 +68,24 @@ const Courses = () => {
     }
   };
 
+  // Filtrado de los cursos basados en el término de búsqueda
+  const cursosFiltrados = cursos.filter((curso) =>
+    curso.cursoNombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="courses-container">
       {!nuevoCursoVisible ? (
         <>
           <h1 className="title-courses">Cursos</h1>
           <div className="search-container">
-            <input type="text" className="search-input" placeholder="Buscar curso" />
+            <input 
+              type="text" 
+              className="search-input" 
+              placeholder="Buscar curso" 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+            />
             <button className="search-button">
               <FontAwesomeIcon icon={faSearchPlus} /> Buscar
             </button>
@@ -98,7 +109,7 @@ const Courses = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cursos.map((curso) => (
+                  {cursosFiltrados.map((curso) => (
                     <tr key={curso.id}>
                       <td>{curso.id}</td>
                       <td>{curso.cursoNombre}</td>
