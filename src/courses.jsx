@@ -55,19 +55,6 @@ const Courses = () => {
     setNuevoCursoVisible(true); // Muestra el formulario de edición
   };
 
-  // Función para actualizar el curso
-  const handleActualizarCurso = async (cursoId, updatedCurso) => {
-    try {
-      const cursoRef = doc(db, 'cursos', cursoId);
-      await updateDoc(cursoRef, updatedCurso);
-      alert('Curso actualizado exitosamente');
-      setCursoSeleccionado(null); // Limpia el curso seleccionado
-      setNuevoCursoVisible(false); // Cierra el formulario de edición
-    } catch (error) {
-      console.error("Error al actualizar el curso: ", error);
-    }
-  };
-
   // Filtrado de los cursos basados en el término de búsqueda
   const cursosFiltrados = cursos.filter((curso) =>
     curso.cursoNombre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -90,45 +77,23 @@ const Courses = () => {
               <FontAwesomeIcon icon={faSearchPlus} /> Buscar
             </button>
           </div>
-          <div className="main-content">
-            <div className="actions-container">
-              <button className="action-button" onClick={() => setNuevoCursoVisible(true)}>
-                <FontAwesomeIcon icon={faPlus} className="fa-icon" /> Agregar
-              </button>
-            </div>
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID curso</th>
-                    <th>Nombre</th>
-                    <th>Asesor</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha de Finalización</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cursosFiltrados.map((curso) => (
-                    <tr key={curso.id}>
-                      <td>{curso.id}</td>
-                      <td>{curso.cursoNombre}</td>
-                      <td>{curso.asesor}</td>
-                      <td>{curso.fechaInicio}</td>
-                      <td>{curso.fechaFin}</td>
-                      <td>
-                        <button className="action-button" onClick={() => handleEditar(curso)}>
-                          <FontAwesomeIcon icon={faEdit} /> Editar
-                        </button>
-                        <button className="action-button" onClick={() => handleEliminar(curso.id)}>
-                          <FontAwesomeIcon icon={faTrash} /> Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="actions-container">
+            <button className="action-button" onClick={() => setNuevoCursoVisible(true)}>
+              <FontAwesomeIcon icon={faPlus} className="fa-icon" /> Agregar
+            </button>
+          </div>
+          <div className="courses-list">
+            {cursosFiltrados.map((curso) => (
+              <div key={curso.id} className="course-item">
+                <h3>{curso.cursoNombre}</h3> {/* Muestra el título de cada curso */}
+                <button className="action-button" onClick={() => handleEditar(curso)}>
+                  <FontAwesomeIcon icon={faEdit} /> Editar
+                </button>
+                <button className="action-button" onClick={() => handleEliminar(curso.id)}>
+                  <FontAwesomeIcon icon={faTrash} /> Eliminar
+                </button>
+              </div>
+            ))}
           </div>
         </>
       ) : (
