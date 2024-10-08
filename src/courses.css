@@ -1,123 +1,161 @@
+/* Contenedor principal */
 .courses-container {
   padding: 20px;
-  background-color: #FFFFFF; /* Fondo completamente blanco */
-  width: 100%; /* Asegúrate de que ocupe el 100% del ancho */
-  box-sizing: border-box; /* Incluye padding en el ancho total */
+  background-color: #f5f5f5; /* Fondo gris claro para toda la página */
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Título principal de Cursos */
 .title-courses {
-  font-size: 24px; /* Título más grande */
-  font-weight: bold; /* Título en negritas */
-  margin-bottom: 20px; /* Espacio debajo del título */
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
 }
 
+/* Barra de búsqueda y botones */
 .search-container {
-  display: flex; /* Flex para alinear input y botón de búsqueda */
-  margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .search-input {
-  border-radius: 200px; /* Borde redondeado */
-  width: calc(100% - 100px); /* Abarca casi todo el espacio */
-  padding: 10px;
-  margin-right: 10px; /* Espacio entre el input y el botón */
-  border: 2px solid #003cff; /* Borde azul claro (más delgado que antes) */
-  font-size: 16px; /* Tamaño de letra adecuado */
-  outline: none; /* Remueve el borde de enfoque predeterminado */
-}
-
-.search-input:focus {
-  border-color: #001aff; /* Cambia el color del borde al estar en foco */
+  border-radius: 20px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  width: 70%;
+  font-size: 16px;
 }
 
 .search-button {
-  padding: 10px 15px; /* Espaciado interno del botón */
-  background-color: #001aff; /* Color de fondo azul más oscuro */
-  color: white; /* Color del texto en blanco */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  font-weight: bold; /* Texto en negritas */
-  display: flex; /* Para alinear ícono y texto */
+  background-color: #001aff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  background-color: #003cff;
 }
 
 .search-button .fa-icon {
-  margin-right: 5px; /* Espacio entre el ícono y el texto */
+  margin-right: 5px;
 }
 
 .main-content {
-  display: flex; /* Flex para alinear acciones y tabla */
-  width: 100%; /* Asegura que el contenido principal ocupe todo el ancho */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
+/* Contenedor para los botones de acción */
 .actions-container {
-  display: flex; /* Flex para alinear los botones en línea */
-  flex-direction: column; /* Coloca los botones en vertical */
-  margin-right: 20px; /* Espacio a la derecha para separar de la tabla */
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
 }
 
 .action-button {
-  margin-bottom: 10px; /* Espacio entre los botones */
-  padding: 8px 12px; /* Espaciado interno de los botones */
-  display: flex; /* Permite alinear íconos y texto */
-  align-items: center; /* Centra verticalmente el texto y el ícono */
-  background-color: #001aff; /* Color azul oscuro */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  font-weight: bold; /* Texto en negritas */
-  color: white; /* Color del texto en blanco */
-  font-size: 16px; /* Tamaño de letra más grande */
-  transition: background-color 0.3s ease; /* Efecto de transición */
+  background-color: #001aff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
 }
 
 .action-button:hover {
-  background-color: #003cff; /* Color más claro al pasar el mouse */
+  background-color: #003cff;
 }
 
 .action-button .fa-icon {
-  font-size: 1.5em; /* Tamaño del ícono más grande */
-  margin-right: 5px; /* Espacio entre el ícono y el texto */
+  margin-right: 5px;
 }
 
+/* Tabla de cursos */
 .table-container {
-  margin-top: 20px;
-  overflow: auto; /* Permitir desplazamiento si la tabla es grande */
-  flex-grow: 1; /* Permite que la tabla ocupe el espacio restante */
+  width: 100%;
+  overflow-x: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
 th, td {
-  border: 1px solid #003cff; /* Borde azul claro */
-  padding: 8px;
+  padding: 15px;
   text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
 th {
-  background-color: #001aff; /* Fondo azul oscuro */
-  color: white; /* Texto blanco */
+  background-color: #001aff;
+  color: white;
+  font-weight: bold;
 }
 
 td {
-  color: #333; /* Color de texto para las celdas */
+  color: #555;
 }
 
 tr:nth-child(even) {
-  background-color: #f9f9f9; /* Fondo gris claro para filas pares */
+  background-color: #f9f9f9;
 }
 
 tr:hover {
-  background-color: #f1f1f1; /* Fondo gris más claro al pasar el mouse */
+  background-color: #f1f1f1;
 }
 
-/* Para mejorar la accesibilidad y agregar más interactividad */
-.action-button:focus,
-.search-button:focus {
-  outline: 2px solid #003cff; /* Borde de enfoque */
+/* Diseño de los cuadros de cursos */
+.course-section {
+  margin-top: 40px;
 }
 
+.course-section-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.courses-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.course-item {
+  background-color: #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.course-item:hover {
+  background-color: #ccc;
+  cursor: pointer;
+}
