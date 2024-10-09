@@ -1,98 +1,183 @@
-/* src/Courses.css */
 .courses-container {
   padding: 20px;
-  background-color: #FFFFFF; /* Fondo completamente blanco */
-  width: 100%; /* Asegúrate de que ocupe el 100% del ancho */
-  box-sizing: border-box; /* Incluye padding en el ancho total */
+  background-color: #f5f5f5;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.title-courses {
-  font-size: 24px; /* Título más grande */
-  font-weight: bold; /* Título en negritas */
-  margin-bottom: 20px; /* Espacio debajo del título */
-}
-
-.search-container {
-  display: flex; /* Flex para alinear input y botón de búsqueda */
-  margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
+/* Header que contiene el cuadro de búsqueda y los botones */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 .search-input {
-  border-radius: 200px; /* Borde redondeado */
-  width: calc(100% - 100px); /* Abarca casi todo el espacio */
-  padding: 10px;
-  margin-right: 10px; /* Espacio entre el input y el botón */
-  border: 10px solid #003cff; /* Borde azul claro */
-  font-size: 16px; /* Tamaño de letra adecuado */
+  border-radius: 20px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  width: 60%;
+  font-size: 16px;
+}
+
+.filter-button {
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
 .search-button {
-  padding: 10px 15px; /* Espaciado interno del botón */
-  background-color:#001aff !important; /* Color de fondo más oscuro */
-  color: white; /* Color del texto en blanco */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  font-weight: bold; /* Texto en negritas */
+  background-color: #001aff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
 }
 
-.main-content {
-  display: flex; /* Flex para alinear acciones y tabla */
-  width: 100%; /* Asegura que el contenido principal ocupe todo el ancho */
+.add-course-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.actions-container {
-  display: flex; /* Flex para alinear los botones en línea */
-  flex-direction: column; /* Coloca los botones en vertical */
-  margin-right: 20px; /* Espacio a la derecha para separar de la tabla */
-}
-
-.action-button {
-  margin-bottom: 10px; /* Espacio entre los botones */
-  padding: 8px 12px; /* Espaciado interno de los botones */
-  display: flex; /* Permite alinear íconos y texto */
-  align-items: center; /* Centra verticalmente el texto y el ícono */
-  background-color: #001aff; /* Color azul claro */
-  border: none; /* Sin borde */
-  border-radius: 5px; /* Bordes redondeados */
-  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  font-weight: bold; /* Texto en negritas */
-  color: white; /* Color del texto en blanco */
-  font-size: 16px; /* Tamaño de letra más grande */
-}
-
-.action-button .fa-icon {
-  font-size: 1.5em; /* Tamaño del ícono más grande */
-  margin-right: 5px; /* Espacio entre el ícono y el texto */
-}
-
-.table-container {
-  margin-top: 20px;
-  overflow: auto; /* Permitir desplazamiento si la tabla es grande */
-  flex-grow: 1; /* Permite que la tabla ocupe el espacio restante */
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #003cff; /* Borde azul claro */
-  padding: 8px;
+/* Frame 2: Auto layout de los cursos */
+.academia-separador {
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
   text-align: left;
 }
 
-th {
-  background-color: #001aff !important; /* Forzar el fondo azul */
-  color: white !important; /* Forzar el color del texto blanco */
+.admin {
+  background-color: #f47373; /* Rosa para Administración */
 }
 
-
-tr:nth-child(even) {
-  background-color: #ffffff; /* Fondo blanco para filas pares */
+.systems {
+  background-color: #6a98f0; /* Azul para Sistemas */
 }
 
-tr:hover {
-  background-color: #f1f1f1; /* Fondo gris claro al pasar el mouse */
+.courses-list {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #aaaaaa #f5f5f5; /* Firefox scrollbar color */
+}
+
+/* Personalización del scrollbar para navegadores basados en WebKit (Chrome, Safari, Edge) */
+.courses-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.courses-list::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.courses-list::-webkit-scrollbar-thumb {
+  background-color: #b4b4b4;
+  border-radius: 30px;
+  border: 2px solid #f5f5f5;
+}
+
+.courses-list::-webkit-scrollbar-thumb:hover {
+  background-color: #757575;
+}
+
+.courses-list::-webkit-scrollbar-thumb:active {
+  background-color: #757575;
+}
+
+.course-item {
+  background-color: #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 16px;
+  color: #333333;
+  box-shadow: 0px 4px 6px rgba(66, 19, 195, 0.1);
+  position: relative;
+  width: 200px; /* Ajuste del ancho */
+  height: 100px; /* Ajuste de la altura */
+  transition: transform 0.2s ease-in-out;
+}
+
+.course-item:hover {
+  transform: translateY(-5px); /* Efecto hover para dar sensación de elevación */
+}
+
+.course-item h3 {
+  font-size: 16px;
+  font-weight: 600; /* Letra más gruesa para el título del curso */
+  color: #333;
+  margin: 0;
+}
+
+/* Posicionamiento del ícono "more" */
+.more-options {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.more-icon {
+  font-size: 16px;
+  color: #888;
+}
+
+/* Menú desplegable */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.more-options .dropdown-content {
+  display: block; /* Se muestra cuando el estado lo permite */
+}
+
+.dropdown-content .dropdown-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  border-bottom: 1px solid #eee; /* Separador entre elementos */
+  background-color: white;
+  color: #333; /* Color del texto */
+}
+
+.dropdown-content .dropdown-item:hover {
+  background-color: #f44336; /* Color de fondo rojo al hacer hover */
+  color: white; /* Cambia el color del texto a blanco al hacer hover */
+}
+
+/* Última opción del menú (sin borde inferior) */
+.dropdown-content .dropdown-item:last-child {
+  border-bottom: none;
 }
