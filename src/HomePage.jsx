@@ -1,16 +1,29 @@
 // src/HomePage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import Courses from './Courses'; // Importa el componente Courses
+import Courses from './courses'; // Importa el componente Courses
 import Lists from './Lists'; // Importa el nuevo componente Lists
 import Asistencias from './Asistencias'; // Importa el componente Asistencias
 import Constancias from './Constancias'; // Importa el nuevo componente Constancias
+import { auth } from './firebaseConfig'; // Asegúrate de importar auth
 import './HomePage.css'; // Estilos para el sidebar y el contenido
 
 function HomePage() {
   const [selectedMenu, setSelectedMenu] = useState('');
+  const [user, setUser] = useState(null); // Estado para almacenar la información del usuario
+
+  useEffect(() => {
+    // Obtener el usuario actual
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setUser({
+        name: currentUser.displayName || 'Nombre de Usuario', // Asigna un nombre por defecto si no está disponible
+        email: currentUser.email
+      });
+    }
+  }, []);
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -21,8 +34,8 @@ function HomePage() {
       <aside className="sidebar">
         <div className="profile">
           <img src="https://via.placeholder.com/50" alt="Avatar de Usuario" className="avatar" />
-          <h4>Nombre de Usuario</h4>
-          <p>correo@ejemplo.com</p>
+          <h4>{user ? user.name : 'Cargando...'}</h4>
+          <p>{user ? user.email : 'Cargando...'}</p>
         </div>
         <nav>
           <ul>

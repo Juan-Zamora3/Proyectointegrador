@@ -10,7 +10,6 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   const [fechaFin, setFechaFin] = useState('');
   const [listas, setListas] = useState([]);
 
-  // Si cursoSeleccionado cambia, cargamos sus datos en el formulario
   useEffect(() => {
     if (cursoSeleccionado) {
       setCursoNombre(cursoSeleccionado.cursoNombre || '');
@@ -35,7 +34,6 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
     }
 
     if (cursoSeleccionado) {
-      // Si cursoSeleccionado existe, actualiza el curso
       const cursoActualizado = {
         cursoNombre,
         asesor,
@@ -45,7 +43,6 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
       };
       onActualizarCurso(cursoSeleccionado.id, cursoActualizado);
     } else {
-      // Si no hay cursoSeleccionado, crea uno nuevo
       try {
         await addDoc(collection(db, 'cursos'), {
           cursoNombre,
@@ -61,13 +58,12 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
       }
     }
 
-    // Limpiar el formulario
     setCursoNombre('');
     setAsesor('');
     setFechaInicio('');
     setFechaFin('');
     setListas([]);
-    onCancelar(); // Cierra el formulario
+    onCancelar();
   };
 
   return (
@@ -156,6 +152,27 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
         </div>
 
         <div className="preview-section">
+          <h3>Vista Previa</h3>
+          <table className="preview-table">
+            <thead>
+              <tr>
+                <th>Curso</th>
+                <th>Asesor</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Finalización</th>
+                <th>Listas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{cursoNombre}</td>
+                <td>{asesor}</td>
+                <td>{fechaInicio}</td>
+                <td>{fechaFin}</td>
+                <td>{listas.join(', ')}</td>
+              </tr>
+            </tbody>
+          </table>
           <button className="cancel-button" onClick={onCancelar}>Cancelar</button>
           <button className="create-button" onClick={handleCrearOActualizar}>
             {cursoSeleccionado ? 'Actualizar' : 'Crear'}
