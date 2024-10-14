@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './Courses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearchPlus, faPlus, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'; // Importar funciones necesarias de Firestore
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'; // Eliminamos faPlus ya que el ícono se reemplazará
+import { collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore'; 
 import { db } from './firebaseConfig';
-import NuevoCurso from './NuevoCurso'; // Importar componente para agregar y editar cursos
+import NuevoCurso from './NuevoCurso'; 
 
 const Courses = () => {
   const [cursos, setCursos] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(null); // Estado para manejar qué menú desplegable está visible
+  const [menuVisible, setMenuVisible] = useState(null); 
   const [searchTerm, setSearchTerm] = useState('');
-  const [nuevoCursoVisible, setNuevoCursoVisible] = useState(false); // Estado para mostrar el formulario de nuevo curso
-  const [cursoSeleccionado, setCursoSeleccionado] = useState(null); // Estado para manejar el curso seleccionado para editar
+  const [nuevoCursoVisible, setNuevoCursoVisible] = useState(false); 
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(null); 
 
-  // Obtener cursos desde Firebase
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'cursos'), (snapshot) => {
       const cursosObtenidos = snapshot.docs.map((doc) => ({
@@ -47,12 +46,10 @@ const Courses = () => {
     return acc;
   }, {});
 
-  // Función para manejar el clic en el ícono de "more"
   const toggleMenu = (courseId) => {
-    setMenuVisible(menuVisible === courseId ? null : courseId); // Si es el mismo, lo oculta; si no, lo muestra
+    setMenuVisible(menuVisible === courseId ? null : courseId); 
   };
 
-  // Función para eliminar un curso
   const eliminarCurso = async (cursoId) => {
     const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este curso?");
     if (confirmacion) {
@@ -65,16 +62,18 @@ const Courses = () => {
     }
   };
 
-  // Función para seleccionar un curso para editar
   const editarCurso = (curso) => {
-    setCursoSeleccionado(curso); // Selecciona el curso para editar
-    setNuevoCursoVisible(true); // Muestra el formulario de edición
+    setCursoSeleccionado(curso); 
+    setNuevoCursoVisible(true); 
   };
 
-  // Función para manejar el cierre del formulario de nuevo curso
   const handleActualizarCurso = () => {
     setCursoSeleccionado(null);
-    setNuevoCursoVisible(false); // Cierra el formulario
+    setNuevoCursoVisible(false); 
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -83,26 +82,30 @@ const Courses = () => {
         <>
           {/* Frame 1: Cuadro de búsqueda y botones */}
           <div className="header-container">
-            <input 
-              type="text" 
-              className="search-input" 
-              placeholder="Buscar curso" 
-              value={searchTerm} 
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button className="filter-button">
-              <FontAwesomeIcon icon={faSearchPlus} />
-            </button>
-            <button className="search-button">Buscar</button>
-            <button className="add-course-button" onClick={() => setNuevoCursoVisible(true)}>
-              <FontAwesomeIcon icon={faPlus} /> Agregar
-            </button>
+            <div className="search">
+              <input 
+                type="text" 
+                className="search__input" 
+                placeholder="Buscar curso" 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button className="search__button" onClick={handleSearch}>
+                <svg className="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <g>
+                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                  </g>
+                </svg>
+              </button>
+              <button className="add-course-button" onClick={() => setNuevoCursoVisible(true)}>
+                Agregar
+              </button>
+            </div>
           </div>
 
           {/* Frame 2: Cursos agrupados por academia */}
           {Object.keys(cursosFiltrados).map((academia) => (
             <div key={academia} className="academia-section">
-              {/* Separador con el nombre de la academia */}
               <div className={`academia-separador ${academia === 'Cursos de Administración' ? 'admin' : 'systems'}`}>
                 {academia}
               </div>
@@ -116,9 +119,9 @@ const Courses = () => {
                       <FontAwesomeIcon 
                         icon={faEllipsisV} 
                         className="more-icon" 
-                        onClick={() => toggleMenu(curso.id)} // Manejador de clic para abrir el menú
+                        onClick={() => toggleMenu(curso.id)} 
                       />
-                      {menuVisible === curso.id && (  // Mostrar solo si el menú está activo
+                      {menuVisible === curso.id && (  
                         <div className="dropdown-content">
                           <button className="dropdown-item" onClick={() => editarCurso(curso)}>Editar</button>
                           <button className="dropdown-item" onClick={() => eliminarCurso(curso.id)}>Eliminar</button>
