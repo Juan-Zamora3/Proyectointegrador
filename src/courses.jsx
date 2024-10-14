@@ -1,124 +1,138 @@
 import React, { useState, useEffect } from 'react';
-import './Courses.css'; // Mantén el estilo de Cursos
+import './Courses.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearchPlus, faPlus, faEdit, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
-import NuevoCurso from './NuevoCurso'; // Importa el nuevo componente
-import { collection, getDocs, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'; // Importa las funciones necesarias de Firestore
-import { db } from './firebaseConfig'; // Importa la configuración correcta de Firebase
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons'; // Eliminamos faPlus ya que el ícono se reemplazará
+import { collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore'; 
+import { db } from './firebaseConfig';
+import NuevoCurso from './NuevoCurso'; 
 
 const Courses = () => {
-  const [nuevoCursoVisible, setNuevoCursoVisible] = useState(false);
   const [cursos, setCursos] = useState([]);
-  const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
+  const [menuVisible, setMenuVisible] = useState(null); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [nuevoCursoVisible, setNuevoCursoVisible] = useState(false); 
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(null); 
 
-  // Función para obtener los cursos desde Firestore
-  const obtenerCursos = async () => {
-    const querySnapshot = await getDocs(collection(db, 'cursos'));
-    const cursosObtenidos = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setCursos(cursosObtenidos);
-  };
-
-  // Efecto para cargar los cursos al montar el componente
   useEffect(() => {
-    // Usamos onSnapshot para obtener los cambios en tiempo real
     const unsubscribe = onSnapshot(collection(db, 'cursos'), (snapshot) => {
-      const cursosActualizados = snapshot.docs.map((doc) => ({
+      const cursosObtenidos = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setCursos(cursosActualizados);
+      setCursos(cursosObtenidos);
     });
 
-    // Limpiar el snapshot cuando se desmonta el componente
     return () => unsubscribe();
   }, []);
 
-  // Función para eliminar un curso
-  const handleEliminar = async (cursoId) => {
+  // Agrupar cursos por academia
+  const academiasAgrupadas = cursos.reduce((acc, curso) => {
+    const { academia } = curso;
+    if (!acc[academia]) {
+      acc[academia] = [];
+    }
+    acc[academia].push(curso);
+    return acc;
+  }, {});
+
+  // Filtrar los cursos basados en el término de búsqueda
+  const cursosFiltrados = Object.keys(academiasAgrupadas).reduce((acc, academia) => {
+    const cursosFiltradosPorAcademia = academiasAgrupadas[academia].filter((curso) =>
+      curso.cursoNombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    if (cursosFiltradosPorAcademia.length > 0) {
+      acc[academia] = cursosFiltradosPorAcademia;
+    }
+    return acc;
+  }, {});
+
+  const toggleMenu = (courseId) => {
+    setMenuVisible(menuVisible === courseId ? null : courseId); 
+  };
+
+  const eliminarCurso = async (cursoId) => {
     const confirmacion = window.confirm("¿Estás seguro de que deseas eliminar este curso?");
     if (confirmacion) {
       try {
         await deleteDoc(doc(db, 'cursos', cursoId));
-        alert('Curso eliminado exitosamente');
+        alert('Curso eliminado correctamente');
       } catch (error) {
-        console.error("Error al eliminar el curso: ", error);
+        console.error("Error eliminando el curso: ", error);
       }
     }
   };
 
-  // Función para seleccionar un curso para editar
-  const handleEditar = (curso) => {
-    setCursoSeleccionado(curso); // Selecciona el curso para editar
-    setNuevoCursoVisible(true); // Muestra el formulario de edición
+  const editarCurso = (curso) => {
+    setCursoSeleccionado(curso); 
+    setNuevoCursoVisible(true); 
   };
 
-  // Función para actualizar el curso
-  const handleActualizarCurso = async (cursoId, updatedCurso) => {
-    try {
-      const cursoRef = doc(db, 'cursos', cursoId);
-      await updateDoc(cursoRef, updatedCurso);
-      alert('Curso actualizado exitosamente');
-      setCursoSeleccionado(null); // Limpia el curso seleccionado
-      setNuevoCursoVisible(false); // Cierra el formulario de edición
-    } catch (error) {
-      console.error("Error al actualizar el curso: ", error);
-    }
+  const handleActualizarCurso = () => {
+    setCursoSeleccionado(null);
+    setNuevoCursoVisible(false); 
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
   };
 
   return (
     <div className="courses-container">
       {!nuevoCursoVisible ? (
         <>
-          <h1 className="title-courses">Cursos</h1>
-          <div className="search-container">
-            <input type="text" className="search-input" placeholder="Buscar curso" />
-            <button className="search-button">
-              <FontAwesomeIcon icon={faSearchPlus} /> Buscar
-            </button>
-          </div>
-          <div className="main-content">
-            <div className="actions-container">
-              <button className="action-button" onClick={() => setNuevoCursoVisible(true)}>
-                <FontAwesomeIcon icon={faPlus} className="fa-icon" /> Agregar
+          {/* Frame 1: Cuadro de búsqueda y botones */}
+          <div className="header-container">
+            <div className="search">
+              <input 
+                type="text" 
+                className="search__input" 
+                placeholder="Buscar curso" 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button className="search__button" onClick={handleSearch}>
+                <svg className="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+                  <g>
+                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                  </g>
+                </svg>
+              </button>
+              <button className="add-course-button" onClick={() => setNuevoCursoVisible(true)}>
+                Agregar
               </button>
             </div>
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID curso</th>
-                    <th>Nombre</th>
-                    <th>Asesor</th>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha de Finalización</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cursos.map((curso) => (
-                    <tr key={curso.id}>
-                      <td>{curso.id}</td>
-                      <td>{curso.cursoNombre}</td>
-                      <td>{curso.asesor}</td>
-                      <td>{curso.fechaInicio}</td>
-                      <td>{curso.fechaFin}</td>
-                      <td>
-                        <button className="action-button" onClick={() => handleEditar(curso)}>
-                          <FontAwesomeIcon icon={faEdit} /> Editar
-                        </button>
-                        <button className="action-button" onClick={() => handleEliminar(curso.id)}>
-                          <FontAwesomeIcon icon={faTrash} /> Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
+
+          {/* Frame 2: Cursos agrupados por academia */}
+          {Object.keys(cursosFiltrados).map((academia) => (
+            <div key={academia} className="academia-section">
+              <div className={`academia-separador ${academia === 'Cursos de Administración' ? 'admin' : 'systems'}`}>
+                {academia}
+              </div>
+
+              {/* Auto-layout para los cursos */}
+              <div className="courses-list">
+                {cursosFiltrados[academia].map((curso) => (
+                  <div key={curso.id} className="course-item">
+                    <h3>{curso.cursoNombre}</h3>
+                    <div className="more-options">
+                      <FontAwesomeIcon 
+                        icon={faEllipsisV} 
+                        className="more-icon" 
+                        onClick={() => toggleMenu(curso.id)} 
+                      />
+                      {menuVisible === curso.id && (  
+                        <div className="dropdown-content">
+                          <button className="dropdown-item" onClick={() => editarCurso(curso)}>Editar</button>
+                          <button className="dropdown-item" onClick={() => eliminarCurso(curso.id)}>Eliminar</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </>
       ) : (
         <NuevoCurso
