@@ -1,25 +1,42 @@
 // src/Asistencias.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from './firebaseConfig';
 import './Asistencias.css'; // Asegúrate de que este archivo CSS exista
 
 function Asistencias() {
   const [showCourses, setShowCourses] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const students = [
-    { id: 1, name: 'Juan Pérez', area: 'Matemáticas' },
-    { id: 2, name: 'Ana García', area: 'Ciencias' },
-    // Agrega más estudiantes según sea necesario
-  ];
+  // Cargar los estudiantes desde Firebase
+  const fetchStudents = async () => {
+    try {
+      const studentsRef = collection(db, 'estudiantes');
+      const studentsSnapshot = await getDocs(studentsRef);
+      const loadedStudents = studentsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setStudents(loadedStudents);
+    } catch (error) {
+      console.error('Error al cargar los estudiantes:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   const handleDoubleClick = (student) => {
-    setSelectedStudent(student); // Establecer el estudiante seleccionado
-    setShowCourses(true); // Mostrar los cursos del estudiante
+    setSelectedStudent(student);
+    setShowCourses(true);
   };
 
   const handleBackToAsistencias = () => {
-    setShowCourses(false); // Volver a la vista de asistencias
-    setSelectedStudent(null); // Resetear el estudiante seleccionado
+    setShowCourses(false);
+    setSelectedStudent(null);
   };
 
   return (
@@ -27,7 +44,13 @@ function Asistencias() {
       {!showCourses ? (
         <>
           <h2 className="title-asistencias">Asistencias</h2>
-          <input type="text" placeholder="Buscar..." className="search-input" />
+          <input
+            type="text"
+            placeholder="Buscar..."
+            className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <table>
             <thead>
               <tr>
@@ -37,13 +60,17 @@ function Asistencias() {
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
-                <tr key={student.id} onDoubleClick={() => handleDoubleClick(student)}>
-                  <td>{student.id}</td>
-                  <td>{student.name}</td>
-                  <td>{student.area}</td>
-                </tr>
-              ))}
+              {students
+                .filter(student =>
+                  student.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((student) => (
+                  <tr key={student.id} onDoubleClick={() => handleDoubleClick(student)}>
+                    <td>{student.id}</td>
+                    <td>{student.name}</td>
+                    <td>{student.area}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </>
@@ -55,6 +82,29 @@ function Asistencias() {
 }
 
 function CoursesOfStudent({ student, onBack }) {
+  const [courses, setCourses] = useState([]);
+
+  // Cargar los cursos del estudiante desde Firebase
+  const fetchCourses = async () => {
+    try {
+      const coursesRef = query(
+        collection(db, 'cursos'),
+        where('studentId', '==', student.id)
+      );
+      const coursesSnapshot = await getDocs(coursesRef);
+      const loadedCourses = coursesSnapshot.docs.map(doc => doc.data());
+      setCourses(loadedCourses);
+    } catch (error) {
+      console.error('Error al cargar los cursos del estudiante:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (student) {
+      fetchCourses();
+    }
+  }, [student]);
+
   return (
     <div className="courses-container">
       <h2 className="title-courses">Cursos de {student.name}</h2>
@@ -68,16 +118,12 @@ function CoursesOfStudent({ student, onBack }) {
             </tr>
           </thead>
           <tbody>
-            {/* Aquí puedes mapear los cursos a los que ha asistido el estudiante */}
-            <tr>
-              <td>Curso 1</td>
-              <td>01/01/2024</td>
-            </tr>
-            <tr>
-              <td>Curso 2</td>
-              <td>02/01/2024</td>
-            </tr>
-            {/* Agrega más filas según sea necesario */}
+            {courses.map((course, index) => (
+              <tr key={index}>
+                <td>{course.name}</td>
+                <td>{new Date(course.date.seconds * 1000).toLocaleDateString()}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -19,7 +19,7 @@ function HomePage() {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser({
-        name: currentUser.displayName || 'Nombre de Usuario', // Asigna un nombre por defecto si no está disponible
+        name: currentUser.displayName || 'Administrador', // Asigna un nombre por defecto si no está disponible
         email: currentUser.email
       });
     }

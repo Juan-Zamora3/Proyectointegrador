@@ -1,3 +1,4 @@
+// src/Lists.jsx
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -43,8 +44,10 @@ function Lists() {
   return (
     <div className="lists-container">
       {selectedList ? (
+        // Mostrar Attendance si se ha seleccionado una lista
         <Attendance list={selectedList} onBack={() => setSelectedList(null)} />
       ) : showAddForm ? (
+        // Mostrar CrearLista si se quiere agregar una nueva lista
         <CrearLista onListCreated={handleListCreated} />
       ) : (
         <>
