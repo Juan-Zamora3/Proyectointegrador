@@ -1,25 +1,41 @@
 // src/Asistencias.jsx
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
-import './Asistencias.css'; // Asegúrate de que este archivo CSS exista
+import './Asistencias.css';
 
 function Asistencias() {
-  const [showCourses, setShowCourses] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Cargar los estudiantes desde Firebase
   const fetchStudents = async () => {
     try {
-      const studentsRef = collection(db, 'estudiantes');
-      const studentsSnapshot = await getDocs(studentsRef);
-      const loadedStudents = studentsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setStudents(loadedStudents);
+      const listsRef = collection(db, 'listas');
+      const listsSnapshot = await getDocs(listsRef);
+      const allParticipants = {};
+
+      listsSnapshot.forEach(doc => {
+        const { participants, name } = doc.data();
+
+        participants.forEach(participant => {
+          // Normaliza el nombre a minúsculas para evitar duplicados
+          const key = `${participant.firstName.toLowerCase()} ${participant.lastNameP.toLowerCase()} ${participant.lastNameM.toLowerCase()}`;
+          if (!allParticipants[key]) {
+            allParticipants[key] = {
+              firstName: participant.firstName,
+              lastNameP: participant.lastNameP,
+              lastNameM: participant.lastNameM,
+              position: participant.position,
+              lists: [name],
+              courses: [] 
+            };
+          } else {
+            allParticipants[key].lists.push(name);
+          }
+        });
+      });
+
+      setStudents(Object.values(allParticipants));
     } catch (error) {
       console.error('Error al cargar los estudiantes:', error);
     }
@@ -29,104 +45,52 @@ function Asistencias() {
     fetchStudents();
   }, []);
 
-  const handleDoubleClick = (student) => {
-    setSelectedStudent(student);
-    setShowCourses(true);
-  };
-
-  const handleBackToAsistencias = () => {
-    setShowCourses(false);
-    setSelectedStudent(null);
+  const handleDetails = (student) => {
+    console.log('Detalles de:', student);
   };
 
   return (
     <div className="asistencias-container">
-      {!showCourses ? (
-        <>
-          <h2 className="title-asistencias">Asistencias</h2>
-          <input
-            type="text"
-            placeholder="Buscar..."
-            className="search-input"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>ID Alumno</th>
-                <th>Nombre</th>
-                <th>Área</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students
-                .filter(student =>
-                  student.name.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((student) => (
-                  <tr key={student.id} onDoubleClick={() => handleDoubleClick(student)}>
-                    <td>{student.id}</td>
-                    <td>{student.name}</td>
-                    <td>{student.area}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <CoursesOfStudent student={selectedStudent} onBack={handleBackToAsistencias} />
-      )}
-    </div>
-  );
-}
-
-function CoursesOfStudent({ student, onBack }) {
-  const [courses, setCourses] = useState([]);
-
-  // Cargar los cursos del estudiante desde Firebase
-  const fetchCourses = async () => {
-    try {
-      const coursesRef = query(
-        collection(db, 'cursos'),
-        where('studentId', '==', student.id)
-      );
-      const coursesSnapshot = await getDocs(coursesRef);
-      const loadedCourses = coursesSnapshot.docs.map(doc => doc.data());
-      setCourses(loadedCourses);
-    } catch (error) {
-      console.error('Error al cargar los cursos del estudiante:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (student) {
-      fetchCourses();
-    }
-  }, [student]);
-
-  return (
-    <div className="courses-container">
-      <h2 className="title-courses">Cursos de {student.name}</h2>
-      <button onClick={onBack} className="back-button">Regresar a Asistencias</button>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Curso</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((course, index) => (
+      <h2 className="title-asistencias">Asistencias</h2>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        className="search-input"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Cargo</th>
+            <th>Listas</th>
+            <th>Cursos</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students
+            .filter(student =>
+              `${student.firstName} ${student.lastNameP}`.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((student, index) => (
               <tr key={index}>
-                <td>{course.name}</td>
-                <td>{new Date(course.date.seconds * 1000).toLocaleDateString()}</td>
+                <td>{student.firstName}</td>
+                <td>{student.lastNameP}</td>
+                <td>{student.lastNameM}</td>
+                <td>{student.position}</td>
+                <td>{student.lists.join(', ')}</td>
+                <td>{student.courses.join(', ')}</td>
+                <td>
+                  <button onClick={() => handleDetails(student)}>Detalles</button>
+                </td>
               </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
+        </tbody>
+      </table>
     </div>
   );
 }
