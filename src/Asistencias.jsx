@@ -1,86 +1,96 @@
 // src/Asistencias.jsx
-import React, { useState } from 'react';
-import './Asistencias.css'; // Asegúrate de que este archivo CSS exista
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+import './Asistencias.css';
 
 function Asistencias() {
-  const [showCourses, setShowCourses] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const students = [
-    { id: 1, name: 'Juan Pérez', area: 'Matemáticas' },
-    { id: 2, name: 'Ana García', area: 'Ciencias' },
-    // Agrega más estudiantes según sea necesario
-  ];
+  const fetchStudents = async () => {
+    try {
+      const listsRef = collection(db, 'listas');
+      const listsSnapshot = await getDocs(listsRef);
+      const allParticipants = {};
 
-  const handleDoubleClick = (student) => {
-    setSelectedStudent(student); // Establecer el estudiante seleccionado
-    setShowCourses(true); // Mostrar los cursos del estudiante
+      listsSnapshot.forEach(doc => {
+        const { participants, name } = doc.data();
+
+        participants.forEach(participant => {
+          // Normaliza el nombre a minúsculas para evitar duplicados
+          const key = `${participant.firstName.toLowerCase()} ${participant.lastNameP.toLowerCase()} ${participant.lastNameM.toLowerCase()}`;
+          if (!allParticipants[key]) {
+            allParticipants[key] = {
+              firstName: participant.firstName,
+              lastNameP: participant.lastNameP,
+              lastNameM: participant.lastNameM,
+              position: participant.position,
+              lists: [name],
+              courses: [] 
+            };
+          } else {
+            allParticipants[key].lists.push(name);
+          }
+        });
+      });
+
+      setStudents(Object.values(allParticipants));
+    } catch (error) {
+      console.error('Error al cargar los estudiantes:', error);
+    }
   };
 
-  const handleBackToAsistencias = () => {
-    setShowCourses(false); // Volver a la vista de asistencias
-    setSelectedStudent(null); // Resetear el estudiante seleccionado
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const handleDetails = (student) => {
+    console.log('Detalles de:', student);
   };
 
   return (
     <div className="asistencias-container">
-      {!showCourses ? (
-        <>
-          <h2 className="title-asistencias">Asistencias</h2>
-          <input type="text" placeholder="Buscar..." className="search-input" />
-          <table>
-            <thead>
-              <tr>
-                <th>ID Alumno</th>
-                <th>Nombre</th>
-                <th>Área</th>
+      <h2 className="title-asistencias">Asistencias</h2>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        className="search-input"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Cargo</th>
+            <th>Listas</th>
+            <th>Cursos</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students
+            .filter(student =>
+              `${student.firstName} ${student.lastNameP}`.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((student, index) => (
+              <tr key={index}>
+                <td>{student.firstName}</td>
+                <td>{student.lastNameP}</td>
+                <td>{student.lastNameM}</td>
+                <td>{student.position}</td>
+                <td>{student.lists.join(', ')}</td>
+                <td>{student.courses.join(', ')}</td>
+                <td>
+                  <button onClick={() => handleDetails(student)}>Detalles</button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student.id} onDoubleClick={() => handleDoubleClick(student)}>
-                  <td>{student.id}</td>
-                  <td>{student.name}</td>
-                  <td>{student.area}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <CoursesOfStudent student={selectedStudent} onBack={handleBackToAsistencias} />
-      )}
-    </div>
-  );
-}
-
-function CoursesOfStudent({ student, onBack }) {
-  return (
-    <div className="courses-container">
-      <h2 className="title-courses">Cursos de {student.name}</h2>
-      <button onClick={onBack} className="back-button">Regresar a Asistencias</button>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Curso</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Aquí puedes mapear los cursos a los que ha asistido el estudiante */}
-            <tr>
-              <td>Curso 1</td>
-              <td>01/01/2024</td>
-            </tr>
-            <tr>
-              <td>Curso 2</td>
-              <td>02/01/2024</td>
-            </tr>
-            {/* Agrega más filas según sea necesario */}
-          </tbody>
-        </table>
-      </div>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 }

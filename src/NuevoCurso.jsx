@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './NuevoCurso.css';
-import { db } from './firebaseConfig'; 
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore'; 
+import { db } from './firebaseConfig';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   const [cursoNombre, setCursoNombre] = useState('');
@@ -9,6 +9,25 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [listas, setListas] = useState([]);
+  const [todasLasListas, setTodasLasListas] = useState([]);
+
+  // Cargar listas desde Firebase
+  useEffect(() => {
+    const fetchListas = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'listas'));
+        const loadedListas = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name,
+        }));
+        setTodasLasListas(loadedListas);
+      } catch (error) {
+        console.error('Error al cargar las listas:', error);
+      }
+    };
+
+    fetchListas();
+  }, []);
 
   useEffect(() => {
     if (cursoSeleccionado) {
@@ -29,21 +48,24 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
 
   const handleCrearOActualizar = async () => {
     if (!cursoNombre || !asesor || !fechaInicio || !fechaFin) {
-      alert("Por favor, completa todos los campos.");
+      alert('Por favor, completa todos los campos.');
       return;
     }
 
-    if (cursoSeleccionado) {
-      const cursoActualizado = {
-        cursoNombre,
-        asesor,
-        fechaInicio,
-        fechaFin,
-        listas,
-      };
-      onActualizarCurso(cursoSeleccionado.id, cursoActualizado);
-    } else {
-      try {
+    try {
+      if (cursoSeleccionado) {
+        // Actualizar curso existente
+        await updateDoc(doc(db, 'cursos', cursoSeleccionado.id), {
+          cursoNombre,
+          asesor,
+          fechaInicio,
+          fechaFin,
+          listas,
+        });
+        alert('Curso actualizado exitosamente');
+        onActualizarCurso(cursoSeleccionado.id, { cursoNombre, asesor, fechaInicio, fechaFin, listas });
+      } else {
+        // Crear nuevo curso
         await addDoc(collection(db, 'cursos'), {
           cursoNombre,
           asesor,
@@ -52,10 +74,10 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
           listas,
         });
         alert('Curso creado exitosamente');
-      } catch (error) {
-        console.error("Error al crear el curso: ", error);
-        alert('Hubo un error al crear el curso.');
       }
+    } catch (error) {
+      console.error('Error al crear o actualizar el curso:', error);
+      alert('Hubo un error al crear o actualizar el curso.');
     }
 
     setCursoNombre('');
@@ -98,56 +120,20 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
             onChange={(e) => setFechaFin(e.target.value)}
           />
           <label>Listas</label>
-          <input
-            type="text"
-            placeholder="Buscar nombre, usuario, correo, etc."
-          />
           <div className="listas">
-            <div className="table-container">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <label>
-                        <input
-                          type="checkbox"
-                          value="Academia de Sistemas"
-                          onChange={handleListChange}
-                          checked={listas.includes("Academia de Sistemas")}
-                        />
-                        Academia de Sistemas
-                      </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label>
-                        <input
-                          type="checkbox"
-                          value="Academia de Administración"
-                          onChange={handleListChange}
-                          checked={listas.includes("Academia de Administración")}
-                        />
-                        Academia de Administración
-                      </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label>
-                        <input
-                          type="checkbox"
-                          value="Academia de Civil"
-                          onChange={handleListChange}
-                          checked={listas.includes("Academia de Civil")}
-                        />
-                        Academia de Civil
-                      </label>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            {todasLasListas.map((lista) => (
+              <div key={lista.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    value={lista.name}
+                    onChange={handleListChange}
+                    checked={listas.includes(lista.name)}
+                  />
+                  {lista.name}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
 
