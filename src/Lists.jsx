@@ -1,8 +1,7 @@
-// src/Lists.jsx
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Lists.css';
 import Attendance from './Attendance';
@@ -19,14 +18,15 @@ function Lists() {
   // Cargar listas desde Firebase
   const fetchLists = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'listas'));
+      const querySnapshot = await getDocs(collection(db, 'Listas'));
       const loadedLists = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      console.log('Listas cargadas desde Firebase:', loadedLists);
       setLists(loadedLists);
     } catch (error) {
-      console.error('Error fetching lists: ', error);
+      console.error('Error al cargar las listas:', error);
     }
   };
 
@@ -45,27 +45,43 @@ function Lists() {
 
   const handleEdit = (list) => {
     setEditingList(list);
-    setEditName(list.name);
+    setEditName(list.Nombre);
   };
 
   const handleSaveEdit = async () => {
     if (editingList) {
       try {
-        await updateDoc(doc(db, 'listas', editingList.id), { name: editName });
+        await updateDoc(doc(db, 'Listas', editingList.id), { Nombre: editName });
         fetchLists();
         setEditingList(null);
       } catch (error) {
-        console.error('Error updating list: ', error);
+        console.error('Error al actualizar la lista:', error);
       }
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteDoc(doc(db, 'listas', id));
-      fetchLists();
-    } catch (error) {
-      console.error('Error deleting list: ', error);
+  const handleDelete = async (id, listName) => {
+    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar esta lista?');
+    if (confirmDelete) {
+      try {
+        // Eliminar la lista de la colección "Listas"
+        await deleteDoc(doc(db, 'Listas', id));
+        
+        // Ahora eliminar el nombre de la lista de los documentos de "Alumnos"
+        const alumnosQuery = query(collection(db, 'Alumnos'), where('Listas', 'array-contains', listName));
+        const querySnapshot = await getDocs(alumnosQuery);
+
+        // Actualizar cada alumno que tiene esta lista
+        querySnapshot.forEach(async (doc) => {
+          const alumnoRef = doc.ref;
+          const updatedListas = doc.data().Listas.filter(nombre => nombre !== listName);
+          await updateDoc(alumnoRef, { Listas: updatedListas });
+        });
+
+        fetchLists();
+      } catch (error) {
+        console.error('Error al eliminar la lista:', error);
+      }
     }
   };
 
@@ -102,17 +118,18 @@ function Lists() {
             <table>
               <thead>
                 <tr>
-                  <th>Lista</th>
+                  <th>Nombre</th>
                   <th>Fecha</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {lists
-                  .filter(list =>
-                    list.name.toLowerCase().includes(searchTerm.toLowerCase())
-                  )
-                  .map((list) => (
+                {lists.length === 0 ? (
+                  <tr>
+                    <td colSpan="3">No se encontraron listas.</td>
+                  </tr>
+                ) : (
+                  lists.map((list) => (
                     <tr key={list.id}>
                       <td>
                         {editingList && editingList.id === list.id ? (
@@ -121,10 +138,12 @@ function Lists() {
                             onChange={(e) => setEditName(e.target.value)}
                           />
                         ) : (
-                          list.name
+                          list.Nombre || 'Sin nombre'
                         )}
                       </td>
-                      <td>{new Date(list.createdAt.seconds * 1000).toLocaleDateString()}</td>
+                      <td>
+                        {list.Fecha ? new Date(list.Fecha.seconds * 1000).toLocaleDateString() : 'N/A'}
+                      </td>
                       <td>
                         {editingList && editingList.id === list.id ? (
                           <button onClick={handleSaveEdit} className="save-button">
@@ -146,7 +165,7 @@ function Lists() {
                             </button>
                             <button
                               className="delete-button"
-                              onClick={() => handleDelete(list.id)}
+                              onClick={() => handleDelete(list.id, list.Nombre)}
                             >
                               <FontAwesomeIcon icon={faTrash} /> Eliminar
                             </button>
@@ -154,7 +173,8 @@ function Lists() {
                         )}
                       </td>
                     </tr>
-                  ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>

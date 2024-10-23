@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './NuevoCurso.css';
 import { db } from './firebaseConfig';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion } from 'firebase/firestore';
 
 const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   const [cursoNombre, setCursoNombre] = useState('');
@@ -15,10 +15,10 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   useEffect(() => {
     const fetchListas = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'listas'));
+        const querySnapshot = await getDocs(collection(db, 'Listas'));
         const loadedListas = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          name: doc.data().name,
+          name: doc.data().Nombre,
         }));
         setTodasLasListas(loadedListas);
       } catch (error) {
@@ -53,33 +53,43 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
     }
 
     try {
+      const cursoData = {
+        cursoNombre,
+        asesor,
+        fechaInicio,
+        fechaFin,
+        listas,
+      };
+
       if (cursoSeleccionado) {
         // Actualizar curso existente
-        await updateDoc(doc(db, 'cursos', cursoSeleccionado.id), {
-          cursoNombre,
-          asesor,
-          fechaInicio,
-          fechaFin,
-          listas,
-        });
+        await updateDoc(doc(db, 'Cursos', cursoSeleccionado.id), cursoData);
         alert('Curso actualizado exitosamente');
-        onActualizarCurso(cursoSeleccionado.id, { cursoNombre, asesor, fechaInicio, fechaFin, listas });
+        onActualizarCurso(cursoSeleccionado.id, cursoData);
       } else {
         // Crear nuevo curso
-        await addDoc(collection(db, 'cursos'), {
-          cursoNombre,
-          asesor,
-          fechaInicio,
-          fechaFin,
-          listas,
-        });
+        const cursoDocRef = await addDoc(collection(db, 'Cursos'), cursoData);
         alert('Curso creado exitosamente');
+
+        // Actualizar alumnos en la colección de "Alumnos"
+        for (const listaId of listas) {
+          const listaRef = doc(db, 'Listas', listaId);
+          const listaSnapshot = await getDocs(collection(listaRef, 'Alumnos'));
+
+          listaSnapshot.forEach(async (alumnoDoc) => {
+            const alumnoId = alumnoDoc.id;
+            await updateDoc(doc(db, 'Alumnos', alumnoId), {
+              Cursos: arrayUnion(cursoData.cursoNombre),
+            });
+          });
+        }
       }
     } catch (error) {
       console.error('Error al crear o actualizar el curso:', error);
       alert('Hubo un error al crear o actualizar el curso.');
     }
 
+    // Reiniciar los campos del formulario
     setCursoNombre('');
     setAsesor('');
     setFechaInicio('');
@@ -120,15 +130,15 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
             onChange={(e) => setFechaFin(e.target.value)}
           />
           <label>Listas</label>
-          <div className="listas">
+          <div className="listas" style={{ maxHeight: '200px', overflowY: 'auto' }}>
             {todasLasListas.map((lista) => (
               <div key={lista.id}>
                 <label>
                   <input
                     type="checkbox"
-                    value={lista.name}
+                    value={lista.id}
                     onChange={handleListChange}
-                    checked={listas.includes(lista.name)}
+                    checked={listas.includes(lista.id)}
                   />
                   {lista.name}
                 </label>
@@ -155,7 +165,7 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
                 <td>{asesor}</td>
                 <td>{fechaInicio}</td>
                 <td>{fechaFin}</td>
-                <td>{listas.join(', ')}</td>
+                <td>{listas.map(listaId => todasLasListas.find(lista => lista.id === listaId)?.name).filter(Boolean).join(', ')}</td>
               </tr>
             </tbody>
           </table>
