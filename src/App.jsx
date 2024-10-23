@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login.jsx'; // Página de inicio de sesión
 import HomePage from './HomePage.jsx'; // Página principal
-import Courses from './courses'; // Asegúrate de que la ruta sea correcta
+import Courses from './courses.jsx'; // Asegúrate de que la ruta sea correcta
 
 function App() {
   return (

@@ -82,3 +82,14 @@ tr:hover {
     font-weight: bold; /* Texto en negritas */
     margin-bottom: 20px; /* Espacio debajo del botón */
 }
+.add-list-button
+{
+    padding: 10px 15px; /* Espaciado interno del botón */
+    background-color: #001aff!important; /* Color de fondo */
+    color: white; /* Color del texto en blanco */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-weight: bold; /* Texto en negritas */
+    margin-bottom: 20px; /* Espacio debajo del botón */
+}

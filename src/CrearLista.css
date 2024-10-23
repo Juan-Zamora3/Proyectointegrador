@@ -1,0 +1,81 @@
+.crear-lista-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.list-name-section {
+  margin-bottom: 20px;
+}
+
+.list-name-section label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.list-name-section input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.participant-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-left, .form-right {
+  width: 48%;
+}
+
+.form-left label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-left input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #003cff;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: rgb(0, 17, 255);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.form-right table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.form-right table, th, td {
+  border: 1px solid #220aff;
+  padding: 8px;
+}
+
+.form-right th {
+  background-color: #0004ff;
+  text-align: left;
+}
+
+.create-list-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
