@@ -1,36 +1,10 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
-=======
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
 import { db } from './firebaseConfig';
 import './CrearLista.css';
 
 const CrearLista = ({ onListCreated }) => {
   const [listName, setListName] = useState('');
-<<<<<<< HEAD
-  const [firstName, setFirstName] = useState('');
-  const [lastNameP, setLastNameP] = useState('');
-  const [lastNameM, setLastNameM] = useState('');
-  const [position, setPosition] = useState('');
-  const [participants, setParticipants] = useState([]);
-
-  // Función para agregar un participante a la vista previa
-  const handleAddParticipant = () => {
-    if (firstName && lastNameP && position) {
-      const newParticipant = { firstName, lastNameP, lastNameM, position };
-      setParticipants([...participants, newParticipant]);
-
-      // Limpiar los campos
-      setFirstName('');
-      setLastNameP('');
-      setLastNameM('');
-      setPosition('');
-    } else {
-      alert('Por favor, rellena todos los campos obligatorios');
-=======
   const [listDate, setListDate] = useState(''); // Estado para la fecha
   const [participants, setParticipants] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
@@ -67,7 +41,6 @@ const CrearLista = ({ onListCreated }) => {
         ApellidoP: student.ApellidoP, 
         ApellidoM: student.ApellidoM 
       }]);
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
     }
   };
 
@@ -78,28 +51,18 @@ const CrearLista = ({ onListCreated }) => {
       return;
     }
 
-<<<<<<< HEAD
-    if (participants.length === 0) {
-=======
     if (!listDate) {
       alert('Por favor, selecciona una fecha');
       return;
     }
 
     if (selectedStudents.length === 0) {
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
       alert('Agrega al menos un participante');
       return;
     }
 
     try {
       // Guardar la lista en Firebase
-<<<<<<< HEAD
-      const docRef = await addDoc(collection(db, 'listas'), {
-        name: listName,
-        participants,
-        createdAt: new Date(),
-=======
       const docRef = await addDoc(collection(db, 'Listas'), {
         Nombre: listName,                  // Guardar el nombre de la lista
         Fecha: listDate,                   // Guardar la fecha
@@ -109,16 +72,10 @@ const CrearLista = ({ onListCreated }) => {
           ApellidoM: s.ApellidoM,
         })), // Guardar los detalles de los alumnos en el campo Alumnos
         createdAt: new Date(),             // Fecha de creación
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
       });
 
       alert('Lista creada exitosamente');
 
-<<<<<<< HEAD
-      // Limpiar todos los campos después de crear la lista
-      setListName('');
-      setParticipants([]);
-=======
       // Actualizar cada alumno seleccionado para agregar la nueva lista a su campo "Listas"
       const listId = docRef.id; // Obtener la ID del documento recién creado
 
@@ -134,7 +91,6 @@ const CrearLista = ({ onListCreated }) => {
       setListDate(''); // Limpiar la fecha
       setParticipants([]);
       setSelectedStudents([]);
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
 
       // Notificar que una nueva lista fue creada
       onListCreated();
@@ -144,8 +100,6 @@ const CrearLista = ({ onListCreated }) => {
     }
   };
 
-<<<<<<< HEAD
-=======
   // Filtrar estudiantes según el término de búsqueda
   const filteredStudents = allStudents.filter(student =>
     student.Nombres.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -153,7 +107,6 @@ const CrearLista = ({ onListCreated }) => {
     student.ApellidoM.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
   return (
     <div className="crear-lista-container">
       <h2>Nueva Lista</h2>
@@ -168,45 +121,6 @@ const CrearLista = ({ onListCreated }) => {
         />
       </div>
 
-<<<<<<< HEAD
-      <div className="participant-section">
-        <div className="form-left">
-          <h3>Agregar Participante</h3>
-
-          <label htmlFor="firstName">Nombre</label>
-          <input
-            type="text"
-            id="firstName"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-
-          <label htmlFor="lastNameP">Apellido Paterno</label>
-          <input
-            type="text"
-            id="lastNameP"
-            value={lastNameP}
-            onChange={(e) => setLastNameP(e.target.value)}
-          />
-
-          <label htmlFor="lastNameM">Apellido Materno</label>
-          <input
-            type="text"
-            id="lastNameM"
-            value={lastNameM}
-            onChange={(e) => setLastNameM(e.target.value)}
-          />
-
-          <label htmlFor="position">Puesto</label>
-          <input
-            type="text"
-            id="position"
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
-          />
-
-          <button onClick={handleAddParticipant}>Guardar Participante</button>
-=======
       <div className="date-section">
         <label htmlFor="listDate">Fecha de la Lista</label>
         <input
@@ -252,7 +166,6 @@ const CrearLista = ({ onListCreated }) => {
               ))}
             </tbody>
           </table>
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
         </div>
 
         <div className="form-right">
@@ -263,25 +176,14 @@ const CrearLista = ({ onListCreated }) => {
                 <th>Nombre</th>
                 <th>Apellido Paterno</th>
                 <th>Apellido Materno</th>
-<<<<<<< HEAD
-                <th>Puesto</th>
-=======
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
               </tr>
             </thead>
             <tbody>
               {participants.map((participant, index) => (
                 <tr key={index}>
-<<<<<<< HEAD
-                  <td>{participant.firstName}</td>
-                  <td>{participant.lastNameP}</td>
-                  <td>{participant.lastNameM}</td>
-                  <td>{participant.position}</td>
-=======
                   <td>{participant.Nombre}</td>
                   <td>{participant.ApellidoP}</td>
                   <td>{participant.ApellidoM}</td>
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
                 </tr>
               ))}
             </tbody>
