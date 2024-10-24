@@ -1,86 +1,134 @@
-// src/Asistencias.jsx
-import React, { useState } from 'react';
-import './Asistencias.css'; // Asegúrate de que este archivo CSS exista
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+import './Asistencias.css';
+import AgregarAlumno from './AgregarAlumno';
 
 function Asistencias() {
-  const [showCourses, setShowCourses] = useState(false);
+  const [students, setStudents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showAgregarAlumno, setShowAgregarAlumno] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const students = [
-    { id: 1, name: 'Juan Pérez', area: 'Matemáticas' },
-    { id: 2, name: 'Ana García', area: 'Ciencias' },
-    // Agrega más estudiantes según sea necesario
-  ];
+  const fetchStudents = async () => {
+    try {
+      const studentsRef = collection(db, 'Alumnos');
+      const studentsSnapshot = await getDocs(studentsRef);
+      const allStudents = [];
 
-  const handleDoubleClick = (student) => {
-    setSelectedStudent(student); // Establecer el estudiante seleccionado
-    setShowCourses(true); // Mostrar los cursos del estudiante
+      studentsSnapshot.forEach(doc => {
+        const studentData = doc.data();
+        allStudents.push({
+          id: doc.id,
+          firstName: studentData.Nombres,
+          lastNameP: studentData.ApellidoP,
+          lastNameM: studentData.ApellidoM,
+          position: studentData.Puesto,
+          email: studentData.Correo,
+          lists: studentData.Listas || [],
+          courses: studentData.Cursos || []
+        });
+      });
+
+      setStudents(allStudents);
+    } catch (error) {
+      console.error('Error al cargar los estudiantes:', error); // Esto debería mostrar un error si algo falla
+    }
   };
 
-  const handleBackToAsistencias = () => {
-    setShowCourses(false); // Volver a la vista de asistencias
-    setSelectedStudent(null); // Resetear el estudiante seleccionado
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const handleDetails = (student) => {
+    console.log('Detalles de:', student);
   };
+
+  const handleAddStudent = () => {
+    setSelectedStudent(null); // Reiniciar selección
+    setShowAgregarAlumno(true); // Cambiar el estado para mostrar AgregarAlumno
+  };
+
+  const handleEditStudent = (student) => {
+    setSelectedStudent(student); // Establecer el estudiante seleccionado para editar
+    setShowAgregarAlumno(true); // Mostrar el formulario de AgregarAlumno
+  };
+
+  const handleDeleteStudent = async (id) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este alumno?')) {
+      try {
+        await deleteDoc(doc(db, 'Alumnos', id));
+        fetchStudents(); // Refrescar la lista después de eliminar
+        alert('Alumno eliminado exitosamente');
+      } catch (error) {
+        console.error('Error al eliminar el alumno:', error);
+        alert('Error al eliminar el alumno');
+      }
+    }
+  };
+
+  // Función para regresar a la vista de Asistencias
+  const handleBack = () => {
+    setShowAgregarAlumno(false); // Cambiar el estado para ocultar AgregarAlumno
+    setSelectedStudent(null); // Reiniciar selección
+    fetchStudents(); // Llamar a la función para actualizar la lista
+  };
+
+  if (showAgregarAlumno) {
+    return <AgregarAlumno onBack={handleBack} student={selectedStudent} />; // Pasar la función y el estudiante seleccionado
+  }
 
   return (
     <div className="asistencias-container">
-      {!showCourses ? (
-        <>
-          <h2 className="title-asistencias">Asistencias</h2>
-          <input type="text" placeholder="Buscar..." className="search-input" />
-          <table>
-            <thead>
-              <tr>
-                <th>ID Alumno</th>
-                <th>Nombre</th>
-                <th>Área</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student.id} onDoubleClick={() => handleDoubleClick(student)}>
-                  <td>{student.id}</td>
-                  <td>{student.name}</td>
-                  <td>{student.area}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <CoursesOfStudent student={selectedStudent} onBack={handleBackToAsistencias} />
-      )}
-    </div>
-  );
-}
+      <h2 className="title-asistencias">Asistencias</h2>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        className="search-input"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button className="add-button" onClick={handleAddStudent}>Agregar</button>
 
-function CoursesOfStudent({ student, onBack }) {
-  return (
-    <div className="courses-container">
-      <h2 className="title-courses">Cursos de {student.name}</h2>
-      <button onClick={onBack} className="back-button">Regresar a Asistencias</button>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Curso</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Aquí puedes mapear los cursos a los que ha asistido el estudiante */}
-            <tr>
-              <td>Curso 1</td>
-              <td>01/01/2024</td>
-            </tr>
-            <tr>
-              <td>Curso 2</td>
-              <td>02/01/2024</td>
-            </tr>
-            {/* Agrega más filas según sea necesario */}
-          </tbody>
-        </table>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Cargo</th>
+            <th>Email</th>
+            <th>Listas</th>
+            <th>Cursos</th>
+            <th>Detalles</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students
+            .filter(student =>
+              `${student.firstName} ${student.lastNameP}`.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((student, index) => (
+              <tr key={index}>
+                <td>{student.firstName}</td>
+                <td>{student.lastNameP}</td>
+                <td>{student.lastNameM}</td>
+                <td>{student.position}</td>
+                <td>{student.email}</td>
+                <td>{student.lists.join(', ')}</td>
+                <td>{student.courses.join(', ')}</td>
+                <td>
+                  <button onClick={() => handleDetails(student)}>Detalles</button>
+                </td>
+                <td>
+                  <button onClick={() => handleEditStudent(student)}>Editar</button>
+                  <button onClick={() => handleDeleteStudent(student.id)}>Eliminar</button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 }

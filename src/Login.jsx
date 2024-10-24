@@ -3,17 +3,16 @@ import React, { useState } from 'react';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import logo from './assets/logo.png';
-import { auth, db } from './firebaseConfig'; // Importa auth y db para la autenticación y Firestore
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'; // Para autenticación
-import { doc, setDoc } from 'firebase/firestore'; // Para guardar en Firestore
+import { db } from './firebaseConfig'; // Importa la referencia a Firestore
+import { doc, setDoc, getDoc } from 'firebase/firestore'; // Para interactuar con Firestore
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState(''); // Para registrar el nombre del usuario
   const [isRegister, setIsRegister] = useState(false); // Alterna entre login y registro
-  const [error, setError] = useState('');
   const [alert, setAlert] = useState(''); // Almacena la alerta que se mostrará
+  const [error, setError] = useState('');
   const navigate = useNavigate();  // Hook para redirigir
 
   // Manejar el cambio de valores en los campos de input
@@ -23,23 +22,29 @@ function Login() {
     setError(''); // Limpiar cualquier error anterior
   };
 
-  // Manejar el inicio de sesión
-  const handleLogin = (e) => {
+  // Manejar el ingreso de usuarios (login manual)
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setAlert('Por favor, completa todos los campos.');
       return;
     }
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log('Usuario logueado:', userCredential.user);
-        setAlert(''); // Limpia cualquier alerta anterior
-        navigate("/home");  // Redirige a la página principal después del login
-      })
-      .catch((error) => {
-        handleFirebaseError(error.code);
-      });
+    try {
+      // Buscar el usuario en la colección "Usuarios"
+      const userDoc = await getDoc(doc(db, 'Usuarios', email));
+      if (userDoc.exists() && userDoc.data().password === password) {
+        console.log('Usuario encontrado:', userDoc.data());
+        // Guardar datos del usuario en localStorage
+        localStorage.setItem('user', JSON.stringify({ name: userDoc.data().name, email }));
+        setAlert('');
+        navigate("/home");  // Redirige a la página principal
+      } else {
+        setError('Credenciales incorrectas.');
+      }
+    } catch (error) {
+      setError('Error al acceder a los datos del usuario.');
+    }
   };
 
   // Manejar el registro de usuario
@@ -56,40 +61,27 @@ function Login() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log('Usuario registrado:', user);
+      // Verificar si el correo ya está registrado
+      const userDoc = await getDoc(doc(db, 'Usuarios', email));
+      if (userDoc.exists()) {
+        setAlert('El correo ya está en uso. Por favor, usa otro o inicia sesión.');
+        return;
+      }
 
-      // Guarda los datos del usuario en Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      // Guarda los datos del usuario en la colección "Usuarios"
+      await setDoc(doc(db, 'Usuarios', email), {
         name: name,
-        email: email
+        email: email,
+        password: password
       });
 
-      setAlert(''); // Limpia cualquier alerta anterior
+      console.log('Usuario registrado:', { name, email });
+      // Guardar datos del usuario en localStorage
+      localStorage.setItem('user', JSON.stringify({ name, email }));
+      setAlert('');
       navigate("/home");  // Redirige a la página principal después del registro
     } catch (error) {
-      handleFirebaseError(error.code);
-    }
-  };
-
-  // Manejar los errores de Firebase
-  const handleFirebaseError = (errorCode) => {
-    switch (errorCode) {
-      case 'auth/email-already-in-use':
-        setError('El correo ya está en uso. Por favor, usa otro o inicia sesión.');
-        break;
-      case 'auth/invalid-email':
-        setError('El formato del correo es inválido.');
-        break;
-      case 'auth/wrong-password':
-        setError('La contraseña es incorrecta.');
-        break;
-      case 'auth/user-not-found':
-        setError('No se encontró una cuenta con este correo.');
-        break;
-      default:
-        setError('Error inesperado. Inténtalo de nuevo.');
+      setError('Error al registrar el usuario.');
     }
   };
 
@@ -97,7 +89,6 @@ function Login() {
     <div className="login-container">
       <div className="login-form">
         <h2>{isRegister ? 'Registro de Usuario' : 'Inicio de Sesión'}</h2>
-        {/* Mostrar alerta en caso de error o campos vacíos */}
         {alert && <div className="alert">{alert}</div>}
         {error && <p className="error">{error}</p>}
 
