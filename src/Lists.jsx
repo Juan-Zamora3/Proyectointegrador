@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-<<<<<<< HEAD
-import { faSearchPlus, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs } from 'firebase/firestore';
-=======
 import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { collection, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
 import { db } from './firebaseConfig';
 import './Lists.css';
 import Attendance from './Attendance';
@@ -17,34 +12,21 @@ function Lists() {
   const [lists, setLists] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedList, setSelectedList] = useState(null);
-<<<<<<< HEAD
-=======
   const [editingList, setEditingList] = useState(null);
   const [editName, setEditName] = useState('');
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
 
   // Cargar listas desde Firebase
   const fetchLists = async () => {
     try {
-<<<<<<< HEAD
-      const querySnapshot = await getDocs(collection(db, 'listas'));
-=======
       const querySnapshot = await getDocs(collection(db, 'Listas'));
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
       const loadedLists = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-<<<<<<< HEAD
-      setLists(loadedLists);
-    } catch (error) {
-      console.error('Error fetching lists: ', error);
-=======
       console.log('Listas cargadas desde Firebase:', loadedLists);
       setLists(loadedLists);
     } catch (error) {
       console.error('Error al cargar las listas:', error);
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
     }
   };
 
@@ -57,12 +39,6 @@ function Lists() {
   };
 
   const handleListCreated = () => {
-<<<<<<< HEAD
-    fetchLists(); // Refrescar las listas después de crear una nueva
-    setShowAddForm(false);
-  };
-
-=======
     fetchLists();
     setShowAddForm(false);
   };
@@ -109,7 +85,6 @@ function Lists() {
     }
   };
 
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
   return (
     <div className="lists-container">
       {selectedList ? (
@@ -143,36 +118,12 @@ function Lists() {
             <table>
               <thead>
                 <tr>
-<<<<<<< HEAD
-                  <th>Lista</th>
-=======
                   <th>Nombre</th>
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
                   <th>Fecha</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
-                {lists
-                  .filter(list =>
-                    list.name.toLowerCase().includes(searchTerm.toLowerCase())
-                  )
-                  .map((list) => (
-                    <tr key={list.id}>
-                      <td>{list.name}</td>
-                      <td>{new Date(list.createdAt.seconds * 1000).toLocaleDateString()}</td>
-                      <td>
-                        <button
-                          className="view-button"
-                          onClick={() => handleViewAttendance(list)}
-                        >
-                          Visualizar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-=======
                 {lists.length === 0 ? (
                   <tr>
                     <td colSpan="3">No se encontraron listas.</td>
@@ -224,7 +175,6 @@ function Lists() {
                     </tr>
                   ))
                 )}
->>>>>>> 4692b1226a6fdfc04e849e47f49e5b8bad26da84
               </tbody>
             </table>
           </div>
