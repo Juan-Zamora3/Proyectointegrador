@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import { saveAs } from 'file-saver';
 import { PDFDocument, rgb } from 'pdf-lib';
@@ -9,55 +9,82 @@ import './Constancias.css';
 
 const Constancias = () => {
   const [students, setStudents] = useState([]);
-  const [listas, setListas] = useState([]);
-  const [listaSeleccionada, setListaSeleccionada] = useState('');
+  const [cursos, setCursos] = useState([]);
+  const [selectedCurso, setSelectedCurso] = useState(null);
+  const [selectedCursoNombre, setSelectedCursoNombre] = useState('');
   const [pdfBlobs, setPdfBlobs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [listasAsociadas, setListasAsociadas] = useState([]);
 
   useEffect(() => {
-    fetchListas();
+    fetchCursos();
   }, []);
 
-  // Cargar listas desde Firebase
-  const fetchListas = async () => {
+  // Cargar los cursos desde Firebase
+  const fetchCursos = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'Listas'));
-      const loadedListas = querySnapshot.docs.map(doc => ({
+      const querySnapshot = await getDocs(collection(db, 'Cursos'));
+      const loadedCursos = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setListas(loadedListas);
+      setCursos(loadedCursos);
     } catch (error) {
-      console.error('Error al cargar las listas:', error);
+      console.error('Error al cargar los cursos:', error);
     }
   };
 
-  // Cargar estudiantes de la lista seleccionada
-  const fetchStudents = async (listName) => {
+  // Cargar estudiantes y listas asociadas cuando se selecciona un curso
+  const fetchStudentsAndListas = async (cursoId) => {
     try {
-      const studentsQuery = query(
-        collection(db, 'Alumnos'),
-        where('Listas', 'array-contains', listName)
-      );
-      const studentsSnapshot = await getDocs(studentsQuery);
-      const allStudents = studentsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setStudents(allStudents);
-      setSelectedStudents(allStudents.map(student => student.id)); // Seleccionar todos inicialmente
+      const cursoDocRef = doc(db, 'Cursos', cursoId);
+      const cursoData = await getDoc(cursoDocRef);
+      const listasIds = cursoData.data().listas; // Asumiendo que 'listas' es un arreglo de IDs de listas
+
+      // Cargar los nombres de las listas asociadas al curso
+      const loadedListas = [];
+      for (const listaId of listasIds) {
+        const listaDocRef = doc(db, 'Listas', listaId);
+        const listaDoc = await getDoc(listaDocRef);
+        if (listaDoc.exists) {
+          loadedListas.push(listaDoc.data().Nombre); // Obtener el nombre de cada lista
+        }
+      }
+      setListasAsociadas(loadedListas);
+
+      // Cargar los estudiantes de todas las listas asociadas
+      let allStudents = [];
+      for (const listaId of listasIds) {
+        const listaDocRef = doc(db, 'Listas', listaId);
+        const listaDoc = await getDoc(listaDocRef);
+        if (listaDoc.exists) {
+          allStudents = allStudents.concat(listaDoc.data().Alumnos || []);
+        }
+      }
+
+      // Eliminar duplicados (si es necesario) basados en un identificador único, por ejemplo, 'Nombre'
+      const uniqueStudents = Array.from(new Set(allStudents.map(student => student.Nombre)))
+        .map(nombre => allStudents.find(student => student.Nombre === nombre));
+
+      setStudents(uniqueStudents);
+      setSelectedStudents(uniqueStudents.map((_, index) => index)); // Seleccionar todos inicialmente
       setSelectAll(true);
     } catch (error) {
       console.error('Error al cargar los estudiantes:', error);
     }
   };
 
-  const handleListChange = (event) => {
-    const selectedListName = event.target.value;
-    setListaSeleccionada(selectedListName);
-    fetchStudents(selectedListName); // Cargar estudiantes cuando se selecciona una lista
+  // Manejar el cambio de curso
+  const handleCursoChange = (event) => {
+    const selectedCursoId = event.target.value;
+    const selectedCursoText = event.target.options[event.target.selectedIndex].text;
+    setSelectedCurso(selectedCursoId);
+    setSelectedCursoNombre(selectedCursoText);
+    if (selectedCursoId) {
+      fetchStudentsAndListas(selectedCursoId); // Cargar estudiantes y listas asociadas al curso seleccionado
+    }
   };
 
   const handleGenerarPDFs = async () => {
@@ -70,14 +97,14 @@ const Constancias = () => {
         const firstPage = pages[0];
         const { width } = firstPage.getSize();
 
-        firstPage.drawText(`A: ${student.Nombres} ${student.ApellidoP} ${student.ApellidoM}`, {
+        firstPage.drawText(`A: ${student.Nombre} ${student.ApellidoP} ${student.ApellidoM}`, {
           x: width / 2 - 100,
           y: 420,
           size: 20,
           color: rgb(0, 0, 0),
         });
 
-        firstPage.drawText(`Por su participación en el curso: ${listaSeleccionada}`, {
+        firstPage.drawText(`Por su participación en el curso: ${selectedCursoNombre}`, {
           x: width / 2 - 150,
           y: 390,
           size: 14,
@@ -103,9 +130,9 @@ const Constancias = () => {
   };
 
   const handleDescargarPDFs = () => {
-    const selectedBlobs = pdfBlobs.filter(({ student }) => selectedStudents.includes(student.id));
+    const selectedBlobs = pdfBlobs.filter((_, index) => selectedStudents.includes(index));
     selectedBlobs.forEach(({ blob, student }) => {
-      saveAs(blob, `Constancia_${student.Nombres}_${student.ApellidoP}.pdf`);
+      saveAs(blob, `Constancia_${student.Nombre}_${student.ApellidoP}.pdf`);
     });
   };
 
@@ -117,11 +144,11 @@ const Constancias = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + pdfBlobs.length) % pdfBlobs.length);
   };
 
-  const handleSelectStudent = (id) => {
+  const handleSelectStudent = (index) => {
     setSelectedStudents(prevSelected =>
-      prevSelected.includes(id)
-        ? prevSelected.filter(studentId => studentId !== id)
-        : [...prevSelected, id]
+      prevSelected.includes(index)
+        ? prevSelected.filter(studentIndex => studentIndex !== index)
+        : [...prevSelected, index]
     );
   };
 
@@ -129,7 +156,7 @@ const Constancias = () => {
     if (selectAll) {
       setSelectedStudents([]);
     } else {
-      setSelectedStudents(students.map(student => student.id));
+      setSelectedStudents(students.map((_, index) => index));
     }
     setSelectAll(!selectAll);
   };
@@ -139,22 +166,50 @@ const Constancias = () => {
       <div className="form-section">
         <h2>Constancias</h2>
 
-        <label>Seleccionar Lista</label>
-        <select
-          value={listaSeleccionada}
-          onChange={handleListChange}
-        >
-          <option value="">Seleccione una lista</option>
-          {listas.map((lista) => (
-            <option key={lista.id} value={lista.Nombre}>
-              {lista.Nombre}
+        <label>Seleccionar Curso</label>
+        <select onChange={handleCursoChange}>
+          <option value="">Seleccione un curso</option>
+          {cursos.map((curso) => (
+            <option key={curso.id} value={curso.id}>
+              {curso.cursoNombre}
             </option>
           ))}
         </select>
 
-        <button onClick={handleGenerarPDFs} disabled={!listaSeleccionada || students.length === 0}>
+        <button onClick={handleGenerarPDFs} disabled={!selectedCurso || students.length === 0}>
           Generar Constancias
         </button>
+
+        {/* Listas asociadas */}
+        <h3>Listas asociadas</h3>
+        {listasAsociadas.length > 0 ? (
+          <ul>
+            {listasAsociadas.map((lista, index) => (
+              <li key={index}>{lista}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No hay listas asociadas para este curso.</p>
+        )}
+
+        {/* Integrantes del curso */}
+        <h3>Integrantes del curso</h3>
+        {students.length > 0 && (
+          <div className="students-list">
+            <ul>
+              {students.map((student, index) => (
+                <li key={index}>
+                  <input
+                    type="checkbox"
+                    checked={selectedStudents.includes(index)}
+                    onChange={() => handleSelectStudent(index)}
+                  />
+                  {`${student.Nombre} ${student.ApellidoP} ${student.ApellidoM}`}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {pdfBlobs.length > 0 && (
@@ -168,10 +223,10 @@ const Constancias = () => {
               <div className="student-select">
                 <input
                   type="checkbox"
-                  checked={selectedStudents.includes(pdfBlobs[currentIndex].student.id)}
-                  onChange={() => handleSelectStudent(pdfBlobs[currentIndex].student.id)}
+                  checked={selectedStudents.includes(currentIndex)}
+                  onChange={() => handleSelectStudent(currentIndex)}
                 />
-                <span>{`${pdfBlobs[currentIndex].student.Nombres} ${pdfBlobs[currentIndex].student.ApellidoP} ${pdfBlobs[currentIndex].student.ApellidoM}`}</span>
+                <span>{`${students[currentIndex].Nombre} ${students[currentIndex].ApellidoP} ${students[currentIndex].ApellidoM}`}</span>
               </div>
               <div className="pdf-viewer">
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
@@ -183,9 +238,7 @@ const Constancias = () => {
             <button onClick={handleNext} disabled={pdfBlobs.length <= 1}>Siguiente</button>
           </div>
 
-          <button onClick={handleDescargarPDFs} className="download-all-button">
-            Descargar Seleccionados
-          </button>
+          <button onClick={handleDescargarPDFs}>Descargar Constancias</button>
         </div>
       )}
     </div>
