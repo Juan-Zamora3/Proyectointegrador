@@ -1,51 +1,175 @@
-/* src/Asistencias.css */
+/* Contenedor principal de asistencias */
 .asistencias-container {
-    padding: 20px;
-  }
-  
-  .title-asistencias {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 20px;
-  }
-  
-  .table-container {
-    overflow-x: auto; /* Permitir desplazamiento horizontal si la tabla es muy ancha */
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  .back-button {
-    margin: 10px 0;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .back-button:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 30px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f9fc; /* Fondo suave */
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la sección */
+.title-asistencias {
+  font-size: 32px;
+  font-weight: 600;
+  color: #003cff; /* Azul vibrante */
+  margin-bottom: 30px;
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Estilo para el campo de búsqueda */
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  margin-bottom: 25px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  background-color: #fff;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: #0066cc; /* Azul cuando el input está enfocado */
+  outline: none;
+}
+
+/* Contenedor de la tabla con desplazamiento horizontal */
+.table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+/* Estilo de la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
+  color: #333;
+}
+
+th {
+  background-color: #003cff; /* Azul más oscuro para encabezados */
+  color: white;
+  font-weight: 600;
+}
+
+td {
+  background-color: #f9f9f9; /* Fondo claro para celdas */
+  border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) td {
+  background-color: #f2f2f2; /* Fila alterna más suave */
+}
+
+/* Efecto de hover para las filas */
+tr:hover {
+  background-color: #e6f0ff;
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+}
+
+/* Estilo del botón de retroceso */
+.back-button {
+  padding: 12px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05); /* Efecto de ampliación */
+}
+
+/* Animación de entrada para el contenedor */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.asistencias-container {
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Estilo para la tabla y sus botones */
+.asistencias-container {
+  padding: 20px;
+}
+
+.title-asistencias {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.back-button {
+  margin: 10px 0;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: rgb(255, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+/* NUEVO ESTILO PARA LOS BOTONES DENTRO DE LA TABLA */
+.table-container button {
+  padding: 10px 20px;
+  background-color: #0066cc; /* Azul fuerte */
+  color: white;
+  border: none;
+  border-radius: 30px; /* Bordes redondeados */
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.3); /* Sombra moderna */
+}
+
+.table-container button:hover {
+  background-color: #004b99; /* Azul más oscuro */
+  transform: scale(1.1); /* Efecto de ampliación */
+}

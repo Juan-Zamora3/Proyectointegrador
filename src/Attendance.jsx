@@ -27,36 +27,38 @@ function Attendance({ list, onBack }) {
 
   return (
     <div className="attendance-container">
-      <h2>Asistentes de la lista: {list.Nombre}</h2>
+      <h2 className="title-attendance">Asistentes de la lista: {list.Nombre}</h2>
       <button onClick={onBack}>Volver</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Apellido P</th>
-            <th>Apellido M</th>
-            <th>Puesto</th>
-            <th>Correo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {alumnos.length === 0 ? (
+      <div className="table-container">
+        <table>
+          <thead>
             <tr>
-              <td colSpan="5">No hay alumnos en esta lista.</td>
+              <th>Nombre</th>
+              <th>Apellido P</th>
+              <th>Apellido M</th>
+              <th>Puesto</th>
+              <th>Correo</th>
             </tr>
-          ) : (
-            alumnos.map((alumno) => (
-              <tr key={alumno.id}>
-                <td>{alumno.Nombres}</td>
-                <td>{alumno.ApellidoP}</td>
-                <td>{alumno.ApellidoM}</td>
-                <td>{alumno.Puesto}</td> {/* Cambiado de Area a Puesto */}
-                <td>{alumno.Correo}</td>
+          </thead>
+          <tbody>
+            {alumnos.length === 0 ? (
+              <tr>
+                <td colSpan="5">No hay alumnos en esta lista.</td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              alumnos.map((alumno) => (
+                <tr key={alumno.id}>
+                  <td>{alumno.Nombres}</td>
+                  <td>{alumno.ApellidoP}</td>
+                  <td>{alumno.ApellidoM}</td>
+                  <td>{alumno.Puesto}</td> {/* Cambiado de Area a Puesto */}
+                  <td>{alumno.Correo}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

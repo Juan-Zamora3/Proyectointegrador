@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Courses.css';
+import NuevoCurso from './NuevoCurso';
 
 function Courses() {
+  const [showAddForm, setShowAddForm] = useState(false);
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingCourse, setEditingCourse] = useState(null);
-  const [editName, setEditName] = useState('');
 
-  // Cargar cursos desde Firebase
   const fetchCourses = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
-      const loadedCourses = querySnapshot.docs.map(doc => ({
+      const loadedCourses = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
-      console.log('Cursos cargados desde Firebase:', loadedCourses);
       setCourses(loadedCourses);
     } catch (error) {
       console.error('Error al cargar los cursos:', error);
@@ -32,19 +31,7 @@ function Courses() {
 
   const handleEdit = (course) => {
     setEditingCourse(course);
-    setEditName(course.cursoNombre);
-  };
-
-  const handleSaveEdit = async () => {
-    if (editingCourse) {
-      try {
-        await updateDoc(doc(db, 'Cursos', editingCourse.id), { Nombre: editName });
-        fetchCourses();
-        setEditingCourse(null);
-      } catch (error) {
-        console.error('Error al actualizar el curso:', error);
-      }
-    }
+    setShowAddForm(true); // Muestra el formulario de edición
   };
 
   const handleDelete = async (id) => {
@@ -59,66 +46,76 @@ function Courses() {
     }
   };
 
+  const handleCancelar = () => {
+    setShowAddForm(false);
+    setEditingCourse(null);
+  };
+
+  const handleActualizarCurso = (id, updatedData) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course.id === id ? { ...course, ...updatedData } : course
+      )
+    );
+    handleCancelar();
+  };
+
+  // Filtrar cursos según el término de búsqueda
+  const filteredCourses = courses.filter((course) =>
+    course.cursoNombre?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="courses-container">
       <h2 className="title-courses">Cursos</h2>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Buscar curso..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
+      {showAddForm ? (
+        <NuevoCurso
+          cursoSeleccionado={editingCourse}
+          onActualizarCurso={handleActualizarCurso}
+          onCancelar={handleCancelar}
         />
-        <button className="search-button">
-          <FontAwesomeIcon icon={faSearchPlus} /> Buscar
-        </button>
-      </div>
+      ) : (
+        <>
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Buscar curso..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            <button className="search-button">
+              <FontAwesomeIcon icon={faSearchPlus} /> Buscar
+            </button>
+          </div>
 
-      <div className="add-course-container">
-        <button onClick={() => window.location.href = '/NuevoCurso'} className="add-course-button">
-          <FontAwesomeIcon icon={faPlus} /> Agregar Curso
-        </button>
-      </div>
+          <div className="add-course-container">
+            <button onClick={() => setShowAddForm(true)} className="add-course-button">
+              <FontAwesomeIcon icon={faPlus} /> Agregar Curso
+            </button>
+          </div>
 
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.length === 0 ? (
-              <tr>
-                <td colSpan="3">No se encontraron cursos.</td>
-              </tr>
-            ) : (
-              courses.map((course) => (
-                <tr key={course.id}>
-                  <td>
-                    {editingCourse && editingCourse.id === course.id ? (
-                      <input
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                      />
-                    ) : (
-                      course.cursoNombre || 'Sin nombre'
-                    )}
-                  </td>
-                  <td>
-                    {course.FechaInicio ? new Date(course.Fecha.seconds * 1000).toLocaleDateString() : 'N/A'}
-                  </td>
-                  <td>
-                    {editingCourse && editingCourse.id === course.id ? (
-                      <button onClick={handleSaveEdit} className="save-button">
-                        Guardar
-                      </button>
-                    ) : (
-                      <>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCourses.length === 0 ? (
+                  <tr>
+                    <td colSpan="3">No se encontraron cursos.</td>
+                  </tr>
+                ) : (
+                  filteredCourses.map((course) => (
+                    <tr key={course.id}>
+                      <td>{course.cursoNombre || 'Sin nombre'}</td>
+                      <td>{course.fechaInicio || 'N/A'}</td>
+                      <td>
                         <button
                           className="edit-button"
                           onClick={() => handleEdit(course)}
@@ -131,15 +128,15 @@ function Courses() {
                         >
                           <FontAwesomeIcon icon={faTrash} /> Eliminar
                         </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 }

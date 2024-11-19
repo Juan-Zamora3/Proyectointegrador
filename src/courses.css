@@ -1,11 +1,15 @@
+/* Estilo principal */
 .courses-container {
   padding: 20px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   width: 100%;
   box-sizing: border-box;
+  border: 2px solid #0066cc; /* Borde azul fuerte */
+  border-radius: 25px; /* Bordes más redondeados */
+  transition: all 0.3s ease;
 }
 
-/* Header que contiene el cuadro de búsqueda y los botones */
+/* Header */
 .header-container {
   display: flex;
   align-items: center;
@@ -13,202 +17,254 @@
   margin-bottom: 30px;
 }
 
+/* Barra de búsqueda */
 .search-input {
-  border-radius: 20px;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  width: 60%;
+  border-radius: 30px; /* Bordes muy redondeados */
+  padding: 12px 20px;
+  border: 1px solid #0066cc;
+  width: 65%;
   font-size: 16px;
+  background-color: #f2f9ff;
+  color: #0066cc;
+  transition: all 0.3s ease;
 }
 
-.search {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-}
-
+/* Estilo de la búsqueda */
 .search__input {
   font-family: inherit;
   font-size: inherit;
-  background-color: #f4f2f2;
-  border: none;
-  color: #646464;
-  padding: 0.7rem 1rem;
-  border-radius: 30px;
-  width: 12em;
-  transition: all ease-in-out .5s;
-  margin-right: -2rem;
-}
-
-.search__input:hover, .search__input:focus {
-  box-shadow: 0 0 1em #00000013;
+  background-color: #ffffff;
+  border: 1px solid #0066cc;
+  color: #333;
+  padding: 1rem 1.5rem;
+  border-radius: 30px; /* Bordes redondeados */
+  width: 15em;
+  transition: all ease-in-out .3s;
+  margin-right: 10px;
 }
 
 .search__input:focus {
   outline: none;
-  background-color: #f0eeee;
+  box-shadow: 0 0 8px rgba(0, 102, 204, 0.6);
+  background-color: #e6f0ff;
 }
 
-.search__input::-webkit-input-placeholder {
-  font-weight: 100;
-  color: #ccc;
-}
-
-.search__input:focus + .search__button {
-  background-color: #f0eeee;
-}
-
+/* Botón de búsqueda */
 .search__button {
   border: none;
-  background-color: #f4f2f2;
-  margin-top: .1em;
+  background-color: #0066cc;
+  color: white;
+  border-radius: 30px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .search__button:hover {
-  cursor: pointer;
+  background-color: #004b99;
 }
 
-.search__icon {
-  height: 1.3em;
-  width: 1.3em;
-  fill: #b4b4b4;
-}
-
-/* Botón para agregar curso */
+/* Botón de agregar curso */
 .add-course-button {
-  background-color: #28a745;
+  background-color: #0066cc;
   color: white;
-  padding: 10px 15px;
+  padding: 15px 30px;
   border: none;
-  border-radius: 10px;
+  border-radius: 30px; /* Bordes redondeados */
   cursor: pointer;
-  font-size: 16px;
-}
-
-/* Frame 2: Auto layout de los cursos */
-.academia-separador {
-  padding: 10px;
-  margin: 20px 0;
-  border-radius: 10px;
   font-size: 18px;
-  font-weight: bold;
-  color: white;
-  text-align: left;
+  transition: background-color 0.3s;
 }
 
-.admin {
-  background-color: #f47373; /* Rosa para Administración */
+.add-course-button:hover {
+  background-color: #004b99;
 }
 
-.systems {
-  background-color: #6a98f0; /* Azul para Sistemas */
-}
-
+/* Contenedor de cursos */
 .courses-list {
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  max-height: 300px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  max-height: 500px;
   overflow-y: auto;
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #aaaaaa #f5f5f5; /* Firefox scrollbar color */
+  scrollbar-width: thin;
+  scrollbar-color: #0066cc #ffffff;
 }
 
-/* Personalización del scrollbar para navegadores basados en WebKit (Chrome, Safari, Edge) */
-.courses-list::-webkit-scrollbar {
-  width: 10px;
-}
-
-.courses-list::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 10px;
-}
-
-.courses-list::-webkit-scrollbar-thumb {
-  background-color: #b4b4b4;
-  border-radius: 30px;
-  border: 2px solid #f5f5f5;
-}
-
-.courses-list::-webkit-scrollbar-thumb:hover {
-  background-color: #757575;
-}
-
-.courses-list::-webkit-scrollbar-thumb:active {
-  background-color: #757575;
-}
-
+/* Cuadro de curso */
 .course-item {
-  background-color: #e0e0e0;
-  padding: 20px;
-  border-radius: 10px;
+  background-color: #e6f0ff;
+  padding: 30px;
+  border-radius: 25px; /* Bordes más redondeados */
   text-align: center;
-  font-size: 16px;
-  color: #333333;
-  box-shadow: 0px 4px 6px rgba(66, 19, 195, 0.1);
+  font-size: 18px;
+  color: #333;
+  box-shadow: 0 10px 15px rgba(0, 102, 204, 0.1);
+  transition: transform 0.3s ease-in-out;
   position: relative;
-  width: 200px; /* Ajuste del ancho */
-  height: 100px; /* Ajuste de la altura */
-  transition: transform 0.2s ease-in-out;
+  width: 100%;
+  height: 250px;
 }
 
 .course-item:hover {
-  transform: translateY(-5px); /* Efecto hover para dar sensación de elevación */
+  transform: translateY(-10px);
 }
 
 .course-item h3 {
-  font-size: 16px;
-  font-weight: 600; /* Letra más gruesa para el título del curso */
-  color: #333;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0066cc;
   margin: 0;
 }
 
-/* Posicionamiento del ícono "more" */
 .more-options {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   cursor: pointer;
 }
 
 .more-icon {
-  font-size: 16px;
+  font-size: 20px;
   color: #888;
 }
 
-/* Menú desplegable */
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 30px;
+  top: 35px;
   right: 10px;
   background-color: white;
-  border-radius: 5px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
 .more-options .dropdown-content {
-  display: block; /* Se muestra cuando el estado lo permite */
+  display: block;
 }
 
 .dropdown-content .dropdown-item {
-  padding: 10px 15px;
+  padding: 15px;
   cursor: pointer;
-  font-size: 14px;
-  border-bottom: 1px solid #eee; /* Separador entre elementos */
+  font-size: 16px;
+  border-bottom: 1px solid #f0f0f0;
   background-color: white;
-  color: #333; /* Color del texto */
+  color: #333;
+  border-radius: 10px; /* Bordes redondeados */
 }
 
 .dropdown-content .dropdown-item:hover {
-  background-color: #f44336; /* Color de fondo rojo al hacer hover */
-  color: white; /* Cambia el color del texto a blanco al hacer hover */
+  background-color: #0066cc;
+  color: white;
 }
 
-/* Última opción del menú (sin borde inferior) */
 .dropdown-content .dropdown-item:last-child {
   border-bottom: none;
+}
+/* Fondo de la página */
+body {
+  background-color: #f7f9fc; /* Fondo suave */
+  font-family: 'Arial', sans-serif;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+  background-color: #ffffff;
+  border-radius: 20px; /* Bordes redondeados */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Estilo de la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 15px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 12px; /* Bordes de las celdas redondeados */
+  transition: background-color 0.3s ease;
+}
+
+/* Estilo de las celdas al pasar el mouse */
+table tr:hover td {
+  background-color: #f2f9ff;
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2); /* Sombra suave */
+}
+
+/* Cabecera de la tabla */
+table th {
+  background-color: #0066cc;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px; /* Bordes redondeados */
+}
+
+/* Botón de acción en la tabla (agregar, editar, eliminar) */
+.table-button {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px; /* Bordes redondeados */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.table-button:hover {
+  background-color: #004b99;
+  transform: scale(1.05); /* Efecto de aumento */
+}
+
+/* Estilo de los íconos (por ejemplo, en los botones de acción) */
+.table-button i {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+/* Inputs de formularios */
+input[type="text"], input[type="email"], select {
+  border: 1px solid #0066cc;
+  padding: 12px;
+  border-radius: 30px; /* Bordes redondeados */
+  font-size: 16px;
+  width: 100%;
+  background-color: #f7f9fc;
+  transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, select:focus {
+  outline: none;
+  background-color: #e6f0ff;
+  border-color: #004b99;
+}
+
+/* Sombra suave */
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-soft:hover {
+  box-shadow: 0 6px 25px rgba(0, 102, 204, 0.2);
+}
+
+/* Animaciones para suavizar todo */
+@keyframes smoothFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Aplicando animación a los elementos al cargarse */
+.courses-container, .table-container, .add-course-button, .table-button {
+  animation: smoothFadeIn 1s ease-in-out;
 }

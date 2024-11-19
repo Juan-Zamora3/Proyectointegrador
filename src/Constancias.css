@@ -3,11 +3,13 @@
   gap: 20px;
   padding: 20px;
   background-color: #f5f7fa;
-  flex-wrap: nowrap;
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  width: 100%; /* Ocupa todo el ancho de la pantalla */
+  box-sizing: border-box; /* Incluye el padding en el ancho total */
 }
 
-.form-section {
-  width: 48%; /* Ajustado para ocupar más espacio horizontal */
+.form-section, .preview-section {
+  width: 48%; /* Secciones equilibradas que ocupan el 48% cada una */
   background: #ffffff;
   border-radius: 8px;
   padding: 20px;
@@ -32,18 +34,11 @@
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .student-item button:hover {
   background-color: #0056b3;
-}
-
-.preview-section {
-  width: 48%; /* Ajustado para ocupar más espacio horizontal */
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .preview-section h3 {
@@ -51,35 +46,10 @@
 }
 
 .pdf-viewer {
-  height: 700px; /* Aumentado para una mejor vista del PDF */
-  width: 100%; /* Asegura que el visor PDF ocupe todo el ancho */
+  height: 700px; /* Vista más grande del PDF */
+  width: 100%; /* Ocupa todo el ancho de la sección */
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 10px;
-}
-/* Asegúrate de que el contenedor principal use el 100% de ancho */
-.constancias-container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background-color: #f5f7fa;
-  margin-left: 1%; /* Agrega esto para mover todo el contenedor hacia la izquierda */
-  width: 80%; /* Asegúrate de que el contenedor ocupe el 80% del ancho de la pantalla */
-}
-
-.form-section {
-  width: 45%; /* Ajusta el ancho para que ocupe más espacio horizontal */
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.preview-section {
-  width: 45%; /* Ajusta el ancho para que ocupe más espacio horizontal */
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
