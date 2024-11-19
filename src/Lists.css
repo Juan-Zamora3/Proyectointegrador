@@ -1,9 +1,12 @@
 /* Lists.css */
-.lists-container {
+.lists-container {  
     padding: 20px;
-    background-color: #FFFFFF; /* Fondo completamente blanco */
-    width: 100%; /* Asegúrate de que ocupe el 100% del ancho */
-    box-sizing: border-box; /* Incluye padding en el ancho total */
+    background-color: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #0066cc; /* Borde azul fuerte */
+    border-radius: 25px; /* Bordes más redondeados */
+    transition: all 0.3s ease;
 }
 
 
@@ -84,12 +87,12 @@ tr:hover {
 }
 .add-list-button
 {
-    padding: 10px 15px; /* Espaciado interno del botón */
-    background-color: #001aff!important; /* Color de fondo */
-    color: white; /* Color del texto en blanco */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    font-weight: bold; /* Texto en negritas */
-    margin-bottom: 20px; /* Espacio debajo del botón */
+    background-color: #0066cc;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px; /* Bordes redondeados */
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
 }

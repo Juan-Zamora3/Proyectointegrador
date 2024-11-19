@@ -31,7 +31,7 @@ function HomePage() {
     <div className="container">
       <aside className="sidebar">
         <div className="profile">
-          <img src="https://via.placeholder.com/50" alt="Avatar de Usuario" className="avatar" />
+          <img src="https://7touchgroup.com/wp-content/uploads/2021/10/conocias-las-caracteristicas-de-un-empresario-exitoso.png" alt="Avatar de Usuario" className="avatar" />
           <h4>{user ? user.name : 'Administrador'}</h4>
           <p>{user ? user.email : 'Administrador@gmail.com'}</p>
         </div>
@@ -79,7 +79,7 @@ function HomePage() {
         {selectedMenu === 'Cursos' && <Courses />}
         {selectedMenu === 'Listas' && <Lists />}
         {selectedMenu === 'Asistencias' && <Asistencias />}
-        {selectedMenu === 'Graficas' && <p>Contenido para Gráficas</p>}
+        {selectedMenu === 'Graficas' && <p></p>}
         {selectedMenu === 'Reportes' && <Reportes />}
         {selectedMenu === 'Constancias' && <Constancias />}
         {selectedMenu === 'Graficas' && <Graficas />}

@@ -26,7 +26,6 @@ function Asistencias() {
           position: studentData.Puesto,
           email: studentData.Correo,
           lists: studentData.Listas || [],
-          courses: studentData.Cursos || []
         });
       });
 
@@ -40,9 +39,6 @@ function Asistencias() {
     fetchStudents();
   }, []);
 
-  const handleDetails = (student) => {
-    console.log('Detalles de:', student);
-  };
 
   const handleAddStudent = () => {
     setSelectedStudent(null); // Reiniciar selección
@@ -99,8 +95,6 @@ function Asistencias() {
             <th>Cargo</th>
             <th>Email</th>
             <th>Listas</th>
-            <th>Cursos</th>
-            <th>Detalles</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -117,10 +111,6 @@ function Asistencias() {
                 <td>{student.position}</td>
                 <td>{student.email}</td>
                 <td>{student.lists.join(', ')}</td>
-                <td>{student.courses.join(', ')}</td>
-                <td>
-                  <button onClick={() => handleDetails(student)}>Detalles</button>
-                </td>
                 <td>
                   <button onClick={() => handleEditStudent(student)}>Editar</button>
                   <button onClick={() => handleDeleteStudent(student.id)}>Eliminar</button>

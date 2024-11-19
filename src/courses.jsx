@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Courses.css';
 import NuevoCurso from './NuevoCurso';
@@ -11,16 +11,14 @@ function Courses() {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingCourse, setEditingCourse] = useState(null);
-  const [editName, setEditName] = useState('');
 
   const fetchCourses = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
-      const loadedCourses = querySnapshot.docs.map(doc => ({
+      const loadedCourses = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
-      console.log('Cursos cargados desde Firebase:', loadedCourses);
       setCourses(loadedCourses);
     } catch (error) {
       console.error('Error al cargar los cursos:', error);
@@ -33,19 +31,7 @@ function Courses() {
 
   const handleEdit = (course) => {
     setEditingCourse(course);
-    setEditName(course.cursoNombre);
-  };
-
-  const handleSaveEdit = async () => {
-    if (editingCourse) {
-      try {
-        await updateDoc(doc(db, 'Cursos', editingCourse.id), { Nombre: editName });
-        fetchCourses();
-        setEditingCourse(null);
-      } catch (error) {
-        console.error('Error al actualizar el curso:', error);
-      }
-    }
+    setShowAddForm(true); // Muestra el formulario de edición
   };
 
   const handleDelete = async (id) => {
@@ -60,12 +46,35 @@ function Courses() {
     }
   };
 
+  const handleCancelar = () => {
+    setShowAddForm(false);
+    setEditingCourse(null);
+  };
+
+  const handleActualizarCurso = (id, updatedData) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course.id === id ? { ...course, ...updatedData } : course
+      )
+    );
+    handleCancelar();
+  };
+
+  // Filtrar cursos según el término de búsqueda
+  const filteredCourses = courses.filter((course) =>
+    course.cursoNombre?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="courses-container">
       <h2 className="title-courses">Cursos</h2>
 
       {showAddForm ? (
-        <NuevoCurso />
+        <NuevoCurso
+          cursoSeleccionado={editingCourse}
+          onActualizarCurso={handleActualizarCurso}
+          onCancelar={handleCancelar}
+        />
       ) : (
         <>
           <div className="search-container">
@@ -97,47 +106,28 @@ function Courses() {
                 </tr>
               </thead>
               <tbody>
-                {courses.length === 0 ? (
+                {filteredCourses.length === 0 ? (
                   <tr>
                     <td colSpan="3">No se encontraron cursos.</td>
                   </tr>
                 ) : (
-                  courses.map((course) => (
+                  filteredCourses.map((course) => (
                     <tr key={course.id}>
+                      <td>{course.cursoNombre || 'Sin nombre'}</td>
+                      <td>{course.fechaInicio || 'N/A'}</td>
                       <td>
-                        {editingCourse && editingCourse.id === course.id ? (
-                          <input
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
-                          />
-                        ) : (
-                          course.cursoNombre || 'Sin nombre'
-                        )}
-                      </td>
-                      <td>
-                        {course.FechaInicio ? new Date(course.Fecha.seconds * 1000).toLocaleDateString() : 'N/A'}
-                      </td>
-                      <td>
-                        {editingCourse && editingCourse.id === course.id ? (
-                          <button onClick={handleSaveEdit} className="save-button">
-                            Guardar
-                          </button>
-                        ) : (
-                          <>
-                            <button
-                              className="edit-button"
-                              onClick={() => handleEdit(course)}
-                            >
-                              <FontAwesomeIcon icon={faEdit} /> Editar
-                            </button>
-                            <button
-                              className="delete-button"
-                              onClick={() => handleDelete(course.id)}
-                            >
-                              <FontAwesomeIcon icon={faTrash} /> Eliminar
-                            </button>
-                          </>
-                        )}
+                        <button
+                          className="edit-button"
+                          onClick={() => handleEdit(course)}
+                        >
+                          <FontAwesomeIcon icon={faEdit} /> Editar
+                        </button>
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDelete(course.id)}
+                        >
+                          <FontAwesomeIcon icon={faTrash} /> Eliminar
+                        </button>
                       </td>
                     </tr>
                   ))
