@@ -1,4 +1,4 @@
-/* Configuración general de márgenes, padding y fuente */
+/* Configuración general */
 body, html, #root {
   margin: 0;
   padding: 0;
@@ -7,14 +7,30 @@ body, html, #root {
   font-family: Arial, sans-serif;
 }
 
-/* Contenedor principal de la pantalla de inicio de sesión */
-.login-container {
-  display: flex;
+/* Contenedor principal */
+.app-container {
   height: 100vh;
   width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('./assets/FondoAPP.png') no-repeat center center;
+  background-size: cover;
 }
 
-/* Estilo para el formulario de inicio de sesión */
+/* Contenedor del inicio de sesión */
+.login-container {
+  display: flex;
+  height: 80vh;
+  width: 90vw;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Formulario de inicio de sesión */
 .login-form {
   flex: 1;
   display: flex;
@@ -22,15 +38,14 @@ body, html, #root {
   justify-content: center;
   align-items: center;
   padding: 40px;
-  background-color: #ffffff;
 }
 
-/* Encabezado del formulario */
-h2 {
+.login-form h2 {
+  font-size: 28px;
+  color: #2c3e50;
   margin-bottom: 20px;
 }
 
-/* Agrupación de entradas de texto */
 .input-group {
   margin-bottom: 20px;
   width: 100%;
@@ -40,157 +55,37 @@ h2 {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  color: #34495e;
 }
 
 .input-group input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  font-size: 14px;
 }
 
-/* Botón de inicio de sesión */
 .login-button {
-  padding: 12px 20px;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
+  padding: 12px;
   width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
   border-radius: 5px;
   font-size: 16px;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .login-button:hover {
   background-color: #0056b3;
 }
 
-/* Contenedor para la imagen de la derecha */
+/* Imagen en el contenedor derecho */
 .login-image {
   flex: 1;
-  background-color: #0026b3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.login-image img {
-  width: 80%;
-  max-width: 300px;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Toggle para cambiar entre login y registro */
-.toggle-form {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.toggle-form button {
-  background-color: transparent;
-  border: 1px solid #007bff;
-  padding: 10px 15px;
-  border-radius: 5px;
-  color: #007bff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.toggle-form button:hover {
-  background-color: #007bff;
-  color: #ffffff;
-}
-
-/* Alertas */
-.alert {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.error {
-  color: red;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-/* Estilo responsivo para pantallas pequeñas */
-@media (max-width: 768px) {
-  .login-container {
-    flex-direction: column;
-  }
-
-  .login-form, .login-image {
-    width: 100%;
-    padding: 20px;
-  }
-}
-
-/* Estilos para la página principal (sidebar) */
-.container {
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #2C3E50;
-  padding: 20px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.profile {
-  text-align: center;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-nav ul li {
-  margin: 20px 0;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-nav ul li a:hover {
-  text-decoration: underline;
-}
-
-.settings {
-  margin-top: auto;
-}
-
-.main-content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #ECF0F1;
-}
-
-h1 {
-  margin-top: 0;
+  background-color: #004aad;
+  background: url('./assets/Fondomorado.png') no-repeat center center;
+  background-size: cover;
 }
