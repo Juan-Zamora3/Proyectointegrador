@@ -1,8 +1,23 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import './App.css'; // Aquí se define el fondo
 import { useNavigate } from 'react-router-dom';
 import logo from './assets/logo.png';
 import FondoAPP from './assets/FondoAPP.png'; // Importa la imagen de fondo
+=======
+// src/Login.jsx
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
+import React, { useState } from 'react';
+import './App.css'; // Aquí se define el fondo
+import { useNavigate } from 'react-router-dom';
+import logo from './assets/logo.png';
+<<<<<<< HEAD
+import FondoAPP from './assets/FondoAPP.png'; // Importa la imagen de fondo
+=======
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 import { db } from './firebaseConfig'; // Importa la referencia a Firestore
 import { doc, setDoc, getDoc } from 'firebase/firestore'; // Para interactuar con Firestore
 
@@ -13,7 +28,15 @@ function Login() {
   const [isRegister, setIsRegister] = useState(false); // Alterna entre login y registro
   const [alert, setAlert] = useState(''); // Almacena la alerta que se mostrará
   const [error, setError] = useState('');
+<<<<<<< HEAD
   const navigate = useNavigate(); // Hook para redirigir
+=======
+<<<<<<< HEAD
+  const navigate = useNavigate(); // Hook para redirigir
+=======
+  const navigate = useNavigate();  // Hook para redirigir
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 
   // Manejar el cambio de valores en los campos de input
   const handleInputChange = (e, setter) => {
@@ -38,7 +61,15 @@ function Login() {
         // Guardar datos del usuario en localStorage
         localStorage.setItem('user', JSON.stringify({ name: userDoc.data().name, email }));
         setAlert('');
+<<<<<<< HEAD
         navigate('/home'); // Redirige a la página principal
+=======
+<<<<<<< HEAD
+        navigate('/home'); // Redirige a la página principal
+=======
+        navigate("/home");  // Redirige a la página principal
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
       } else {
         setError('Credenciales incorrectas.');
       }
@@ -72,20 +103,40 @@ function Login() {
       await setDoc(doc(db, 'Usuarios', email), {
         name: name,
         email: email,
+<<<<<<< HEAD
         password: password,
+=======
+<<<<<<< HEAD
+        password: password,
+=======
+        password: password
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
       });
 
       console.log('Usuario registrado:', { name, email });
       // Guardar datos del usuario en localStorage
       localStorage.setItem('user', JSON.stringify({ name, email }));
       setAlert('');
+<<<<<<< HEAD
       navigate('/home'); // Redirige a la página principal después del registro
+=======
+<<<<<<< HEAD
+      navigate('/home'); // Redirige a la página principal después del registro
+=======
+      navigate("/home");  // Redirige a la página principal después del registro
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
     } catch (error) {
       setError('Error al registrar el usuario.');
     }
   };
 
   return (
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
     <div
       className="app-container"
       style={{
@@ -99,6 +150,8 @@ function Login() {
           <h2>{isRegister ? 'Registro de Usuario' : 'Inicio de Sesión'}</h2>
           {alert && <div className="alert">{alert}</div>}
           {error && <p className="error">{error}</p>}
+<<<<<<< HEAD
+=======
 
           <form onSubmit={isRegister ? handleRegister : handleLogin}>
             {isRegister && (
@@ -147,6 +200,68 @@ function Login() {
         <div className="login-image">
           <img src={logo} alt="Logo" />
         </div>
+=======
+    <div className="login-container">
+      <div className="login-form">
+        <h2>{isRegister ? 'Registro de Usuario' : 'Inicio de Sesión'}</h2>
+        {alert && <div className="alert">{alert}</div>}
+        {error && <p className="error">{error}</p>}
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
+
+          <form onSubmit={isRegister ? handleRegister : handleLogin}>
+            {isRegister && (
+              <div className="input-group">
+                <label>Nombre Completo</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => handleInputChange(e, setName)}
+                  placeholder="Nombre Completo"
+                  required
+                />
+              </div>
+            )}
+            <div className="input-group">
+              <label>Correo Electrónico</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => handleInputChange(e, setEmail)}
+                placeholder="Correo Electrónico"
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => handleInputChange(e, setPassword)}
+                placeholder="Contraseña"
+                required
+              />
+            </div>
+            <button type="submit" className="login-button">
+              {isRegister ? 'Registrarse' : 'Login'}
+            </button>
+          </form>
+          <div className="toggle-form">
+            <p>{isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}</p>
+            <button onClick={() => setIsRegister(!isRegister)}>
+              {isRegister ? 'Inicia sesión' : 'Regístrate'}
+            </button>
+          </div>
+        </div>
+<<<<<<< HEAD
+        <div className="login-image">
+          <img src={logo} alt="Logo" />
+        </div>
+=======
+      </div>
+      <div className="login-image">
+        <img src={logo} alt="Logo" />
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
+>>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
       </div>
     </div>
   );
