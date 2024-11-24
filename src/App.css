@@ -14,7 +14,7 @@ body, html, #root {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('./assets/descarga.gif') no-repeat center center;
+  background: url('./assets/FondoAPP.png') no-repeat center center;
   background-size: cover;
 }
 
