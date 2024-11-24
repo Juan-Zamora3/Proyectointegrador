@@ -1,12 +1,4 @@
-<<<<<<< HEAD
 /* Configuración general */
-=======
-<<<<<<< HEAD
-/* Configuración general */
-=======
-/* Configuración general de márgenes, padding y fuente */
->>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 body, html, #root {
   margin: 0;
   padding: 0;
@@ -15,11 +7,6 @@ body, html, #root {
   font-family: Arial, sans-serif;
 }
 
-<<<<<<< HEAD
-/* Contenedor principal */
-.app-container {
-=======
-<<<<<<< HEAD
 /* Contenedor principal */
 .app-container {
   height: 100vh;
@@ -44,38 +31,6 @@ body, html, #root {
 }
 
 /* Formulario de inicio de sesión */
-=======
-/* Contenedor principal de la pantalla de inicio de sesión */
-.login-container {
-  display: flex;
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: url('./assets/FondoAPP.png') no-repeat center center;
-  background-size: cover;
-}
-
-<<<<<<< HEAD
-/* Contenedor del inicio de sesión */
-.login-container {
-  display: flex;
-  height: 80vh;
-  width: 90vw;
-  max-width: 1200px;
-  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
-
-/* Formulario de inicio de sesión */
-=======
-/* Estilo para el formulario de inicio de sesión */
->>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 .login-form {
   flex: 1;
   display: flex;
@@ -83,9 +38,6 @@ body, html, #root {
   justify-content: center;
   align-items: center;
   padding: 40px;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 }
 
 .login-form h2 {
@@ -94,22 +46,6 @@ body, html, #root {
   margin-bottom: 20px;
 }
 
-=======
-  background-color: #ffffff;
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
-}
-
-.login-form h2 {
-  font-size: 28px;
-  color: #2c3e50;
-  margin-bottom: 20px;
-}
-
-<<<<<<< HEAD
-=======
-/* Agrupación de entradas de texto */
->>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 .input-group {
   margin-bottom: 20px;
   width: 100%;
@@ -119,22 +55,11 @@ body, html, #root {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-<<<<<<< HEAD
   color: #34495e;
-=======
-<<<<<<< HEAD
-  color: #34495e;
-=======
->>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 }
 
 .input-group input {
   width: 100%;
-<<<<<<< HEAD
-  padding: 12px;
-=======
-<<<<<<< HEAD
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -151,178 +76,16 @@ body, html, #root {
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
-=======
-  padding: 10px;
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.login-button {
-  padding: 12px;
-  width: 100%;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-<<<<<<< HEAD
-  cursor: pointer;
-  transition: 0.3s;
-=======
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
->>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 }
 
 .login-button:hover {
   background-color: #0056b3;
 }
 
-<<<<<<< HEAD
 /* Imagen en el contenedor derecho */
 .login-image {
   flex: 1;
   background-color: #004aad;
   background: url('./assets/Fondomorado.png') no-repeat center center;
   background-size: cover;
-=======
-<<<<<<< HEAD
-/* Imagen en el contenedor derecho */
-.login-image {
-  flex: 1;
-  background-color: #004aad;
-  background: url('./assets/Fondomorado.png') no-repeat center center;
-  background-size: cover;
-=======
-/* Contenedor para la imagen de la derecha */
-.login-image {
-  flex: 1;
-  background-color: #0026b3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.login-image img {
-  width: 80%;
-  max-width: 300px;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Toggle para cambiar entre login y registro */
-.toggle-form {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.toggle-form button {
-  background-color: transparent;
-  border: 1px solid #007bff;
-  padding: 10px 15px;
-  border-radius: 5px;
-  color: #007bff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.toggle-form button:hover {
-  background-color: #007bff;
-  color: #ffffff;
-}
-
-/* Alertas */
-.alert {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.error {
-  color: red;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-/* Estilo responsivo para pantallas pequeñas */
-@media (max-width: 768px) {
-  .login-container {
-    flex-direction: column;
-  }
-
-  .login-form, .login-image {
-    width: 100%;
-    padding: 20px;
-  }
-}
-
-/* Estilos para la página principal (sidebar) */
-.container {
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #2C3E50;
-  padding: 20px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.profile {
-  text-align: center;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-nav ul li {
-  margin: 20px 0;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-nav ul li a:hover {
-  text-decoration: underline;
-}
-
-.settings {
-  margin-top: auto;
-}
-
-.main-content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #ECF0F1;
-}
-
-h1 {
-  margin-top: 0;
->>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
->>>>>>> 3652af1798a975c299606cc22c14b1f246d7d505
 }
