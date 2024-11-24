@@ -1,0 +1,79 @@
+.reports-container {
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #0066cc; /* Borde azul fuerte */
+  border-radius: 25px; /* Bordes más redondeados */
+}
+
+.reports-container h2 {
+  text-align: center;
+  font-size: 26px;
+  color: #333333;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.reports-container label {
+  font-weight: 600;
+  color: #555555;
+}
+
+.reports-container select,
+.reports-container textarea,
+.reports-container input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #333333;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.reports-container select:focus,
+.reports-container textarea:focus,
+.reports-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.reports-container textarea {
+  min-height: 80px; /* Área de texto más corta */
+  resize: vertical;
+}
+
+.reports-container input[type="number"] {
+  max-width: 120px;
+}
+
+.reports-container button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.reports-container button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Efecto de elevación al hacer hover */
+}
+
+.reports-container button:active {
+  background-color: #004080;
+  transform: translateY(0); /* Restablece la posición al hacer clic */
+}
+
+.reports-container button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

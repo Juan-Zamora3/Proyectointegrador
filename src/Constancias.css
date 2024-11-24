@@ -1,0 +1,55 @@
+.constancias-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f5f7fa;
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  width: 100%; /* Ocupa todo el ancho de la pantalla */
+  box-sizing: border-box; /* Incluye el padding en el ancho total */
+}
+
+.form-section, .preview-section {
+  width: 48%; /* Secciones equilibradas que ocupan el 48% cada una */
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.students-section {
+  margin-top: 20px;
+}
+
+.student-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.student-item button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.student-item button:hover {
+  background-color: #0056b3;
+}
+
+.preview-section h3 {
+  margin-bottom: 15px;
+}
+
+.pdf-viewer {
+  height: 700px; /* Vista más grande del PDF */
+  width: 100%; /* Ocupa todo el ancho de la sección */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}

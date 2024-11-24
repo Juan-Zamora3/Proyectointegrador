@@ -1,0 +1,151 @@
+/* Contenedor principal de la lista */
+.crear-lista-container {
+  padding: 30px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f9fc; /* Fondo suave */
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: #003cff; /* Título en azul suave */
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Sección de nombre de lista */
+.list-name-section {
+  margin-bottom: 25px;
+}
+
+/* Estilo de las etiquetas dentro de la sección de nombre */
+.list-name-section label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Estilo de los inputs para el nombre de lista */
+.list-name-section input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 30px; /* Bordes más redondeados */
+  background-color: #f2f9ff;
+  font-size: 16px;
+  color: #333;
+  transition: border 0.3s ease-in-out;
+}
+
+.list-name-section input:focus {
+  border-color: #0066cc;
+  outline: none;
+  background-color: #e6f0ff;
+}
+
+/* Sección de participantes */
+.participant-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.form-left, .form-right {
+  width: 48%;
+}
+
+/* Estilo para las etiquetas dentro de los formularios */
+.form-left label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Estilo para los inputs dentro de form-left */
+.form-left input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #003cff;
+  border-radius: 30px;
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.form-left input:focus {
+  border-color: #0066cc;
+  outline: none;
+  background-color: #e6f0ff;
+}
+
+/* Estilo para los botones */
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+}
+
+/* Estilo para la tabla de participantes */
+.form-right table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.form-right table, th, td {
+  border: 1px solid #220aff;
+  padding: 12px;
+  font-size: 16px;
+  color: #333;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+/* Encabezados de la tabla */
+.form-right th {
+  background-color: #0004ff;
+  color: white;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Efecto de hover en las filas de la tabla */
+.form-right tr:hover {
+  background-color: #f2f9ff;
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+}
+
+/* Botón para crear lista */
+.create-list-button-container {
+  margin-top: 25px;
+  text-align: center;
+}
+
+/* Animación para suavizar la entrada */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.crear-lista-container {
+  animation: fadeIn 1s ease-in-out;
+}

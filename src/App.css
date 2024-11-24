@@ -1,0 +1,91 @@
+/* Configuración general */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal */
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('./assets/FondoAPP.png') no-repeat center center;
+  background-size: cover;
+}
+
+/* Contenedor del inicio de sesión */
+.login-container {
+  display: flex;
+  height: 80vh;
+  width: 90vw;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Formulario de inicio de sesión */
+.login-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.login-form h2 {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #34495e;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.login-button {
+  padding: 12px;
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+/* Imagen en el contenedor derecho */
+.login-image {
+  flex: 1;
+  background-color: #004aad;
+  background: url('./assets/Fondomorado.png') no-repeat center center;
+  background-size: cover;
+}
