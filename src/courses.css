@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Contenedor Principal */
 .courses-container {
   display: grid;
@@ -101,3 +102,275 @@
   font-size: 14px;
   color: #333;
 }
+=======
+/* Estilo principal */
+.courses-container {
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #0066cc; /* Borde azul fuerte */
+  border-radius: 25px; /* Bordes más redondeados */
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+/* Barra de búsqueda */
+.search-input {
+  border-radius: 30px; /* Bordes muy redondeados */
+  padding: 12px 20px;
+  border: 1px solid #0066cc;
+  width: 65%;
+  font-size: 16px;
+  background-color: #f2f9ff;
+  color: #0066cc;
+  transition: all 0.3s ease;
+}
+
+/* Estilo de la búsqueda */
+.search__input {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #ffffff;
+  border: 1px solid #0066cc;
+  color: #333;
+  padding: 1rem 1.5rem;
+  border-radius: 30px; /* Bordes redondeados */
+  width: 15em;
+  transition: all ease-in-out .3s;
+  margin-right: 10px;
+}
+
+.search__input:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 102, 204, 0.6);
+  background-color: #e6f0ff;
+}
+
+/* Botón de búsqueda */
+.search__button {
+  border: none;
+  background-color: #0066cc;
+  color: white;
+  border-radius: 30px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search__button:hover {
+  background-color: #004b99;
+}
+
+/* Botón de agregar curso */
+.add-course-button {
+  background-color: #0066cc;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 30px; /* Bordes redondeados */
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.add-course-button:hover {
+  background-color: #004b99;
+}
+
+/* Contenedor de cursos */
+.courses-list {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #0066cc #ffffff;
+}
+
+/* Cuadro de curso */
+.course-item {
+  background-color: #e6f0ff;
+  padding: 30px;
+  border-radius: 25px; /* Bordes más redondeados */
+  text-align: center;
+  font-size: 18px;
+  color: #333;
+  box-shadow: 0 10px 15px rgba(0, 102, 204, 0.1);
+  transition: transform 0.3s ease-in-out;
+  position: relative;
+  width: 100%;
+  height: 250px;
+}
+
+.course-item:hover {
+  transform: translateY(-10px);
+}
+
+.course-item h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0066cc;
+  margin: 0;
+}
+
+.more-options {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.more-icon {
+  font-size: 20px;
+  color: #888;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  background-color: white;
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.more-options .dropdown-content {
+  display: block;
+}
+
+.dropdown-content .dropdown-item {
+  padding: 15px;
+  cursor: pointer;
+  font-size: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: white;
+  color: #333;
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.dropdown-content .dropdown-item:hover {
+  background-color: #0066cc;
+  color: white;
+}
+
+.dropdown-content .dropdown-item:last-child {
+  border-bottom: none;
+}
+/* Fondo de la página */
+body {
+  background-color: #f7f9fc; /* Fondo suave */
+  font-family: 'Arial', sans-serif;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+  background-color: #ffffff;
+  border-radius: 20px; /* Bordes redondeados */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Estilo de la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 15px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 12px; /* Bordes de las celdas redondeados */
+  transition: background-color 0.3s ease;
+}
+
+/* Estilo de las celdas al pasar el mouse */
+table tr:hover td {
+  background-color: #f2f9ff;
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2); /* Sombra suave */
+}
+
+/* Cabecera de la tabla */
+table th {
+  background-color: #0066cc;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px; /* Bordes redondeados */
+}
+
+/* Botón de acción en la tabla (agregar, editar, eliminar) */
+.table-button {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px; /* Bordes redondeados */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.table-button:hover {
+  background-color: #004b99;
+  transform: scale(1.05); /* Efecto de aumento */
+}
+
+/* Estilo de los íconos (por ejemplo, en los botones de acción) */
+.table-button i {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+/* Inputs de formularios */
+input[type="text"], input[type="email"], select {
+  border: 1px solid #0066cc;
+  padding: 12px;
+  border-radius: 30px; /* Bordes redondeados */
+  font-size: 16px;
+  width: 100%;
+  background-color: #f7f9fc;
+  transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, select:focus {
+  outline: none;
+  background-color: #e6f0ff;
+  border-color: #004b99;
+}
+
+/* Sombra suave */
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-soft:hover {
+  box-shadow: 0 6px 25px rgba(0, 102, 204, 0.2);
+}
+
+/* Animaciones para suavizar todo */
+@keyframes smoothFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Aplicando animación a los elementos al cargarse */
+.courses-container, .table-container, .add-course-button, .table-button {
+  animation: smoothFadeIn 1s ease-in-out;
+}
+>>>>>>> 5a1d3bb48d63da3fe4ef0f8ca938935001d4bb7a
