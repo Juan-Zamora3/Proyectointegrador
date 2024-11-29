@@ -2,16 +2,31 @@ import React, { useState } from 'react';
 import './EditForm.css';
 
 function EditForm({ list, onCancel, onSave }) {
-  const [formData, setFormData] = useState({ ...list });
+  const [formData, setFormData] = useState({
+    ...list,
+    Participantes: list.Participantes || [
+      { id: 1, Nombre: 'Joshua', ApellidoPaterno: 'Quiroz', ApellidoMaterno: 'Burgos', selected: false },
+      { id: 2, Nombre: 'Israel', ApellidoPaterno: 'Pelayo', ApellidoMaterno: 'Sepa', selected: false },
+    ],
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const toggleParticipant = (id) => {
+    setFormData((prev) => ({
+      ...prev,
+      Participantes: prev.Participantes.map((p) =>
+        p.id === id ? { ...p, selected: !p.selected } : p
+      ),
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData); // Llamar a la función de guardado
+    onSave(formData); // Guardar cambios
   };
 
   return (
@@ -44,8 +59,19 @@ function EditForm({ list, onCancel, onSave }) {
             type="text"
             placeholder="Filtrar alumnos..."
             name="search"
-            onChange={handleChange}
             style={{ width: '100%' }}
+            onChange={(e) => {
+              const searchTerm = e.target.value.toLowerCase();
+              setFormData((prev) => ({
+                ...prev,
+                filteredParticipantes: prev.Participantes.filter(
+                  (p) =>
+                    p.Nombre.toLowerCase().includes(searchTerm) ||
+                    p.ApellidoPaterno.toLowerCase().includes(searchTerm) ||
+                    p.ApellidoMaterno.toLowerCase().includes(searchTerm)
+                ),
+              }));
+            }}
           />
         </label>
 
@@ -61,21 +87,13 @@ function EditForm({ list, onCancel, onSave }) {
               </tr>
             </thead>
             <tbody>
-              {formData.Participantes?.map((participant, index) => (
-                <tr key={index}>
+              {(formData.filteredParticipantes || formData.Participantes).map((participant) => (
+                <tr key={participant.id}>
                   <td>
                     <input
                       type="checkbox"
-                      checked={participant.selected || false}
-                      onChange={() => {
-                        const updatedParticipants = [...formData.Participantes];
-                        updatedParticipants[index].selected =
-                          !updatedParticipants[index].selected;
-                        setFormData((prev) => ({
-                          ...prev,
-                          Participantes: updatedParticipants,
-                        }));
-                      }}
+                      checked={participant.selected}
+                      onChange={() => toggleParticipant(participant.id)}
                     />
                   </td>
                   <td>{participant.Nombre}</td>

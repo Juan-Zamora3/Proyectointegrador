@@ -167,18 +167,26 @@ const Constancias = () => {
         <h2>Constancias</h2>
 
         <label>Seleccionar Curso</label>
-        <select onChange={handleCursoChange}>
-          <option value="">Seleccione un curso</option>
-          {cursos.map((curso) => (
-            <option key={curso.id} value={curso.id}>
-              {curso.cursoNombre}
-            </option>
-          ))}
-        </select>
+        <select
+  onChange={(e) => {
+    handleCursoChange(e); // Actualiza el curso seleccionado
+    if (e.target.value) {
+      handleGenerarPDFs(); // Genera los PDFs si se selecciona un curso válido
+    }
+  }}
+>
+  <option value="" disabled selected>
+    Seleccione un curso
+  </option>
+  {cursos.map((curso) => (
+    <option key={curso.id} value={curso.id}>
+      {curso.cursoNombre}
+    </option>
+  ))}
+</select>
 
-        <button onClick={handleGenerarPDFs} disabled={!selectedCurso || students.length === 0}>
-          Generar Constancias
-        </button>
+
+        
 
         {/* Listas asociadas */}
         <h3>Listas asociadas</h3>
