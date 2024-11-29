@@ -146,16 +146,22 @@ nav ul li a:hover span {
 
 /* Main content */
 .main-content {
-  flex-grow: 1;
+  height: calc(100vh - 50px); /* Altura total menos el banner */
+  flex-grow: 1; /* Permite que crezca dinámicamente */
   display: flex;
-  padding: 20px;
+  padding: 10px;
   background-color: #ECF0F1;
   box-sizing: border-box;
 }
 
-/* Contenido dentro del main-content */
+/* Contenedor dentro del contenido principal */
 .content {
+  background-color: #FFFFFF; /* Cambia el color si el rojo es temporal */
   width: 100%;
+  height: 100%; /* Ajusta para cubrir todo el alto */
   display: flex;
   flex-direction: column;
 }
+
+/* Contenedor de cursos */
+

@@ -1,98 +1,113 @@
-/* Lists.css */
-.lists-container {  
-    padding: 20px;
-    background-color: #ffffff;
-    width: 100%;
-    box-sizing: border-box;
-    border: 2px solid #0066cc; /* Borde azul fuerte */
-    border-radius: 25px; /* Bordes más redondeados */
-    transition: all 0.3s ease;
+/* Contenedor principal */
+.lists-container {
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #0066cc;
+  border-radius: 25px;
 }
 
-
+/* Título */
 .title-lists {
-    font-size: 24px; /* Título más grande */
-    font-weight: bold; /* Título en negritas */
-    margin-bottom: 20px; /* Espacio debajo del título */
-  }
-  
-  .search-container {
-    display: flex; /* Flex para alinear input y botón de búsqueda */
-    margin-bottom: 20px; /* Espacio debajo de la barra de búsqueda */
-  }
-  
-  .search-input {
-    border-radius: 20px; /* Borde redondeado */
-    width: calc(100% - 100px); /* Abarca casi todo el espacio */
-    padding: 10px;
-    margin-right: 10px; /* Espacio entre el input y el botón */
-    border: 1px solid #00d9ff; /* Borde gris claro */
-  }
-  
-  .search-button {
-    padding: 10px 15px; /* Espaciado interno del botón */
-    background-color: #001aff !important; /* Color de fondo más oscuro */
-    color: white; /* Color del texto en blanco */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    font-weight: bold; /* Texto en negritas */
-  }
-
-.main-content {
-    display: flex; /* Flex para alinear acciones y tabla */
-    width: 100%; /* Asegura que el contenido principal ocupe todo el ancho */
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-.table-container {
-    margin-top: 20px;
-    overflow: auto; /* Permitir desplazamiento si la tabla es grande */
-    flex-grow: 1; /* Permite que la tabla ocupe el espacio restante */
+/* Barra de búsqueda */
+.search-container {
+  display: flex;
+  margin-bottom: 20px;
 }
 
-table {
-    width: 100%; /* Ocupa todo el ancho */
-    border-collapse: collapse;
+.search-input {
+  border-radius: 20px;
+  width: calc(100% - 100px);
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #00d9ff;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+.search-button {
+  padding: 10px 15px;
+  background-color: #001aff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-th {
-    background-color: #001aff !important; /* Forzar el fondo azul */
-    color: white; /* Color de texto en encabezado */
+/* Botón para agregar lista */
+.add-list-container {
+  margin-bottom: 20px;
 }
 
-tr:nth-child(even) {
-    background-color: #f2f2f2; /* Color de fondo alterno */
+.add-list-button {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-tr:hover {
-    background-color: #ddd; /* Color al pasar el ratón */
+/* Grid de listas */
+.lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
 }
 
-/* Estilos para el botón de regresar */
-.back-button {
-    padding: 10px 15px; /* Espaciado interno del botón */
-    background-color: #001aff!important; /* Color de fondo */
-    color: white; /* Color del texto en blanco */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    font-weight: bold; /* Texto en negritas */
-    margin-bottom: 20px; /* Espacio debajo del botón */
+/* Tarjetas de listas */
+.list-card {
+  background-color: #e6f0ff;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
-.add-list-button
-{
-    background-color: #0066cc;
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 30px; /* Bordes redondeados */
-    cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s;
+
+.list-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px rgba(0, 102, 204, 0.2);
+}
+
+.list-card h3 {
+  font-size: 18px;
+  color: #333;
+}
+
+.list-card p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Acciones en cada tarjeta */
+.list-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.list-actions button {
+  flex: 1;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.list-actions button:hover {
+  background-color: #004b99;
 }

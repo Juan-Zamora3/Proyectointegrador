@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Lists.css';
-import CrearLista from './CrearLista';
+import CrearLista from './CrearLista'; // Componente para agregar/editar listas
 
 function Lists() {
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [lists, setLists] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [editingList, setEditingList] = useState(null); // Lista en edición
+  const [showForm, setShowForm] = useState(false); // Controla si el formulario de agregar/editar se muestra
+  const [lists, setLists] = useState([]); // Datos de las listas
+  const [searchTerm, setSearchTerm] = useState(''); // Término de búsqueda
+  const [editingList, setEditingList] = useState(null); // Datos de la lista en edición
 
   // Cargar listas desde Firebase
   const fetchLists = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Listas'));
-      const loadedLists = querySnapshot.docs.map(doc => ({
+      const loadedLists = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setLists(loadedLists);
     } catch (error) {
@@ -30,42 +30,61 @@ function Lists() {
     fetchLists();
   }, []);
 
+  // Manejar clic en "Editar"
   const handleEdit = (list) => {
-    setEditingList(list); // Cargar la lista en edición
-    setShowAddForm(true); // Mostrar el formulario de edición
+    setEditingList(list); // Establecer datos de la lista seleccionada para edición
+    setShowForm(true); // Mostrar el formulario
   };
 
-  const handleDelete = async (id, listName) => {
+  // Manejar clic en "Eliminar"
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar esta lista?');
     if (confirmDelete) {
       try {
-        // Eliminar la lista de la colección "Listas"
         await deleteDoc(doc(db, 'Listas', id));
-        fetchLists();
+        fetchLists(); // Recargar listas después de eliminar
       } catch (error) {
         console.error('Error al eliminar la lista:', error);
       }
     }
   };
 
+  // Manejar actualización de una lista existente
   const handleUpdate = async (updatedList) => {
     try {
       const listRef = doc(db, 'Listas', updatedList.id);
       await updateDoc(listRef, updatedList);
-      fetchLists();
-      setShowAddForm(false);
+      fetchLists(); // Recargar listas después de actualizar
+      setShowForm(false); // Cerrar el formulario
     } catch (error) {
       console.error('Error al actualizar la lista:', error);
     }
   };
 
+  // Manejar creación de una nueva lista
+  const handleAdd = async (newList) => {
+    try {
+      await addDoc(collection(db, 'Listas'), newList);
+      fetchLists(); // Recargar listas después de agregar
+      setShowForm(false); // Cerrar el formulario
+    } catch (error) {
+      console.error('Error al agregar la lista:', error);
+    }
+  };
+
   return (
     <div className="lists-container">
-      {showAddForm ? (
+      {showForm ? (
         <CrearLista
-          listaSeleccionada={editingList} // Pasamos la lista seleccionada al formulario
-          onCancelar={() => setShowAddForm(false)}
-          onListCreated={handleUpdate} // Llamada para actualizar la lista
+          listaSeleccionada={editingList}
+          onCancelar={() => setShowForm(false)}
+          onSave={(listData) => {
+            if (listData.id) {
+              handleUpdate(listData); // Si hay ID, es edición
+            } else {
+              handleAdd(listData); // Si no hay ID, es creación
+            }
+          }}
         />
       ) : (
         <>
@@ -85,49 +104,30 @@ function Lists() {
           </div>
 
           <div className="add-list-container">
-            <button onClick={() => setShowAddForm(true)} className="add-list-button">
+            <button onClick={() => setShowForm(true)} className="add-list-button">
               <FontAwesomeIcon icon={faPlus} /> Agregar Lista
             </button>
           </div>
 
-          <div className="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Fecha</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lists.length === 0 ? (
-                  <tr>
-                    <td colSpan="3">No se encontraron listas.</td>
-                  </tr>
-                ) : (
-                  lists.map((list) => (
-                    <tr key={list.id}>
-                      <td>{list.Nombre}</td>
-                      <td>{list.Fecha || 'N/A'}</td>
-                      <td>
-                        <button
-                          className="edit-button"
-                          onClick={() => handleEdit(list)} // Llamada a editar
-                        >
-                          <FontAwesomeIcon icon={faEdit} /> Editar
-                        </button>
-                        <button
-                          className="delete-button"
-                          onClick={() => handleDelete(list.id, list.Nombre)}
-                        >
-                          <FontAwesomeIcon icon={faTrash} /> Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+          <div className="lists-grid">
+            {lists
+              .filter((list) =>
+                list.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((list) => (
+                <div className="list-card" key={list.id}>
+                  <h3>{list.Nombre}</h3>
+                  <p>Fecha: {list.Fecha || 'Sin fecha'}</p>
+                  <div className="list-actions">
+                    <button className="edit-button" onClick={() => handleEdit(list)}>
+                      <FontAwesomeIcon icon={faEdit} /> Editar
+                    </button>
+                    <button className="delete-button" onClick={() => handleDelete(list.id)}>
+                      <FontAwesomeIcon icon={faTrash} /> Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
           </div>
         </>
       )}
