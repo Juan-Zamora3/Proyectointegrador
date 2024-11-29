@@ -82,7 +82,6 @@ function Courses() {
       ) : (
         <>
           <div className="courses-left">
-            <h2 className="title-courses">Cursos</h2>
             <div className="header-container">
               <input
                 type="text"

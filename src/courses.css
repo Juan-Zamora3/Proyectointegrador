@@ -2,8 +2,6 @@
 .courses-container {
   display: grid;
   grid-template-columns: 2fr 1fr; /* Dos columnas: cursos (2 partes) y detalles (1 parte) */
-  gap: 20px;
-  padding: 20px;
   background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -92,10 +90,7 @@
   line-height: 1.5;
 }
 .search-input {
- 
-  max-width: 1000px; /* Establece un ancho máximo */
-  padding: 10px 15px;
-  border: 1px solid #0066cc;
+ /* Establece un ancho máximo */
   border-radius: 25px;
   background-color: #f9f9f9;
   font-size: 14px;

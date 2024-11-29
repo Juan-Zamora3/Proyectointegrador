@@ -127,13 +127,35 @@ nav ul li a:hover span {
 }
 
 /* Contenido principal */
-.main-content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #ECF0F1;
+.content-wrapper {
+  width: 100%; /* Ajusta para que tome todo el ancho restante */
+  display: flex;
+  flex-direction: column; /* Asegura que el banner y el contenido estén apilados */
 }
 
-h1 {
-  margin-top: 0;
-  font-size: 24px;
+/* Banner */
+.banner {
+  background-color: #ffffff; /* Color rojo */
+  color: rgb(38, 34, 47);
+  text-align: left; /* Texto alineado a la izquierda */
+  font-size: 0.5em; /* Ajusta el tamaño del texto */
+  font-weight: bold;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Main content */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  padding: 20px;
+  background-color: #ECF0F1;
+  box-sizing: border-box;
+}
+
+/* Contenido dentro del main-content */
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }

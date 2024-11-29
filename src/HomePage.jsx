@@ -1,8 +1,7 @@
-// src/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import Courses from './courses';
 import Lists from './Lists';
 import Asistencias from './Asistencias';
@@ -75,15 +74,21 @@ function HomePage() {
           </Link>
         </div>
       </aside>
-      <main className="main-content">
-        {selectedMenu === 'Cursos' && <Courses />}
-        {selectedMenu === 'Listas' && <Lists />}
-        {selectedMenu === 'Asistencias' && <Asistencias />}
-        {selectedMenu === 'Graficas' && <p></p>}
-        {selectedMenu === 'Reportes' && <Reportes />}
-        {selectedMenu === 'Constancias' && <Constancias />}
-        {selectedMenu === 'Graficas' && <Graficas />}
-      </main>
+      <div className="content-wrapper">
+        <div className="banner">
+          <h1>{selectedMenu || 'Inicio'}</h1>
+        </div>
+        <main className="main-content">
+          <div className="content">
+            {selectedMenu === 'Cursos' && <Courses />}
+            {selectedMenu === 'Listas' && <Lists />}
+            {selectedMenu === 'Asistencias' && <Asistencias />}
+            {selectedMenu === 'Graficas' && <Graficas />}
+            {selectedMenu === 'Reportes' && <Reportes />}
+            {selectedMenu === 'Constancias' && <Constancias />}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
