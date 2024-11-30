@@ -6,6 +6,7 @@ import { db } from './firebaseConfig';
 import './Courses.css';
 import NuevoCurso from './NuevoCurso';
 
+
 function Courses() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -90,9 +91,6 @@ function Courses() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
               />
-              <button className="search-button">
-                <FontAwesomeIcon icon={faSearchPlus} /> Buscar
-              </button>
               <button onClick={() => setShowAddForm(true)} className="add-course-button">
                 <FontAwesomeIcon icon={faPlus} /> Agregar Curso
               </button>
@@ -116,24 +114,6 @@ function Courses() {
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="courses-right">
-            {selectedCourse ? (
-              <div className="course-details">
-                <h3>Detalles del Curso</h3>
-                <p><strong>Nombre:</strong> {selectedCourse.cursoNombre}</p>
-                <p><strong>Fecha Inicio:</strong> {selectedCourse.fechaInicio}</p>
-                <p><strong>Fecha Fin:</strong> {selectedCourse.fechaFin}</p>
-                <p><strong>Descripción:</strong> {selectedCourse.descripcion || 'No disponible'}</p>
-                <p><strong>Listas:</strong> {selectedCourse.listas?.join(', ') || 'Ninguna'}</p>
-              </div>
-            ) : (
-              <div className="course-details">
-                <h3>Detalles del Curso</h3>
-                <p>Selecciona un curso para ver sus detalles.</p>
-              </div>
-            )}
           </div>
         </>
       )}

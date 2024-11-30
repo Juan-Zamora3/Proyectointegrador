@@ -90,7 +90,7 @@ function HomePage() {
       </aside>
       <div className="content-wrapper">
         <div className="banner">
-          <h1>{selectedMenu || 'Inicio'}</h1>
+          <h1 className="titulo-banner">{selectedMenu || 'Inicio'}</h1>
         </div>
         <main className="main-content">
           <div className="content">
