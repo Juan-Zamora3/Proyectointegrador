@@ -177,17 +177,13 @@ const Constancias = () => {
 >
   <option value="" disabled selected>
     Seleccione un curso
-  </option>
-  {cursos.map((curso) => (
-    <option key={curso.id} value={curso.id}>
-      {curso.cursoNombre}
     </option>
-  ))}
-</select>
-
-
-        
-
+      {cursos.map((curso) => (
+      <option key={curso.id} value={curso.id}>
+        {curso.cursoNombre}
+        </option>
+        ))}
+        </select>
         {/* Listas asociadas */}
         <h3>Listas asociadas</h3>
         {listasAsociadas.length > 0 ? (
