@@ -4,22 +4,24 @@ import { faSearchPlus, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-s
 import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Lists.css';
-import CrearLista from './CrearLista'; // Componente para agregar/editar listas
+import CrearLista from './CrearLista';
 
 function Lists() {
-  const [showForm, setShowForm] = useState(false); // Controla si el formulario de agregar/editar se muestra
-  const [lists, setLists] = useState([]); // Datos de las listas
-  const [searchTerm, setSearchTerm] = useState(''); // Término de búsqueda
-  const [editingList, setEditingList] = useState(null); // Datos de la lista en edición
+  const [showForm, setShowForm] = useState(false);
+  const [lists, setLists] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [editingList, setEditingList] = useState(null);
 
   // Cargar listas desde Firebase
   const fetchLists = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Listas'));
-      const loadedLists = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      const loadedLists = querySnapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .filter((list) => list.Nombre); // Filtrar elementos que no tengan el campo Nombre
       setLists(loadedLists);
     } catch (error) {
       console.error('Error al cargar las listas:', error);
@@ -30,43 +32,39 @@ function Lists() {
     fetchLists();
   }, []);
 
-  // Manejar clic en "Editar"
   const handleEdit = (list) => {
-    setEditingList(list); // Establecer datos de la lista seleccionada para edición
-    setShowForm(true); // Mostrar el formulario
+    setEditingList(list);
+    setShowForm(true);
   };
 
-  // Manejar clic en "Eliminar"
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar esta lista?');
     if (confirmDelete) {
       try {
         await deleteDoc(doc(db, 'Listas', id));
-        fetchLists(); // Recargar listas después de eliminar
+        fetchLists();
       } catch (error) {
         console.error('Error al eliminar la lista:', error);
       }
     }
   };
 
-  // Manejar actualización de una lista existente
   const handleUpdate = async (updatedList) => {
     try {
       const listRef = doc(db, 'Listas', updatedList.id);
       await updateDoc(listRef, updatedList);
-      fetchLists(); // Recargar listas después de actualizar
-      setShowForm(false); // Cerrar el formulario
+      fetchLists();
+      setShowForm(false);
     } catch (error) {
       console.error('Error al actualizar la lista:', error);
     }
   };
 
-  // Manejar creación de una nueva lista
   const handleAdd = async (newList) => {
     try {
       await addDoc(collection(db, 'Listas'), newList);
-      fetchLists(); // Recargar listas después de agregar
-      setShowForm(false); // Cerrar el formulario
+      fetchLists();
+      setShowForm(false);
     } catch (error) {
       console.error('Error al agregar la lista:', error);
     }
@@ -80,9 +78,9 @@ function Lists() {
           onCancelar={() => setShowForm(false)}
           onSave={(listData) => {
             if (listData.id) {
-              handleUpdate(listData); // Si hay ID, es edición
+              handleUpdate(listData);
             } else {
-              handleAdd(listData); // Si no hay ID, es creación
+              handleAdd(listData);
             }
           }}
         />
@@ -112,11 +110,11 @@ function Lists() {
           <div className="lists-grid">
             {lists
               .filter((list) =>
-                list.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+                list.Nombre && list.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
               )
               .map((list) => (
                 <div className="list-card" key={list.id}>
-                  <h3>{list.Nombre}</h3>
+                  <h3>{list.Nombre || 'Sin Nombre'}</h3>
                   <p>Fecha: {list.Fecha || 'Sin fecha'}</p>
                   <div className="list-actions">
                     <button className="edit-button" onClick={() => handleEdit(list)}>
