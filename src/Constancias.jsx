@@ -41,15 +41,24 @@ const Constancias = () => {
     try {
       const cursoDocRef = doc(db, 'Cursos', cursoId);
       const cursoData = await getDoc(cursoDocRef);
-      const listasIds = cursoData.data().listas; // Asumiendo que 'listas' es un arreglo de IDs de listas
+
+      if (!cursoData.exists()) {
+        throw new Error(`El curso con ID ${cursoId} no existe.`);
+      }
+
+      const listasIds = cursoData.data()?.listas || []; // Manejo de listas no definidas
+
+      if (!Array.isArray(listasIds)) {
+        throw new Error('El formato de las listas no es válido.');
+      }
 
       // Cargar los nombres de las listas asociadas al curso
       const loadedListas = [];
       for (const listaId of listasIds) {
         const listaDocRef = doc(db, 'Listas', listaId);
         const listaDoc = await getDoc(listaDocRef);
-        if (listaDoc.exists) {
-          loadedListas.push(listaDoc.data().Nombre); // Obtener el nombre de cada lista
+        if (listaDoc.exists()) {
+          loadedListas.push(listaDoc.data()?.Nombre || 'Sin Nombre'); // Evitar errores si el nombre no existe
         }
       }
       setListasAsociadas(loadedListas);
@@ -59,20 +68,22 @@ const Constancias = () => {
       for (const listaId of listasIds) {
         const listaDocRef = doc(db, 'Listas', listaId);
         const listaDoc = await getDoc(listaDocRef);
-        if (listaDoc.exists) {
-          allStudents = allStudents.concat(listaDoc.data().Alumnos || []);
+        if (listaDoc.exists()) {
+          const alumnos = listaDoc.data()?.Alumnos || [];
+          allStudents = allStudents.concat(alumnos);
         }
       }
 
-      // Eliminar duplicados (si es necesario) basados en un identificador único, por ejemplo, 'Nombre'
-      const uniqueStudents = Array.from(new Set(allStudents.map(student => student.Nombre)))
-        .map(nombre => allStudents.find(student => student.Nombre === nombre));
+      // Eliminar duplicados (si es necesario) y asegurar datos válidos
+      const uniqueStudents = Array.from(
+        new Set(allStudents.filter(student => student?.Nombre).map(student => student.Nombre))
+      ).map(nombre => allStudents.find(student => student?.Nombre === nombre));
 
       setStudents(uniqueStudents);
       setSelectedStudents(uniqueStudents.map((_, index) => index)); // Seleccionar todos inicialmente
       setSelectAll(true);
     } catch (error) {
-      console.error('Error al cargar los estudiantes:', error);
+      console.error('Error al cargar los estudiantes:', error.message);
     }
   };
 
@@ -97,7 +108,7 @@ const Constancias = () => {
         const firstPage = pages[0];
         const { width } = firstPage.getSize();
 
-        firstPage.drawText(`A: ${student.Nombre} ${student.ApellidoP} ${student.ApellidoM}`, {
+        firstPage.drawText(`A: ${student.Nombre} ${student.ApellidoP || ''} ${student.ApellidoM || ''}`, {
           x: width / 2 - 100,
           y: 420,
           size: 20,
@@ -124,8 +135,8 @@ const Constancias = () => {
       setPdfBlobs(blobs);
       setCurrentIndex(0);
     } catch (error) {
-      console.error("Error al generar los PDFs:", error);
-      alert("Hubo un error al generar los PDFs.");
+      console.error('Error al generar los PDFs:', error);
+      alert('Hubo un error al generar los PDFs.');
     }
   };
 
@@ -165,26 +176,26 @@ const Constancias = () => {
     <div className="constancias-container">
       <div className="form-section">
         <h2>Constancias</h2>
-
-        <label>Seleccionar Curso</label>
+        <label htmlFor="curso-select">Seleccionar Curso</label>
         <select
-  onChange={(e) => {
-    handleCursoChange(e); // Actualiza el curso seleccionado
-    if (e.target.value) {
-      handleGenerarPDFs(); // Genera los PDFs si se selecciona un curso válido
-    }
-  }}
->
-  <option value="" disabled selected>
-    Seleccione un curso
-    </option>
-      {cursos.map((curso) => (
-      <option key={curso.id} value={curso.id}>
-        {curso.cursoNombre}
-        </option>
-        ))}
+          id="curso-select"
+          defaultValue=""
+          onChange={(e) => {
+            handleCursoChange(e);
+            if (e.target.value) {
+              handleGenerarPDFs();
+            }
+          }}
+        >
+          <option value="" disabled>
+            Seleccione un curso
+          </option>
+          {cursos.map((curso) => (
+            <option key={curso.id} value={curso.id}>
+              {curso.cursoNombre}
+            </option>
+          ))}
         </select>
-        {/* Listas asociadas */}
         <h3>Listas asociadas</h3>
         {listasAsociadas.length > 0 ? (
           <ul>
@@ -195,10 +206,8 @@ const Constancias = () => {
         ) : (
           <p>No hay listas asociadas para este curso.</p>
         )}
-
-        {/* Integrantes del curso */}
         <h3>Integrantes del curso</h3>
-        {students.length > 0 && (
+        {students.length > 0 ? (
           <div className="students-list">
             <ul>
               {students.map((student, index) => (
@@ -208,21 +217,22 @@ const Constancias = () => {
                     checked={selectedStudents.includes(index)}
                     onChange={() => handleSelectStudent(index)}
                   />
-                  {`${student.Nombre} ${student.ApellidoP} ${student.ApellidoM}`}
+                  {`${student.Nombre} ${student.ApellidoP || ''} ${student.ApellidoM || ''}`}
                 </li>
               ))}
             </ul>
           </div>
+        ) : (
+          <p>No hay estudiantes disponibles.</p>
         )}
       </div>
-
       {pdfBlobs.length > 0 && (
         <div className="preview-section">
           <h3>Vista Previa de las Constancias</h3>
-
           <div className="pdf-carousel">
-            <button onClick={handlePrevious} disabled={pdfBlobs.length <= 1}>Anterior</button>
-
+            <button onClick={handlePrevious} disabled={pdfBlobs.length <= 1}>
+              Anterior
+            </button>
             <div className="pdf-preview-item">
               <div className="student-select">
                 <input
@@ -230,7 +240,7 @@ const Constancias = () => {
                   checked={selectedStudents.includes(currentIndex)}
                   onChange={() => handleSelectStudent(currentIndex)}
                 />
-                <span>{`${students[currentIndex].Nombre} ${students[currentIndex].ApellidoP} ${students[currentIndex].ApellidoM}`}</span>
+                <span>{`${students[currentIndex].Nombre} ${students[currentIndex].ApellidoP || ''} ${students[currentIndex].ApellidoM || ''}`}</span>
               </div>
               <div className="pdf-viewer">
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
@@ -238,10 +248,10 @@ const Constancias = () => {
                 </Worker>
               </div>
             </div>
-
-            <button onClick={handleNext} disabled={pdfBlobs.length <= 1}>Siguiente</button>
+            <button onClick={handleNext} disabled={pdfBlobs.length <= 1}>
+              Siguiente
+            </button>
           </div>
-
           <button onClick={handleDescargarPDFs}>Descargar Constancias</button>
         </div>
       )}

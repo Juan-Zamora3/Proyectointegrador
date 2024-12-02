@@ -14,7 +14,7 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
   // Cargar datos de la lista seleccionada cuando se edita
   useEffect(() => {
     if (listaSeleccionada) {
-      setListName(listaSeleccionada.Nombre || '');
+      setListName(listaSeleccionada.Nombres || '');
       setListDate(listaSeleccionada.Fecha || '');
       setParticipants(listaSeleccionada.Alumnos || []);
       setSelectedStudents(
@@ -34,12 +34,16 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
 
   // Función para obtener todos los estudiantes de Firebase
   const fetchStudents = async () => {
-    const querySnapshot = await getDocs(collection(db, 'Alumnos'));
-    const students = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setAllStudents(students);
+    try {
+      const querySnapshot = await getDocs(collection(db, 'Alumnos'));
+      const students = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setAllStudents(students);
+    } catch (error) {
+      console.error('Error al cargar los estudiantes:', error);
+    }
   };
 
   useEffect(() => {
@@ -51,66 +55,52 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
     const isSelected = selectedStudents.find((s) => s.id === student.id);
 
     if (isSelected) {
-      // Si el estudiante ya está seleccionado, lo eliminamos de la lista
       setSelectedStudents(selectedStudents.filter((s) => s.id !== student.id));
-      setParticipants(participants.filter((p) => p.Nombre !== student.Nombres));
     } else {
-      // Si el estudiante no está seleccionado, lo agregamos
       setSelectedStudents([...selectedStudents, student]);
-      setParticipants([
-        ...participants,
-        {
-          Nombre: student.Nombres,
-          ApellidoP: student.ApellidoP,
-          ApellidoM: student.ApellidoM,
-        },
-      ]);
     }
   };
 
   // Crear o actualizar lista en Firebase
   const handleSaveList = async () => {
-    if (!listName) {
-      alert('Por favor, introduce el nombre de la lista');
+    if (!listName.trim()) {
+      alert('Por favor, introduce el nombre de la lista.');
       return;
     }
 
-    if (!listDate) {
-      alert('Por favor, selecciona una fecha');
+    if (!listDate.trim()) {
+      alert('Por favor, selecciona una fecha.');
       return;
     }
 
     if (selectedStudents.length === 0) {
-      alert('Agrega al menos un participante');
+      alert('Agrega al menos un participante.');
       return;
     }
+
+    // Preparar datos limpios para Firebase
+    const listaData = {
+      Nombre: listName.trim(),
+      Fecha: listDate.trim(),
+      Alumnos: selectedStudents.map((s) => ({
+        Nombre: s.Nombres || 'Nombre no especificado',
+        ApellidoP: s.ApellidoP || 'Apellido Paterno no especificado',
+        ApellidoM: s.ApellidoM || 'Apellido Materno no especificado',
+      })),
+    };
 
     try {
       if (listaSeleccionada?.id) {
         // Actualizar lista existente
-        await updateDoc(doc(db, 'Listas', listaSeleccionada.id), {
-          Nombre: listName,
-          Fecha: listDate,
-          Alumnos: selectedStudents.map((s) => ({
-            Nombre: s.Nombres,
-            ApellidoP: s.ApellidoP,
-            ApellidoM: s.ApellidoM,
-          })),
-        });
-        alert('Lista actualizada exitosamente');
+        await updateDoc(doc(db, 'Listas', listaSeleccionada.id), listaData);
+        alert('Lista actualizada exitosamente.');
       } else {
         // Crear nueva lista
         await addDoc(collection(db, 'Listas'), {
-          Nombre: listName,
-          Fecha: listDate,
-          Alumnos: selectedStudents.map((s) => ({
-            Nombre: s.Nombres,
-            ApellidoP: s.ApellidoP,
-            ApellidoM: s.ApellidoM,
-          })),
+          ...listaData,
           createdAt: new Date(),
         });
-        alert('Lista creada exitosamente');
+        alert('Lista creada exitosamente.');
       }
 
       // Limpiar todos los campos
@@ -123,15 +113,15 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
       onSave();
     } catch (e) {
       console.error('Error al guardar la lista: ', e);
-      alert('Error al guardar la lista');
+      alert('Error al guardar la lista.');
     }
   };
 
   // Filtrar estudiantes según el término de búsqueda
   const filteredStudents = allStudents.filter((student) =>
-    student.Nombres.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.ApellidoP.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.ApellidoM.toLowerCase().includes(searchTerm.toLowerCase())
+    student.Nombres?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.ApellidoP?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.ApellidoM?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -206,11 +196,11 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
               </tr>
             </thead>
             <tbody>
-              {participants.map((participant, index) => (
+              {selectedStudents.map((student, index) => (
                 <tr key={index}>
-                  <td>{participant.Nombre}</td>
-                  <td>{participant.ApellidoP}</td>
-                  <td>{participant.ApellidoM}</td>
+                  <td>{student.Nombres}</td>
+                  <td>{student.ApellidoP}</td>
+                  <td>{student.ApellidoM}</td>
                 </tr>
               ))}
             </tbody>
