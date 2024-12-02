@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login.jsx'; // Página de inicio de sesión
 import HomePage from './HomePage.jsx'; // Página principal
 import Courses from './courses.jsx'; // Asegúrate de que la ruta sea correcta
-
 function App() {
   return (
     <Router basename="/Proyectointegrador"> {/* Asegúrate de usar el basename correcto para GitHub Pages */}

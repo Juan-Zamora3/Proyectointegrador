@@ -30,7 +30,7 @@ body, html, #root {
   justify-content: space-between;
   width: 250px;
   height: 100%;
-  padding: 20px 1px;
+  padding: 20px;
   background-color: #0F1621;
   box-sizing: border-box;
 }
@@ -183,7 +183,6 @@ margin-top: auto;
 
 /* Contenedor dentro del contenido principal */
 .content {
-  background-color: #FFFFFF;
   width: 100%; /* Ocupa todo el ancho disponible */
   height: 100%; /* Ocupa todo el alto disponible */
   display: flex;

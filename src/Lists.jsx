@@ -117,7 +117,6 @@ return (
     ) : (
       // Vista principal con todas las listas
       <>
-        <h2 className="title-lists">Listas</h2>
         <div className="search-container">
           <input
             type="text"

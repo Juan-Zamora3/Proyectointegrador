@@ -99,76 +99,76 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
   };
 
   return (
-    <div className="nuevo-curso-page">
-      <div className="nuevo-curso-container">
-        <div className="form-section">
-          <h2>{cursoSeleccionado ? 'Editar Curso' : 'Nuevo Curso'}</h2>
-          <label>Nombre del curso</label>
-          <input
-            type="text"
-            value={cursoNombre}
-            onChange={(e) => setCursoNombre(e.target.value)}
-            placeholder="Nombre del curso"
-          />
-          <label>Asesor del curso</label>
-          <input
-            type="text"
-            value={asesor}
-            onChange={(e) => setAsesor(e.target.value)}
-            placeholder="Asesor del curso"
-          />
-          <label>Fecha de Inicio</label>
-          <input
-            type="date"
-            value={fechaInicio}
-            onChange={(e) => setFechaInicio(e.target.value)}
-          />
-          <label>Fecha de Finalización</label>
-          <input
-            type="date"
-            value={fechaFin}
-            onChange={(e) => setFechaFin(e.target.value)}
-          />
-          <label>Listas</label>
-          <div className="listas" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-            {todasLasListas.map((lista) => (
-              <div key={lista.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    value={lista.id}
-                    onChange={handleListChange}
-                    checked={listas.includes(lista.id)}
-                  />
-                  {lista.name}
-                </label>
-              </div>
-            ))}
-          </div>
+    <div className="nuevo-curso-container">
+      <div className="form-section">
+        <h2>{cursoSeleccionado ? 'Editar Curso' : 'Nuevo Curso'}</h2>
+        <label>Nombre del curso</label>
+        <input
+          type="text"
+          value={cursoNombre}
+          onChange={(e) => setCursoNombre(e.target.value)}
+          placeholder="Nombre del curso"
+        />
+        <label>Asesor del curso</label>
+        <input
+          type="text"
+          value={asesor}
+          onChange={(e) => setAsesor(e.target.value)}
+          placeholder="Asesor del curso"
+        />
+        <label>Fecha de Inicio</label>
+        <input
+          type="date"
+          value={fechaInicio}
+          onChange={(e) => setFechaInicio(e.target.value)}
+        />
+        <label>Fecha de Finalización</label>
+        <input
+          type="date"
+          value={fechaFin}
+          onChange={(e) => setFechaFin(e.target.value)}
+        />
+        <label>Listas</label>
+        <div className="listas">
+          {todasLasListas.map((lista) => (
+            <div key={lista.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={lista.id}
+                  onChange={handleListChange}
+                  checked={listas.includes(lista.id)}
+                />
+                {lista.name}
+              </label>
+            </div>
+          ))}
         </div>
+      </div>
 
-        <div className="preview-section">
-          <h3>Vista Previa</h3>
-          <table className="preview-table">
-            <thead>
-              <tr>
-                <th>Curso</th>
-                <th>Asesor</th>
-                <th>Fecha de Inicio</th>
-                <th>Fecha de Finalización</th>
-                <th>Listas</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{cursoNombre}</td>
-                <td>{asesor}</td>
-                <td>{fechaInicio}</td>
-                <td>{fechaFin}</td>
-                <td>{listas.map(listaId => todasLasListas.find(lista => lista.id === listaId)?.name).filter(Boolean).join(', ')}</td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="preview-section">
+        <h3>Vista Previa</h3>
+        <table className="preview-table">
+          <thead>
+            <tr>
+              <th>Curso</th>
+              <th>Asesor</th>
+              <th>Fecha de Inicio</th>
+              <th>Fecha de Finalización</th>
+              <th>Listas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{cursoNombre}</td>
+              <td>{asesor}</td>
+              <td>{fechaInicio}</td>
+              <td>{fechaFin}</td>
+              <td>{listas.map(listaId => todasLasListas.find(lista => lista.id === listaId)?.name).filter(Boolean).join(', ')}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="actions">
           <button className="cancel-button" onClick={onCancelar}>Cancelar</button>
           <button className="create-button" onClick={handleCrearOActualizar}>
             {cursoSeleccionado ? 'Actualizar' : 'Crear'}

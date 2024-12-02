@@ -1,26 +1,17 @@
-/* Contenedor principal sin neón */
+/* Contenedor principal */
 .nuevo-curso-container {
-    transform: scale(0.9);
     display: flex;
+    gap: 20px;
     justify-content: space-between;
-    gap: 40px;
 }
 
-/* Sección del formulario */
 .form-section {
-    width: 50%;
+    flex: 0 0 35%; /* Ocupar el 35% del ancho */
+
     display: flex;
     flex-direction: column;
     padding: 25px;
-    background: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    color: #333;
-    transition: all 0.3s ease;
-}
-
-.form-section:hover {
-    transform: scale(1.03);
 }
 
 .form-section label {
@@ -35,8 +26,6 @@
 .form-section input {
     border: 1px solid #ccc;
     padding: 12px;
-    width: 100%;
-    background-color: #f9f9f9;
     color: #333;
     border-radius: 8px;
     margin: 10px 0;
@@ -46,11 +35,10 @@
 }
 
 .form-section input:focus {
-    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 150, 136, 0.5);
 }
 
-/* Sección de listas (checkboxes sin neón) */
+/* Sección de listas */
 .listas {
     display: flex;
     flex-wrap: wrap;
@@ -60,17 +48,10 @@
 .listas label {
     display: flex;
     align-items: center;
-    padding: 15px;
-    background-color: #fafafa;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 5px;
     border: 1px solid #ddd;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.listas label:hover {
-    background-color: #f0f0f0;
 }
 
 .listas input[type="checkbox"] {
@@ -80,39 +61,27 @@
 
 /* Sección de vista previa */
 .preview-section {
-    width: 50%;
+    flex: 1; /* Ocupar el restante del espacio */
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Permitir la posición absoluta para los botones */
+    border-radius: 10px;
     padding: 30px;
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    color: #333;
-    transform: scale(1.02);
-    transition: all 0.3s ease;
-}
-
-.preview-section:hover {
-    transform: scale(1.05);
-}
-
-.preview-section h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #2980b9;
-    margin-bottom: 20px;
 }
 
 /* Estilo de la tabla de vista previa */
 .preview-table {
-    width: 100%;
+    width: 100%; /* Ajustar al ancho de la sección */
     border-collapse: collapse;
-    margin-top: 20px;
+    table-layout: fixed; /* Evitar desbordes */
 }
 
 .preview-table th, .preview-table td {
     border: 1px solid #ddd;
-    padding: 15px;
+    padding: 8px;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 0.8rem;
+    word-wrap: break-word; /* Ajustar el texto */
 }
 
 .preview-table th {
@@ -126,21 +95,23 @@
     background-color: #fafafa;
     color: #333;
     font-size: 1rem;
+    padding: 15px;
 }
 
 /* Estilo para botones de acción */
 .actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px; /* Alinear a la esquina inferior derecha */
     display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    gap: 20px; /* Añadimos espacio entre los botones */
+    gap: 10px; /* Separación entre los botones */
 }
 
 .cancel-button, .create-button {
-    padding: 15px 30px;
-    border-radius: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
