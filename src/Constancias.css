@@ -53,3 +53,19 @@
   border-radius: 8px;
   padding: 10px;
 }
+.preview-section .buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px; /* Espacio entre los botones y el PDF */
+}
+
+.pdf-viewer {
+  height: 700px; /* Vista más grande del PDF */
+  width: 100%; /* Ocupa todo el ancho de la sección */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+

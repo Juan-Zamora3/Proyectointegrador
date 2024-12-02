@@ -10,7 +10,7 @@ import './Constancias.css';
 const Constancias = () => {
   const [students, setStudents] = useState([]);
   const [cursos, setCursos] = useState([]);
-  const [selectedCurso, setSelectedCurso] = useState('');
+  const [selectedCurso, setSelectedCurso] = useState("");
   const [selectedCursoNombre, setSelectedCursoNombre] = useState('');
   const [pdfBlobs, setPdfBlobs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,6 +25,7 @@ const Constancias = () => {
 
   const fetchCursos = async () => {
     try {
+      
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
       const loadedCursos = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -48,7 +49,7 @@ const Constancias = () => {
         const listaDocRef = doc(db, 'Listas', listaId);
         const listaDoc = await getDoc(listaDocRef);
         if (listaDoc.exists) {
-          loadedListas.push(listaDoc.data().Nombres);
+          loadedListas.push(listaDoc.data().Nombre);
         }
       }
       setListasAsociadas(loadedListas);
@@ -89,8 +90,6 @@ const Constancias = () => {
   const handleGenerarPDFs = async () => {
     try {
       const blobs = [];
-  
-      // Generar PDFs de manera asíncrona para cada estudiante
       await Promise.all(students.map(async (student) => {
         try {
           const existingPdfBytes = await fetch('/Proyectointegrador/public/plantillareconocimiento.pdf').then(res => res.arrayBuffer());
@@ -127,6 +126,7 @@ const Constancias = () => {
         }
       }));
   
+      console.log(blobs); // Verifica que los blobs estén generados correctamente
       setPdfBlobs(blobs);
       setCurrentIndex(0);
     } catch (error) {
@@ -134,6 +134,7 @@ const Constancias = () => {
       alert("Hubo un error al generar los PDFs.");
     }
   };
+  
 
   // Descargar los PDFs seleccionados
   const handleDescargarPDFs = () => {
@@ -170,13 +171,13 @@ const Constancias = () => {
     }
     setSelectAll(!selectAll);
   };
-  return ( 
+  return (
     <div className="constancias-container">
       <div className="form-section">
         <h2>Constancias</h2>
   
         <label>Seleccionar Curso</label>
-        <select onChange={handleCursoChange} value={selectedCurso}>
+        <select onChange={handleCursoChange}>
           <option value="">Seleccione un curso</option>
           {cursos.map((curso) => (
             <option key={curso.id} value={curso.id}>
@@ -189,6 +190,7 @@ const Constancias = () => {
           Generar Constancias
         </button>
   
+        {/* Listas asociadas */}
         <h3>Listas asociadas</h3>
         {listasAsociadas.length > 0 ? (
           <ul>
@@ -200,6 +202,7 @@ const Constancias = () => {
           <p>No hay listas asociadas para este curso.</p>
         )}
   
+        {/* Integrantes del curso */}
         <h3>Integrantes del curso</h3>
         {students.length > 0 && (
           <div className="students-list">
@@ -223,9 +226,14 @@ const Constancias = () => {
         <div className="preview-section">
           <h3>Vista Previa de las Constancias</h3>
   
-          <div className="pdf-carousel">
+          {/* Los botones están aquí antes del visor */}
+          <div className="buttons">
             <button onClick={handlePrevious} disabled={pdfBlobs.length <= 1}>Anterior</button>
+            <button onClick={handleNext} disabled={pdfBlobs.length <= 1}>Siguiente</button>
+            <button onClick={handleDescargarPDFs}>Descargar Constancias</button>
+          </div>
   
+          <div className="pdf-carousel">
             <div className="pdf-preview-item">
               <div className="student-select">
                 <input
@@ -235,27 +243,20 @@ const Constancias = () => {
                 />
                 <span>{`${students[currentIndex].Nombres} ${students[currentIndex].ApellidoP} ${students[currentIndex].ApellidoM}`}</span>
               </div>
-  
-              <Worker workerUrl={`https://unpkg.com/pdfjs-dist/build/pdf.worker.min.js`}>
-                <Viewer fileUrl={URL.createObjectURL(pdfBlobs[currentIndex].blob)} />
-              </Worker>
+              <div className="pdf-viewer">
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                  <Viewer fileUrl={URL.createObjectURL(pdfBlobs[currentIndex].blob)} />
+                </Worker>
+              </div>
             </div>
-  
-            <button onClick={handleNext} disabled={pdfBlobs.length <= 1}>Siguiente</button>
           </div>
-  
-          <button
-            onClick={handleDescargarPDFs}
-            disabled={selectedStudents.length === 0}
-            className="download-button"
-          >
-            Descargar PDF(s)
-          </button>
         </div>
       )}
     </div>
   );
   
 };
+  
+
 
 export default Constancias;
