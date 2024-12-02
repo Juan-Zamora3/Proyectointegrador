@@ -42,7 +42,8 @@ function Courses() {
     if (confirmDelete) {
       try {
         await deleteDoc(doc(db, 'Cursos', id));
-        fetchCourses();
+        // Actualizar el estado de los cursos después de eliminar el curso
+        setCourses((prevCourses) => prevCourses.filter((course) => course.id !== id));
       } catch (error) {
         console.error('Error al eliminar el curso:', error);
       }

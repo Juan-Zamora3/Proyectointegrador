@@ -6,33 +6,25 @@ import './CrearLista.css';
 const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
   const [listName, setListName] = useState('');
   const [listDate, setListDate] = useState('');
-  const [participants, setParticipants] = useState([]);
-  const [allStudents, setAllStudents] = useState([]);
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [participants, setParticipants] = useState([]); // Participantes de la lista
+  const [allStudents, setAllStudents] = useState([]); // Todos los estudiantes
+  const [selectedStudents, setSelectedStudents] = useState([]); // Estudiantes seleccionados
+  const [searchTerm, setSearchTerm] = useState(''); // Término de búsqueda
 
   // Cargar datos de la lista seleccionada cuando se edita
   useEffect(() => {
     if (listaSeleccionada) {
-      setListName(listaSeleccionada.Nombres || '');
+      setListName(listaSeleccionada.Nombre || '');
       setListDate(listaSeleccionada.Fecha || '');
-      setParticipants(listaSeleccionada.Alumnos || []);
-      setSelectedStudents(
-        listaSeleccionada.Alumnos.map((alumno, index) => ({
-          id: `existing-${index}`, // Usamos un ID ficticio para alumnos existentes
-          ...alumno,
-        }))
-      );
+      setSelectedStudents(listaSeleccionada.Alumnos || []);
     } else {
-      // Limpiar campos si se está creando una nueva lista
       setListName('');
       setListDate('');
-      setParticipants([]);
       setSelectedStudents([]);
     }
   }, [listaSeleccionada]);
 
-  // Función para obtener todos los estudiantes de Firebase
+  // Función para obtener todos los estudiantes desde Firebase
   const fetchStudents = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Alumnos'));
@@ -50,7 +42,7 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
     fetchStudents();
   }, []);
 
-  // Manejar cambios en checkboxes
+  // Manejar cambios en checkboxes de selección de estudiantes
   const handleCheckboxChange = (student) => {
     const isSelected = selectedStudents.find((s) => s.id === student.id);
 
@@ -61,7 +53,7 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
     }
   };
 
-  // Crear o actualizar lista en Firebase
+  // Guardar o actualizar lista en Firebase
   const handleSaveList = async () => {
     if (!listName.trim()) {
       alert('Por favor, introduce el nombre de la lista.');
@@ -78,12 +70,11 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
       return;
     }
 
-    // Preparar datos limpios para Firebase
     const listaData = {
       Nombre: listName.trim(),
       Fecha: listDate.trim(),
       Alumnos: selectedStudents.map((s) => ({
-        Nombre: s.Nombres || 'Nombre no especificado',
+        Nombres: s.Nombres || 'Nombre no especificado',
         ApellidoP: s.ApellidoP || 'Apellido Paterno no especificado',
         ApellidoM: s.ApellidoM || 'Apellido Materno no especificado',
       })),
@@ -96,24 +87,18 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
         alert('Lista actualizada exitosamente.');
       } else {
         // Crear nueva lista
-        await addDoc(collection(db, 'Listas'), {
-          ...listaData,
-          createdAt: new Date(),
-        });
+        await addDoc(collection(db, 'Listas'), listaData);
         alert('Lista creada exitosamente.');
       }
 
-      // Limpiar todos los campos
+      // Limpiar campos después de guardar
       setListName('');
       setListDate('');
-      setParticipants([]);
       setSelectedStudents([]);
-
-      // Notificar al componente padre
       onSave();
-    } catch (e) {
-      console.error('Error al guardar la lista: ', e);
-      alert('Error al guardar la lista.');
+    } catch (error) {
+      console.error('Error al guardar la lista:', error);
+      alert('Hubo un error al guardar la lista.');
     }
   };
 

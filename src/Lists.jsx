@@ -21,6 +21,7 @@ function Lists() {
         id: doc.id,
         ...doc.data(),
       }));
+      console.log('Listas cargadas:', loadedLists); // Depuración
       setLists(loadedLists);
     } catch (error) {
       console.error('Error al cargar las listas:', error);
@@ -41,7 +42,7 @@ function Lists() {
     if (confirmDelete) {
       try {
         await deleteDoc(doc(db, 'Listas', id));
-        fetchLists();
+        fetchLists(); // Actualizar listas después de eliminar
         alert('Lista eliminada exitosamente.');
       } catch (error) {
         console.error('Error al eliminar la lista:', error);
@@ -52,7 +53,7 @@ function Lists() {
   const handleSave = () => {
     setShowForm(false);
     setEditingList(null);
-    fetchLists();
+    fetchLists(); // Actualizar las listas después de guardar
   };
 
   const handleCancel = () => {
@@ -89,7 +90,7 @@ function Lists() {
               {selectedList.Alumnos && selectedList.Alumnos.length > 0 ? (
                 selectedList.Alumnos.map((alumno, index) => (
                   <tr key={index}>
-                    <td>{alumno.Nombre}</td>
+                    <td>{alumno.Nombres}</td>
                     <td>{alumno.ApellidoP}</td>
                     <td>{alumno.ApellidoM}</td>
                   </tr>

@@ -70,7 +70,7 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
         // Crear nuevo curso
         const cursoDocRef = await addDoc(collection(db, 'Cursos'), cursoData);
         alert('Curso creado exitosamente');
-
+        
         // Actualizar alumnos en la colección de "Alumnos"
         for (const listaId of listas) {
           const listaRef = doc(db, 'Listas', listaId);
@@ -83,6 +83,9 @@ const NuevoCurso = ({ cursoSeleccionado, onActualizarCurso, onCancelar }) => {
             });
           });
         }
+
+        // Actualizar la lista de cursos para reflejar el nuevo curso creado
+        onActualizarCurso(cursoDocRef.id, cursoData);
       }
     } catch (error) {
       console.error('Error al crear o actualizar el curso:', error);
