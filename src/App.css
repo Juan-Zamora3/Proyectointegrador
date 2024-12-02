@@ -48,7 +48,6 @@ body, html, #root {
 
 .input-group {
   margin-bottom: 20px;
-  width: 100%;
 }
 
 .input-group label {
@@ -59,7 +58,6 @@ body, html, #root {
 }
 
 .input-group input {
-  width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -88,4 +86,9 @@ body, html, #root {
   background-color: #004aad;
   background: url('./assets/Fondomorado.png') no-repeat center center;
   background-size: cover;
+}
+
+.toggle-form{
+  display: flex;
+  flex-direction: column;
 }
