@@ -1,12 +1,3 @@
-.courses-container {
-    position: relative;
-    backdrop-filter: blur(10px); /* Aplica desenfoque solo a esta sección */
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* Fondo ligeramente transparente */
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin-top: 50px;
-}
 
 .login-overlay {
     position: fixed;
@@ -56,10 +47,7 @@
 
 /* Sección de cursos */
 .courses-left {
-    padding: 15px;
-    background-color: #ffffff;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     flex: 1;
 }
 
