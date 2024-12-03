@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import Courses from './courses';
 import Lists from './Lists';
 import Asistencias from './Asistencias';
 import Constancias from './Constancias';
 import Reportes from './Reportes';
 import Graficas from './Graficas';
+import Cuentas from './Cuentas';
 import './HomePage.css';
 
 function HomePage() {
@@ -15,7 +16,7 @@ function HomePage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem('Cuentas');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -25,9 +26,16 @@ function HomePage() {
     setSelectedMenu(menu);
   };
 
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('¿Estás seguro de que deseas cerrar sesión?');
+    if (confirmLogout) {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+  };
+
   return (
     <div className="container">
-      {/* Sidebar adaptado */}
       <aside className="barra-lateral">
         <div className="usuario">
           <img
@@ -82,9 +90,21 @@ function HomePage() {
           </ul>
         </nav>
         <div className="linea-settings"></div>
+        {/* Nueva sección para Cuentas */}
         <div className="settings">
-          <Link to="/" onClick={() => localStorage.removeItem('user')}>
-            <FontAwesomeIcon icon={faSignOutAlt} /><span>Cerrar Sesión</span>
+          <ul>
+            <li onClick={() => handleMenuClick('Cuentas')}>
+              <Link to="#">
+                <FontAwesomeIcon icon={faUser} />
+                <span>Cuentas</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div className="settings">
+          <Link to="#" onClick={handleLogout}>
+            <FontAwesomeIcon icon={faSignOutAlt} />
+            <span>Cerrar Sesión</span>
           </Link>
         </div>
       </aside>
@@ -100,6 +120,7 @@ function HomePage() {
             {selectedMenu === 'Graficas' && <Graficas />}
             {selectedMenu === 'Reportes' && <Reportes />}
             {selectedMenu === 'Constancias' && <Constancias />}
+            {selectedMenu === 'Cuentas' && <Cuentas />}
           </div>
         </main>
       </div>
