@@ -22,6 +22,14 @@ function Login() {
     setError(''); // Limpiar cualquier error anterior
   };
 
+  // Manejar la redirección a la página de Cuentas
+  const handleMenuClick = (menu) => {
+    console.log(`Menu seleccionado: ${menu}`);
+    if (menu === 'Cuentas') {
+      navigate('/cuentas'); // Redirige a la página de Cuentas
+    }
+  };
+
   // Manejar el ingreso de usuarios (login manual)
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -47,44 +55,6 @@ function Login() {
     }
   };
 
-  // Manejar el registro de usuario
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    if (!email || !password || !name) {
-      setAlert('Por favor, completa todos los campos.');
-      return;
-    }
-
-    if (password.length < 6) {
-      setAlert('La contraseña debe tener al menos 6 caracteres.');
-      return;
-    }
-
-    try {
-      // Verificar si el correo ya está registrado
-      const userDoc = await getDoc(doc(db, 'Usuarios', email));
-      if (userDoc.exists()) {
-        setAlert('El correo ya está en uso. Por favor, usa otro o inicia sesión.');
-        return;
-      }
-
-      // Guarda los datos del usuario en la colección "Usuarios"
-      await setDoc(doc(db, 'Usuarios', email), {
-        name: name,
-        email: email,
-        password: password,
-      });
-
-      console.log('Usuario registrado:', { name, email });
-      // Guardar datos del usuario en localStorage
-      localStorage.setItem('user', JSON.stringify({ name, email }));
-      setAlert('');
-      navigate('/home'); // Redirige a la página principal después del registro
-    } catch (error) {
-      setError('Error al registrar el usuario.');
-    }
-  };
-
   return (
     <div
       className="app-container"
@@ -100,19 +70,7 @@ function Login() {
           {alert && <div className="alert">{alert}</div>}
           {error && <p className="error">{error}</p>}
 
-          <form onSubmit={isRegister ? handleRegister : handleLogin}>
-            {isRegister && (
-              <div className="input-group">
-                <label>Nombre Completo</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => handleInputChange(e, setName)}
-                  placeholder="Nombre Completo"
-                  required
-                />
-              </div>
-            )}
+          <form onSubmit={handleLogin}>
             <div className="input-group">
               <label>Correo Electrónico</label>
               <input
@@ -134,13 +92,13 @@ function Login() {
               />
             </div>
             <button type="submit" className="login-button">
-              {isRegister ? 'Registrarse' : 'Login'}
+              Login
             </button>
           </form>
           <div className="toggle-form">
-            <p>{isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}</p>
-            <button onClick={() => setIsRegister(!isRegister)}>
-              {isRegister ? 'Inicia sesión' : 'Regístrate'}
+            <p>¿No tienes cuenta?</p>
+            <button onClick={() => handleMenuClick('Cuentas')}>
+              Registrarse
             </button>
           </div>
         </div>
