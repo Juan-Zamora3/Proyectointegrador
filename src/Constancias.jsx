@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore'; // Asegúrate de importar updateDoc
+
 import { db } from './firebaseConfig';
 import { saveAs } from 'file-saver';
 import { PDFDocument, rgb } from 'pdf-lib';
@@ -25,7 +26,6 @@ const Constancias = () => {
 
   const fetchCursos = async () => {
     try {
-      
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
       const loadedCursos = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -63,7 +63,6 @@ const Constancias = () => {
         }
       }
 
-      // Eliminar duplicados por nombre
       const uniqueStudents = Array.from(new Set(allStudents.map(student => student.Nombres)))
         .map(nombres => allStudents.find(student => student.Nombres === nombres));
 
@@ -75,7 +74,6 @@ const Constancias = () => {
     }
   };
 
-  // Cambiar de curso seleccionado
   const handleCursoChange = (event) => {
     const selectedCursoId = event.target.value;
     const selectedCursoText = event.target.options[event.target.selectedIndex].text;
@@ -86,7 +84,6 @@ const Constancias = () => {
     }
   };
 
-  // Generar los PDFs para cada estudiante
   const handleGenerarPDFs = async () => {
     try {
       const blobs = [];
@@ -97,36 +94,35 @@ const Constancias = () => {
           const pages = pdfDoc.getPages();
           const firstPage = pages[0];
           const { width } = firstPage.getSize();
-  
+
           firstPage.drawText(`A: ${student.Nombres} ${student.ApellidoP} ${student.ApellidoM}`, {
             x: width / 2 - 100,
             y: 420,
             size: 20,
             color: rgb(0, 0, 0),
           });
-  
+
           firstPage.drawText(`Por su participación en el curso: ${selectedCursoNombre}`, {
             x: width / 2 - 150,
             y: 390,
             size: 14,
             color: rgb(0, 0, 0),
           });
-  
+
           firstPage.drawText(`Agosto de 2024, Puerto Peñasco, Sonora, México.`, {
             x: width / 2 - 150,
             y: 360,
             size: 14,
             color: rgb(0, 0, 0),
           });
-  
+
           const pdfBytes = await pdfDoc.save();
           blobs.push({ blob: new Blob([pdfBytes], { type: 'application/pdf' }), student });
         } catch (error) {
           console.error(`Error al generar el PDF para el estudiante: ${student.Nombres}`, error);
         }
       }));
-  
-      console.log(blobs); // Verifica que los blobs estén generados correctamente
+
       setPdfBlobs(blobs);
       setCurrentIndex(0);
     } catch (error) {
@@ -134,9 +130,7 @@ const Constancias = () => {
       alert("Hubo un error al generar los PDFs.");
     }
   };
-  
 
-  // Descargar los PDFs seleccionados
   const handleDescargarPDFs = () => {
     const selectedBlobs = pdfBlobs.filter((_, index) => selectedStudents.includes(index));
     selectedBlobs.forEach(({ blob, student }) => {
@@ -144,7 +138,53 @@ const Constancias = () => {
     });
   };
 
-  // Navegar entre los PDFs generados
+  const handleGuardarAsistencia = async () => {
+    try {
+      const asistenciaData = {
+        cursoId: selectedCurso,
+        cursoNombre: selectedCursoNombre,
+        fecha: new Date(),
+        estudiantes: [], // Aquí guardamos la lista de estudiantes presentes
+      };
+  
+      // Agregar los estudiantes seleccionados a la lista de estudiantes
+      selectedStudents.forEach((index) => {
+        const student = students[index];
+        asistenciaData.estudiantes.push({
+          nombres: student.Nombres,
+          apellidoP: student.ApellidoP,
+          apellidoM: student.ApellidoM,
+        });
+      });
+  
+      // Obtener el documento del curso
+      const courseDocRef = doc(db, 'Cursos', selectedCurso);
+      const courseDocSnapshot = await getDoc(courseDocRef);
+  
+      if (!courseDocSnapshot.exists()) {
+        alert('Curso no encontrado');
+        return;
+      }
+  
+      const courseData = courseDocSnapshot.data();
+  
+      // Guardar la lista de asistencia en el curso seleccionado
+      await updateDoc(courseDocRef, {
+        asistencia: [
+          ...(courseData.asistencia || []), // Mantener las asistencias existentes
+          asistenciaData,
+        ],
+      });
+  
+      alert('Asistencia guardada con éxito');
+      setSelectedStudents([]);
+    } catch (error) {
+      console.error('Error al guardar la asistencia:', error);
+      alert('Hubo un error al guardar la asistencia.');
+    }
+  };
+  
+  
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % pdfBlobs.length);
   };
@@ -153,7 +193,6 @@ const Constancias = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + pdfBlobs.length) % pdfBlobs.length);
   };
 
-  // Seleccionar o deseleccionar un estudiante
   const handleSelectStudent = (index) => {
     setSelectedStudents(prevSelected =>
       prevSelected.includes(index)
@@ -162,7 +201,6 @@ const Constancias = () => {
     );
   };
 
-  // Seleccionar o deseleccionar todos los estudiantes
   const handleSelectAll = () => {
     if (selectAll) {
       setSelectedStudents([]);
@@ -171,11 +209,12 @@ const Constancias = () => {
     }
     setSelectAll(!selectAll);
   };
+
   return (
     <div className="constancias-container">
       <div className="form-section">
         <h2>Constancias</h2>
-  
+
         <label>Seleccionar Curso</label>
         <select onChange={handleCursoChange}>
           <option value="">Seleccione un curso</option>
@@ -185,12 +224,14 @@ const Constancias = () => {
             </option>
           ))}
         </select>
-  
+
         <button onClick={handleGenerarPDFs} disabled={!selectedCurso || students.length === 0}>
           Generar Constancias
         </button>
-  
-        {/* Listas asociadas */}
+        <button onClick={handleGuardarAsistencia} disabled={!selectedCurso || selectedStudents.length === 0}>
+          Guardar Asistencia
+        </button>
+
         <h3>Listas asociadas</h3>
         {listasAsociadas.length > 0 ? (
           <ul>
@@ -201,8 +242,7 @@ const Constancias = () => {
         ) : (
           <p>No hay listas asociadas para este curso.</p>
         )}
-  
-        {/* Integrantes del curso */}
+
         <h3>Integrantes del curso</h3>
         {students.length > 0 && (
           <div className="students-list">
@@ -221,18 +261,17 @@ const Constancias = () => {
           </div>
         )}
       </div>
-  
+
       {pdfBlobs.length > 0 && (
         <div className="preview-section">
           <h3>Vista Previa de las Constancias</h3>
-  
-          {/* Los botones están aquí antes del visor */}
+
           <div className="buttons">
             <button onClick={handlePrevious} disabled={pdfBlobs.length <= 1}>Anterior</button>
             <button onClick={handleNext} disabled={pdfBlobs.length <= 1}>Siguiente</button>
             <button onClick={handleDescargarPDFs}>Descargar Constancias</button>
           </div>
-  
+
           <div className="pdf-carousel">
             <div className="pdf-preview-item">
               <div className="student-select">
@@ -254,9 +293,6 @@ const Constancias = () => {
       )}
     </div>
   );
-  
 };
-  
-
 
 export default Constancias;

@@ -3,9 +3,14 @@
   padding: 20px;
   background-color: #ffffff;
   box-sizing: border-box;
-  height: 100%;
+  min-height: 100vh; /* Ocupa al menos toda la ventana */
   width: 100%;
   border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-y: auto; /* Habilita el scroll interno si es necesario */
 }
 
 /* Título */
@@ -43,6 +48,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  padding-bottom: 20px; /* Añade espacio al final para evitar cortes */
 }
 
 /* Tarjetas de asistencias */
@@ -93,4 +99,114 @@
 
 .list-actions button:hover {
   background-color: #004b99;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Container */
+.modal-container {
+  background: #fff;
+  padding: 30px;
+  width: 95%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Título del Modal */
+.modal-container h2 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #007bff;
+}
+
+/* Campos del formulario */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* Botones */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.submit-button {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #218838;
+}
+
+.cancel-button {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: #c82333;
+}
+
+/* Body y Root */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f0f0f0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
 }

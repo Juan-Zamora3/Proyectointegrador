@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import Courses from './courses';
 import Lists from './Lists';
-import Asistencias from './Asistencias';
+import Asistencia from './Asistencia'; // Componente Asistencia.jsx
+import Asistencias from './Asistencias'; // Componente Asistencias.jsx
 import Constancias from './Constancias';
 import Reportes from './Reportes';
 import Graficas from './Graficas';
@@ -66,7 +67,13 @@ function HomePage() {
             <li onClick={() => handleMenuClick('Asistencias')}>
               <Link to="#">
                 <FontAwesomeIcon icon={faCheckSquare} />
-                <span>Personal</span>
+                <span>Asistencias</span> {/* Botón para Asistencia.jsx */}
+              </Link>
+            </li>
+            <li onClick={() => handleMenuClick('Personal')}>
+              <Link to="#">
+                <FontAwesomeIcon icon={faCheckSquare} />
+                <span>Personal</span> {/* Botón para Asistencias.jsx */}
               </Link>
             </li>
             <li onClick={() => handleMenuClick('Graficas')}>
@@ -116,7 +123,8 @@ function HomePage() {
           <div className="content">
             {selectedMenu === 'Cursos' && <Courses />}
             {selectedMenu === 'Listas' && <Lists />}
-            {selectedMenu === 'Asistencias' && <Asistencias />}
+            {selectedMenu === 'Asistencias' && <Asistencia />} {/* Componente Asistencia.jsx */}
+            {selectedMenu === 'Personal' && <Asistencias />} {/* Componente Asistencias.jsx */}
             {selectedMenu === 'Graficas' && <Graficas />}
             {selectedMenu === 'Reportes' && <Reportes />}
             {selectedMenu === 'Constancias' && <Constancias />}

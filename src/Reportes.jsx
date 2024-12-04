@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig';
+import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore'; // Cambiar a getDoc y updateDoc
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from './firebaseConfig';
 import './Reporte.css';
 
 const Reportes = () => {
@@ -8,6 +9,8 @@ const Reportes = () => {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState('');
+  const [images, setImages] = useState([]);
+  const [previewImages, setPreviewImages] = useState([]);
 
   useEffect(() => {
     fetchCourses();
@@ -19,7 +22,7 @@ const Reportes = () => {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
       const loadedCourses = querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setCourses(loadedCourses);
     } catch (error) {
@@ -27,28 +30,79 @@ const Reportes = () => {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + previewImages.length > 5) {
+      alert('Solo puedes subir un máximo de 5 imágenes.');
+      return;
+    }
+
+    setImages([...images, ...files]);
+
+    const previews = files.map(file => URL.createObjectURL(file));
+    setPreviewImages([...previewImages, ...previews]);
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = images.filter((_, i) => i !== index);
+    const updatedPreviews = previewImages.filter((_, i) => i !== index);
+
+    setImages(updatedImages);
+    setPreviewImages(updatedPreviews);
+  };
+
   const handleSaveReport = async () => {
     if (!selectedCourse || !comment || !rating) {
       alert('Por favor, completa todos los campos.');
       return;
     }
-
+  
     try {
-      await addDoc(collection(db, 'Reportes'), {
-        cursoId: selectedCourse,
-        comentario: comment,
-        calificacion: rating,
-        fecha: new Date()
+      // Subir imágenes a Firebase Storage
+      const imageUrls = [];
+      for (const image of images) {
+        const storageRef = ref(storage, `reportes/${Date.now()}-${image.name}`);
+        await uploadBytes(storageRef, image);
+        const downloadURL = await getDownloadURL(storageRef);
+        imageUrls.push(downloadURL);
+      }
+  
+      // Obtener el documento del curso
+      const courseDocRef = doc(db, 'Cursos', selectedCourse);
+      const courseDocSnapshot = await getDoc(courseDocRef); // Usamos getDoc
+  
+      if (!courseDocSnapshot.exists()) {
+        alert('Curso no encontrado');
+        return;
+      }
+  
+      const courseData = courseDocSnapshot.data(); // Ahora se puede usar .data()
+  
+      // Guardar el reporte en el curso seleccionado
+      await updateDoc(courseDocRef, {
+        reportes: [
+          ...(courseData.reportes || []), // Mantener los reportes existentes
+          {
+            comentario: comment,
+            calificacion: rating,
+            imagenes: imageUrls,
+            fecha: new Date(),
+          }
+        ]
       });
+  
       alert('Reporte guardado con éxito');
       setComment('');
       setRating('');
       setSelectedCourse('');
+      setImages([]);
+      setPreviewImages([]);
     } catch (error) {
       console.error('Error al guardar el reporte:', error);
       alert('Hubo un error al guardar el reporte');
     }
   };
+  
 
   return (
     <div className="reports-container">
@@ -83,6 +137,18 @@ const Reportes = () => {
         max="5"
         placeholder="Calificación"
       />
+
+      <label>Subir Imágenes (Máximo 5)</label>
+      <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
+
+      <div className="preview-container">
+        {previewImages.map((src, index) => (
+          <div key={index} className="preview-item">
+            <img src={src} alt={`preview-${index}`} />
+            <button onClick={() => handleRemoveImage(index)}>Eliminar</button>
+          </div>
+        ))}
+      </div>
 
       <button onClick={handleSaveReport}>Guardar Reporte</button>
     </div>
