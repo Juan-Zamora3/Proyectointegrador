@@ -104,3 +104,116 @@
   object-fit: contain;
   border-radius: 8px;
 }
+
+
+.tabla-asistencia th, .tabla-asistencia td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.tabla-asistencia th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.tabla-asistencia td {
+  background-color: #fff;
+}
+.asistencia-table,
+.estudiantes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.asistencia-table th,
+.asistencia-table td,
+.estudiantes-table th,
+.estudiantes-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.asistencia-table th,
+.estudiantes-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.estudiantes-table td {
+  text-transform: capitalize;
+}
+
+.asistencia-row:nth-child(even),
+.estudiante-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.asistencia-row:hover,
+.estudiante-row:hover {
+  background-color: #f1f1f1;
+}
+.estudiantes-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.estudiantes-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.estudiantes-scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+.asistencia-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.asistencia-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.asistencia-table thead,
+.asistencia-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* Asegura alineación uniforme */
+}
+
+.asistencia-table thead {
+  position: sticky; /* Hace que el encabezado sea fijo */
+  top: 0; /* Fija el encabezado al principio */
+  z-index: 2;
+  background-color: #f2f2f2;
+}
+
+.asistencia-table tbody {
+  display: block; /* Permite el desplazamiento vertical */
+  max-height: 300px; /* Altura máxima del área desplazable */
+  overflow-y: auto;
+}
+
+.asistencia-table th,
+.asistencia-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.asistencia-table th {
+  font-weight: bold;
+}
+
+.asistencia-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.asistencia-table tbody tr:hover {
+  background-color: #f1f1f1;
+}

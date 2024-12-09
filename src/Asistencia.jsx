@@ -83,11 +83,13 @@ const Asistencia = () => {
     setSelectedAsistencia(curso);
     setIsModalOpen(true);
   };
-
+  
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedAsistencia(null);
   };
+
+  
 
   return (
     <div className="asistencia-container">
@@ -110,62 +112,98 @@ const Asistencia = () => {
           ))
         )}
       </div>
-
+  
       {isModalOpen && selectedAsistencia && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>{getField(selectedAsistencia, 'cursoNombre')}</h3>
-            <p><strong>Asesor:</strong> {getField(selectedAsistencia, 'asesor')}</p>
-            <p><strong>Fecha de inicio:</strong> {getField(selectedAsistencia, 'fechaInicio')}</p>
-            <p><strong>Fecha de finalización:</strong> {getField(selectedAsistencia, 'fechaFin')}</p>
+  <div className="modal-overlay" onClick={handleCloseModal}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <h3>{getField(selectedAsistencia, 'cursoNombre')}</h3>
+      <p><strong>Asesor:</strong> {getField(selectedAsistencia, 'asesor')}</p>
+      <p><strong>Fecha de inicio:</strong> {getField(selectedAsistencia, 'fechaInicio')}</p>
+      <p><strong>Fecha de finalización:</strong> {getField(selectedAsistencia, 'fechaFin')}</p>
 
-            <h4>Reportes:</h4>
-            {selectedAsistencia.reportes?.length > 0 ? (
-              selectedAsistencia.reportes.map((reporte, index) => (
-                <div key={`reporte-${index}`}>
-                  <p><strong>Comentario:</strong> {getField(reporte, 'comentario')}</p>
-                  <p><strong>Calificación:</strong> {getField(reporte, 'calificacion')}</p>
-                </div>
-              ))
-            ) : (
-              <p>No hay reportes disponibles.</p>
-            )}
+      <h4>Lista de Asistencia:</h4>
+{selectedAsistencia.asistencia?.length > 0 ? (
+  <div className="asistencia-container">
+   <table class="asistencia-table">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido Paterno</th>
+      <th>Apellido Materno</th>
+    </tr>
+  </thead>
+  <tbody class="asistencia-tbody-scroll">
+    {selectedAsistencia.asistencia.map((asistencia, index) =>
+      asistencia.estudiantes.map((estudiante, estudianteIndex) => (
+        <tr key={`estudiante-${index}-${estudianteIndex}`} className="estudiante-row">
+          <td>{capitalize(estudiante.nombres)}</td>
+          <td>{capitalize(estudiante.apellidoP)}</td>
+          <td>{capitalize(estudiante.apellidoM)}</td>
+        </tr>
+      ))
+    )}
+  </tbody>
+</table>
+  </div>
+) : (
+  <p>No hay asistencias registradas.</p>
+)}
 
-            <h4>Imágenes:</h4>
-            <Swiper
-              spaceBetween={20}
-              slidesPerView={1}
-              navigation
-              pagination={{ clickable: true }}
-              loop={true}
-              style={{ maxWidth: '100%', margin: '0 auto' }}
-            >
-              {selectedAsistencia.reportes?.flatMap((reporte, reporteIndex) =>
-                reporte.imagenes?.map((url, imgIndex) => (
-                  <SwiperSlide key={`reporte-${reporteIndex}-image-${imgIndex}`}>
-                    <div className="image-item">
-                      <img
-                        src={url}
-                        alt={`Reporte ${reporteIndex + 1} - Imagen ${imgIndex + 1}`}
-                        className="carousel-image"
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/150?text=No+disponible';
-                        }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))
-              )}
-            </Swiper>
 
-            <div className="actions">
-              <button onClick={handleCloseModal} className="btn-close">Cerrar</button>
-            </div>
+
+      <h4>Reportes:</h4>
+      {selectedAsistencia.reportes?.length > 0 ? (
+        selectedAsistencia.reportes.map((reporte, index) => (
+          <div key={`reporte-${index}`}>
+            <p><strong>Comentario:</strong> {getField(reporte, 'comentario')}</p>
+            <p><strong>Calificación:</strong> {getField(reporte, 'calificacion')}</p>
           </div>
-        </div>
+        ))
+      ) : (
+        <p>No hay reportes disponibles.</p>
       )}
+
+      <h4>Imágenes:</h4>
+      {selectedAsistencia.reportes?.some((reporte) => reporte.imagenes?.length > 0) ? (
+        <Swiper
+          spaceBetween={1}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          loop={true}
+          style={{ maxWidth: '100%', margin: '0 auto' }}
+        >
+          {selectedAsistencia.reportes.flatMap((reporte, reporteIndex) =>
+            reporte.imagenes?.map((url, imgIndex) => (
+              <SwiperSlide key={`reporte-${reporteIndex}-image-${imgIndex}`}>
+                <div className="image-item">
+                  <img
+                    src={url}
+                    alt={`Reporte ${reporteIndex + 1} - Imagen ${imgIndex + 1}`}
+                    className="carousel-image"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/150?text=No+disponible';
+                    }}
+                  />
+                </div>
+              </SwiperSlide>
+            ))
+          )}
+        </Swiper>
+      ) : (
+        <p>No hay imágenes disponibles.</p>
+      )}
+
+      <div className="actions">
+        <button onClick={handleCloseModal} className="btn-close">Cerrar</button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
+  
 };
 
 export default Asistencia;
