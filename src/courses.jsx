@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearchPlus, faPlus, faEdit, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Courses.css';
@@ -12,13 +12,16 @@ function Courses() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingCourse, setEditingCourse] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [todasLasListas, setTodasLasListas] = useState([]); // Todas las listas disponibles
+  const [formattedListas, setFormattedListas] = useState(''); // Listas legibles del curso seleccionado
 
+  // Cargar cursos desde Firestore
   const fetchCourses = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
       const loadedCourses = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setCourses(loadedCourses);
     } catch (error) {
@@ -26,9 +29,38 @@ function Courses() {
     }
   };
 
+  // Cargar todas las listas desde Firestore
+  const fetchListas = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'Listas'));
+      const loadedListas = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().Nombre,
+      }));
+      setTodasLasListas(loadedListas);
+    } catch (error) {
+      console.error('Error al cargar las listas:', error);
+    }
+  };
+
+  // Asociar listas de IDs del curso con sus nombres
+  const formatListas = (listasIds) => {
+    if (!listasIds || listasIds.length === 0) return 'Sin listas asociadas';
+    return listasIds
+      .map((id) => todasLasListas.find((lista) => lista.id === id)?.name || 'Lista no encontrada')
+      .join(', ');
+  };
+
   useEffect(() => {
     fetchCourses();
+    fetchListas(); // Cargar todas las listas al inicio
   }, []);
+
+  useEffect(() => {
+    if (selectedCourse?.listas) {
+      setFormattedListas(formatListas(selectedCourse.listas));
+    }
+  }, [selectedCourse, todasLasListas]);
 
   const handleEdit = (course) => {
     setEditingCourse(course);
@@ -54,8 +86,8 @@ function Courses() {
   };
 
   const handleVisualizar = (course) => {
-    setSelectedCourse(course); // Muestra los detalles del curso seleccionado
-    setShowAddForm(false); // Asegúrate de ocultar el formulario
+    setSelectedCourse(course);
+    setShowAddForm(false);
   };
 
   const handleActualizarCurso = (id, updatedData) => {
@@ -123,8 +155,7 @@ function Courses() {
                 <p><strong>Nombre:</strong> {selectedCourse.cursoNombre}</p>
                 <p><strong>Asesor:</strong> {selectedCourse.asesor}</p>
                 <p><strong>Fecha:</strong> {selectedCourse.fechaInicio}</p>
-                <p><strong>Listas:</strong> {selectedCourse.listas}</p>
-
+                <p><strong>Listas:</strong> {formattedListas}</p>
                 <div className="modal-buttons">
                   <button onClick={() => setSelectedCourse(null)}>Cerrar</button>
                 </div>

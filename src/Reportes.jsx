@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore'; // Cambiar a getDoc y updateDoc
+import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebaseConfig';
 import './Reporte.css';
@@ -11,16 +11,16 @@ const Reportes = () => {
   const [rating, setRating] = useState('');
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchCourses();
   }, []);
 
-  // Cargar cursos desde Firebase
   const fetchCourses = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
-      const loadedCourses = querySnapshot.docs.map(doc => ({
+      const loadedCourses = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -32,6 +32,18 @@ const Reportes = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
+
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('El tamaño máximo permitido por imagen es 5MB.');
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        alert('Solo se permiten archivos de imagen.');
+        return;
+      }
+    }
+
     if (files.length + previewImages.length > 5) {
       alert('Solo puedes subir un máximo de 5 imágenes.');
       return;
@@ -39,7 +51,7 @@ const Reportes = () => {
 
     setImages([...images, ...files]);
 
-    const previews = files.map(file => URL.createObjectURL(file));
+    const previews = files.map((file) => URL.createObjectURL(file));
     setPreviewImages([...previewImages, ...previews]);
   };
 
@@ -56,9 +68,10 @@ const Reportes = () => {
       alert('Por favor, completa todos los campos.');
       return;
     }
-  
+
+    setIsUploading(true);
+
     try {
-      // Subir imágenes a Firebase Storage
       const imageUrls = [];
       for (const image of images) {
         const storageRef = ref(storage, `reportes/${Date.now()}-${image.name}`);
@@ -66,32 +79,30 @@ const Reportes = () => {
         const downloadURL = await getDownloadURL(storageRef);
         imageUrls.push(downloadURL);
       }
-  
-      // Obtener el documento del curso
+
       const courseDocRef = doc(db, 'Cursos', selectedCourse);
-      const courseDocSnapshot = await getDoc(courseDocRef); // Usamos getDoc
-  
+      const courseDocSnapshot = await getDoc(courseDocRef);
+
       if (!courseDocSnapshot.exists()) {
         alert('Curso no encontrado');
         return;
       }
-  
-      const courseData = courseDocSnapshot.data(); // Ahora se puede usar .data()
-  
-      // Guardar el reporte en el curso seleccionado
+
+      const courseData = courseDocSnapshot.data();
+
       await updateDoc(courseDocRef, {
         reportes: [
-          ...(courseData.reportes || []), // Mantener los reportes existentes
+          ...(courseData.reportes || []),
           {
             comentario: comment,
             calificacion: rating,
             imagenes: imageUrls,
             fecha: new Date(),
-          }
-        ]
+          },
+        ],
       });
-  
-      alert('Reporte guardado con éxito');
+
+      alert('Reporte guardado con éxito.');
       setComment('');
       setRating('');
       setSelectedCourse('');
@@ -99,10 +110,11 @@ const Reportes = () => {
       setPreviewImages([]);
     } catch (error) {
       console.error('Error al guardar el reporte:', error);
-      alert('Hubo un error al guardar el reporte');
+      alert('Hubo un error al guardar el reporte.');
+    } finally {
+      setIsUploading(false);
     }
   };
-  
 
   return (
     <div className="reports-container">
@@ -150,7 +162,9 @@ const Reportes = () => {
         ))}
       </div>
 
-      <button onClick={handleSaveReport}>Guardar Reporte</button>
+      <button onClick={handleSaveReport} disabled={isUploading}>
+        {isUploading ? 'Guardando...' : 'Guardar Reporte'}
+      </button>
     </div>
   );
 };

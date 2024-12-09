@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearchPlus, faPlus, faEdit, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, setDoc, deleteDoc, doc, updateDoc, addDoc } from 'firebase/firestore';
+import { faPlus, faEdit, faTrash, faEye, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { collection, getDocs, setDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Cuentas.css';
 
@@ -9,7 +9,7 @@ function Cuentas() {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingUser, setEditingUser] = useState(null);
-  const [creatingUser, setCreatingUser] = useState(false);  // Cambié a 'false' para inicializar correctamente el estado
+  const [creatingUser, setCreatingUser] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(true);
@@ -70,39 +70,34 @@ function Cuentas() {
     }
   };
 
-  const handleVisualizar = (user) => {
-    setSelectedUser(user);
-  };
-
   const handleCreateUser = async () => {
     if (editName && editEmail && editPassword) {
       try {
-        const userDoc = await getDocs(doc(db, 'Usuarios', editEmail));  // Usa editEmail aquí
+        const userRef = doc(db, 'Usuarios', editEmail);
+        const userDoc = await getDocs(userRef);
         if (userDoc.exists()) {
-          alert('El correo ya está en uso. Por favor, usa otro o inicia sesión.');
+          alert('El correo ya está en uso. Usa otro.');
           return;
         }
-  
-        // Guarda los datos del usuario en la colección "Usuarios"
-        await setDoc(doc(db, 'Usuarios', editEmail), {
+
+        await setDoc(userRef, {
           name: editName,
           email: editEmail,
           password: editPassword,
         });
-        fetchUsers(); // Actualiza la lista de usuarios
-        setCreatingUser(false); // Cierra el modal
+        fetchUsers();
+        setCreatingUser(false);
         setEditName('');
         setEditEmail('');
         setEditPassword('');
       } catch (error) {
-        console.error('Error al agregar el usuario:', error);
-        alert('Error al crear el usuario. Inténtalo nuevamente.');
+        console.error('Error al crear el usuario:', error);
+        alert('Error al crear el usuario.');
       }
     } else {
       alert('Por favor completa todos los campos.');
     }
   };
-  
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este Usuario?');
@@ -178,7 +173,7 @@ function Cuentas() {
                   <h3>{user.name}</h3>
                   <p>{user.email}</p>
                   <div className="course-actions">
-                    <button onClick={() => handleVisualizar(user)}>
+                    <button onClick={() => setSelectedUser(user)}>
                       <FontAwesomeIcon icon={faEye} /> Ver
                     </button>
                     <button onClick={() => handleEdit(user)}>
@@ -196,6 +191,11 @@ function Cuentas() {
           {editingUser && (
             <div className="overlay">
               <div className="modal">
+                <FontAwesomeIcon
+                  icon={faTimesCircle}
+                  className="close-icon"
+                  onClick={() => setEditingUser(null)}
+                />
                 <h2>Editar Usuario</h2>
                 <input
                   type="text"
@@ -217,7 +217,6 @@ function Cuentas() {
                 />
                 <div className="modal-buttons">
                   <button onClick={handleSaveEdit}>Guardar Cambios</button>
-                  <button onClick={() => setEditingUser(null)}>Cancelar</button>
                 </div>
               </div>
             </div>
@@ -226,6 +225,11 @@ function Cuentas() {
           {creatingUser && (
             <div className="overlay">
               <div className="modal">
+                <FontAwesomeIcon
+                  icon={faTimesCircle}
+                  className="close-icon"
+                  onClick={() => setCreatingUser(false)}
+                />
                 <h2>Crear Usuario</h2>
                 <input
                   type="text"
@@ -247,7 +251,6 @@ function Cuentas() {
                 />
                 <div className="modal-buttons">
                   <button onClick={handleCreateUser}>Guardar Usuario</button>
-                  <button onClick={() => setCreatingUser(false)}>Cancelar</button>
                 </div>
               </div>
             </div>
@@ -256,13 +259,15 @@ function Cuentas() {
           {selectedUser && (
             <div className="overlay">
               <div className="modal">
+                <FontAwesomeIcon
+                  icon={faTimesCircle}
+                  className="close-icon"
+                  onClick={() => setSelectedUser(null)}
+                />
                 <h2>Detalles del Usuario</h2>
                 <p><strong>Nombre:</strong> {selectedUser.name}</p>
                 <p><strong>Email:</strong> {selectedUser.email}</p>
                 <p><strong>Contraseña:</strong> {selectedUser.password}</p>
-                <div className="modal-buttons">
-                  <button onClick={() => setSelectedUser(null)}>Cerrar</button>
-                </div>
               </div>
             </div>
           )}

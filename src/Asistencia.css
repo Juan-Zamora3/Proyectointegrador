@@ -1,3 +1,14 @@
+:root {
+  --primary-color: #007BFF;
+  --primary-hover: #0056b3;
+  --secondary-color: #4caf50;
+  --secondary-hover: #388e3c;
+  --danger-color: #f44336;
+  --danger-hover: #d32f2f;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .asistencia-container {
   padding: 20px;
 }
@@ -11,8 +22,8 @@
 .asistencia-card {
   background-color: #e0f7fa;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
   transition: transform 0.3s ease;
 }
 
@@ -29,26 +40,26 @@
   padding: 8px 16px;
   margin-right: 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .btn-ver {
-  background-color: #4caf50; /* Verde */
+  background-color: var(--secondary-color);
   color: white;
 }
 
 .btn-ver:hover {
-  background-color: #388e3c;
+  background-color: var(--secondary-hover);
 }
 
 .btn-eliminar {
-  background-color: #f44336; /* Rojo */
+  background-color: var(--danger-color);
   color: white;
 }
 
 .btn-eliminar:hover {
-  background-color: #d32f2f;
+  background-color: var(--danger-hover);
 }
 
 .modal-overlay {
@@ -57,7 +68,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -67,38 +78,29 @@
 .modal-content {
   background-color: white;
   padding: 20px;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 600px;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.carousel img {
-  width: 100%;
-  max-width: 200px;
-  margin: 5px;
-  border-radius: 5px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table th, table td {
-  padding: 8px;
+.image-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  max-height: 300px;
+  background-color: #f9f9f9;
 }
 
-.actions button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007BFF;
-  color: white;
-  cursor: pointer;
-}
-
-.actions button:hover {
-  background-color: #0056b3;
+.carousel-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
 }
