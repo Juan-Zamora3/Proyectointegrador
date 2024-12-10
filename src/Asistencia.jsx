@@ -4,10 +4,6 @@ import { db } from './firebaseConfig';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Navigation, Pagination } from 'swiper/modules';
-
-
-
-
 import './Asistencia.css';
 
 const Asistencia = () => {
@@ -72,8 +68,6 @@ const Asistencia = () => {
       }
     }
   };
-  
-  
 
   const handleOpenModal = (curso) => {
     setSelectedAsistencia(curso);
@@ -145,6 +139,18 @@ const Asistencia = () => {
                 <p>No hay asistencias registradas.</p>
               )}
             </div>
+
+            <h4></h4>
+            {selectedAsistencia.reportes?.length > 0 ? (
+              selectedAsistencia.reportes.map((reporte, index) => (
+                <div key={`reporte-${index}`} className="comment-section">
+                  <p><strong>Comentario:</strong> {reporte.comentario || 'Sin comentario'}</p>
+             
+                </div>
+              ))
+            ) : (
+              <p>No hay comentarios registrados.</p>
+            )}
 
             <h4>Imágenes:</h4>
             {selectedAsistencia.reportes?.some((reporte) => reporte.imagenes?.length > 0) ? (

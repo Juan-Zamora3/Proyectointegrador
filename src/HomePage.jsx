@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faList, faCheckSquare, faChartBar, faFileAlt, faFileContract, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faList, faUserCheck, faChartPie, faFileAlt, faAward, faSignOutAlt, faUsers, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import Courses from './courses';
 import Lists from './Lists';
-import Asistencia from './Asistencia'; // Componente Asistencia.jsx
-import Asistencias from './Asistencias'; // Componente Asistencias.jsx
+import Asistencia from './Asistencia';
+import Personal from './Asistencias'; // Componente reutilizado como "Personal"
 import Constancias from './Constancias';
 import Reportes from './Reportes';
 import Graficas from './Graficas';
 import Cuentas from './Cuentas';
-import './HomePage.css' ;
+import './HomePage.css';
 
 function HomePage() {
   const [selectedMenu, setSelectedMenu] = useState('');
@@ -58,27 +58,21 @@ function HomePage() {
                 <span>Cursos</span>
               </Link>
             </li>
+            <li onClick={() => handleMenuClick('Personal')}>
+              <Link to="#">
+                <FontAwesomeIcon icon={faUserTie} />
+                <span>Personal</span>
+              </Link>
+            </li>
             <li onClick={() => handleMenuClick('Listas')}>
               <Link to="#">
                 <FontAwesomeIcon icon={faList} />
                 <span>Listas</span>
               </Link>
             </li>
-            <li onClick={() => handleMenuClick('Asistencias')}>
-              <Link to="#">
-                <FontAwesomeIcon icon={faCheckSquare} />
-                <span>Asistencias</span> {/* Botón para Asistencia.jsx */}
-              </Link>
-            </li>
-            <li onClick={() => handleMenuClick('Personal')}>
-              <Link to="#">
-                <FontAwesomeIcon icon={faCheckSquare} />
-                <span>Personal</span> {/* Botón para Asistencias.jsx */}
-              </Link>
-            </li>
             <li onClick={() => handleMenuClick('Graficas')}>
               <Link to="#">
-                <FontAwesomeIcon icon={faChartBar} />
+                <FontAwesomeIcon icon={faChartPie} />
                 <span>Gráficas</span>
               </Link>
             </li>
@@ -90,19 +84,24 @@ function HomePage() {
             </li>
             <li onClick={() => handleMenuClick('Constancias')}>
               <Link to="#">
-                <FontAwesomeIcon icon={faFileContract} />
+                <FontAwesomeIcon icon={faAward} />
                 <span>Constancias</span>
+              </Link>
+            </li>
+            <li onClick={() => handleMenuClick('Asistencias')}>
+              <Link to="#">
+                <FontAwesomeIcon icon={faUserCheck} />
+                <span>Asistencias</span>
               </Link>
             </li>
           </ul>
         </nav>
         <div className="linea-settings"></div>
-        {/* Nueva sección para Cuentas */}
         <div className="settings">
           <ul>
             <li onClick={() => handleMenuClick('Cuentas')}>
               <Link to="#">
-                <FontAwesomeIcon icon={faUser} />
+                <FontAwesomeIcon icon={faUsers} />
                 <span>Cuentas</span>
               </Link>
             </li>
@@ -122,9 +121,9 @@ function HomePage() {
         <main className="main-content">
           <div className="content">
             {selectedMenu === 'Cursos' && <Courses />}
+            {selectedMenu === 'Personal' && <Personal />} {/* Cambiado aquí */}
             {selectedMenu === 'Listas' && <Lists />}
-            {selectedMenu === 'Asistencias' && <Asistencia />} {/* Componente Asistencia.jsx */}
-            {selectedMenu === 'Personal' && <Asistencias />} {/* Componente Asistencias.jsx */}
+            {selectedMenu === 'Asistencias' && <Asistencia />}
             {selectedMenu === 'Graficas' && <Graficas />}
             {selectedMenu === 'Reportes' && <Reportes />}
             {selectedMenu === 'Constancias' && <Constancias />}

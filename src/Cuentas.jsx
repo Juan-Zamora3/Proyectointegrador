@@ -119,39 +119,51 @@ function Cuentas() {
     <div className="courses-container">
       {showLoginPrompt && !isAuthenticated ? (
         <div className="login-overlay">
-          <div className="login-box">
-            <h2>Para acceder necesitas cuenta administrativa</h2>
-            <div className="login-form">
-              <div className="form-field">
-                <label htmlFor="username">Usuario</label>
-                <input
-                  type="text"
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="login-input"
-                  placeholder="Ingresa tu usuario"
-                />
-              </div>
-              <div className="form-field">
-                <label htmlFor="password">Contraseña</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="login-input"
-                  placeholder="Ingresa tu contraseña"
-                />
-              </div>
-              <div className="login-btn-container">
-                <button onClick={handleLogin} className="login-button">
-                  Iniciar sesión
-                </button>
-              </div>
+        <div className="login-box">
+          <h2>Para acceder necesitas cuenta administrativa</h2>
+          <div className="login-form">
+            <div className="form-field">
+              <label htmlFor="username">Usuario</label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="login-input"
+                placeholder="Ingresa tu usuario"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="password">Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="login-input"
+                placeholder="Ingresa tu contraseña"
+              />
+            </div>
+            <div className="login-btn-container">
+              <button onClick={handleLogin} className="login-button">
+                Iniciar sesión
+              </button>
+              {/* Botón para cerrar el modal */}
+              <button
+                onClick={() => {
+                  setShowLoginPrompt(false);
+                  setUsername('');
+                  setPassword('');
+                }}
+                className="close-modal-button"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
+      </div>
+      
       ) : (
         <>
           <div className="courses-left">

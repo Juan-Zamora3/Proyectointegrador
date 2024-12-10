@@ -8,15 +8,16 @@ import "./Lists.css";
 function Lists() {
   const [showFormModal, setShowFormModal] = useState(false);
   const [lists, setLists] = useState([]);
-  const [editingList, setEditingList] = useState(null); // Lista seleccionada para editar
+  const [editingList, setEditingList] = useState(null); // Lista para editar
   const [searchTerm, setSearchTerm] = useState("");
   const [formValues, setFormValues] = useState({ Nombre: "", Fecha: "" });
   const [allStudents, setAllStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [filterCargo, setFilterCargo] = useState("Todos los cargos");
   const [showPreview, setShowPreview] = useState(false);
+  const [searchTermAlumnos, setSearchTermAlumnos] = useState("");
 
-  // Cargar listas desde Firebase
+  // Cargar listas
   const fetchLists = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "Listas"));
@@ -30,7 +31,7 @@ function Lists() {
     }
   };
 
-  // Cargar estudiantes desde Firebase
+  // Cargar estudiantes
   const fetchStudents = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "Alumnos"));
@@ -139,18 +140,22 @@ function Lists() {
 
   const filteredStudents = allStudents.filter((student) => {
     const matchesSearch =
-      student.Nombres?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.ApellidoP?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.ApellidoM?.toLowerCase().includes(searchTerm.toLowerCase());
+      student.Nombres?.toLowerCase().includes(searchTermAlumnos.toLowerCase()) ||
+      student.ApellidoP?.toLowerCase().includes(searchTermAlumnos.toLowerCase()) ||
+      student.ApellidoM?.toLowerCase().includes(searchTermAlumnos.toLowerCase());
     const matchesCargo =
       filterCargo === "Todos los cargos" || student.Puesto === filterCargo;
 
     return matchesSearch && matchesCargo;
   });
 
+  const filteredLists = lists.filter((l) =>
+    l.Nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="lists-container">
-      <h2 className="title-lists">Listas</h2>
+      <h2 className="title-lists"></h2>
       <div className="search-container">
         <input
           type="text"
@@ -165,14 +170,17 @@ function Lists() {
             setEditingList(null);
             setFormValues({ Nombre: "", Fecha: "" });
             setSelectedStudents([]);
+            setFilterCargo("Todos los cargos");
+            setSearchTermAlumnos("");
             setShowFormModal(true);
           }}
         >
           <FontAwesomeIcon icon={faPlus} /> Nueva Lista
         </button>
       </div>
+
       <div className="lists-grid">
-        {lists.map((list) => (
+        {filteredLists.map((list) => (
           <div className="list-card" key={list.id}>
             <h3>{list.Nombre || "Sin Nombre"}</h3>
             <p>Fecha: {list.Fecha || "Sin fecha"}</p>
@@ -190,72 +198,83 @@ function Lists() {
 
       {showFormModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="crear-lista-container modal-content">
             <h2>{editingList ? "Editar Lista" : "Nueva Lista"}</h2>
-            <form>
-              <label>Nombre de la Lista:</label>
+
+            <div className="list-name-section">
+              <label htmlFor="listName">Nombre de la Lista</label>
               <input
                 type="text"
+                id="listName"
                 name="Nombre"
                 value={formValues.Nombre}
                 onChange={handleInputChange}
-                placeholder="Nombre de la lista"
               />
-              <label>Fecha de la Lista:</label>
+            </div>
+
+            <div className="date-section">
+              <label htmlFor="listDate">Fecha de la Lista</label>
               <input
                 type="date"
+                id="listDate"
                 name="Fecha"
                 value={formValues.Fecha}
                 onChange={handleInputChange}
               />
-              <h3>Buscar Participante</h3>
-              <input
-                type="text"
-                placeholder="Filtrar alumnos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <select
-                className="select-box"
-                value={filterCargo}
-                onChange={(e) => setFilterCargo(e.target.value)}
-              >
-                <option value="Todos los cargos">Todos los cargos</option>
-                <option value="Administrador">Administrador</option>
-                <option value="Sistemas">Sistemas</option>
-                <option value="Maestro">Maestro</option>
-                <option value="Otro">Otro</option>
-              </select>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Seleccionar</th>
-                    <th>Nombre</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Cargo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredStudents.map((student) => (
-                    <tr key={student.id}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedStudents.some((s) => s.id === student.id)}
-                          onChange={() => handleCheckboxChange(student)}
-                        />
-                      </td>
-                      <td>{student.Nombres}</td>
-                      <td>{student.ApellidoP}</td>
-                      <td>{student.ApellidoM}</td>
-                      <td>{student.Puesto || "Sin puesto"}</td>
+            </div>
+
+            <div className="participant-section">
+              <div className="form-left">
+                <h3>Buscar Participante</h3>
+                <input
+                  type="text"
+                  placeholder="Filtrar alumnos..."
+                  value={searchTermAlumnos}
+                  onChange={(e) => setSearchTermAlumnos(e.target.value)}
+                />
+                <select
+                  className="select-box"
+                  value={filterCargo}
+                  onChange={(e) => setFilterCargo(e.target.value)}
+                >
+                  <option value="Todos los cargos">Todos los cargos</option>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Sistemas">Sistemas</option>
+                  <option value="Maestro">Maestro</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Seleccionar</th>
+                      <th>Nombre</th>
+                      <th>Apellido Paterno</th>
+                      <th>Apellido Materno</th>
+                      <th>Cargo</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredStudents.map((student) => (
+                      <tr key={student.id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={selectedStudents.some((s) => s.id === student.id)}
+                            onChange={() => handleCheckboxChange(student)}
+                          />
+                        </td>
+                        <td>{student.Nombres}</td>
+                        <td>{student.ApellidoP}</td>
+                        <td>{student.ApellidoM}</td>
+                        <td>{student.Puesto || "Sin puesto"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
               {showPreview && (
-                <>
+                <div className="form-right">
                   <h3>Vista Previa de la Lista</h3>
                   <table>
                     <thead>
@@ -277,20 +296,19 @@ function Lists() {
                       ))}
                     </tbody>
                   </table>
-                </>
+                </div>
               )}
-              <div className="modal-actions">
-                <button type="button" onClick={() => setShowPreview(!showPreview)}>
-                  {showPreview ? "Ocultar Vista Previa" : "Mostrar Vista Previa"}
-                </button>
-                <button type="button" onClick={handleSave}>
-                  Guardar
-                </button>
-                <button type="button" onClick={() => setShowFormModal(false)}>
-                  Cancelar
-                </button>
-              </div>
-            </form>
+            </div>
+
+            <div className="create-list-button-container">
+              <button onClick={handleSave}>
+                {editingList ? "Actualizar Lista" : "Crear Lista"}
+              </button>
+              <button onClick={() => setShowPreview(!showPreview)}>
+                {showPreview ? "Ocultar Vista Previa" : "Mostrar Vista Previa"}
+              </button>
+              <button onClick={() => setShowFormModal(false)}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}

@@ -1,400 +1,221 @@
+/* Contenedor general */
 .constancias-container {
   display: flex;
+  justify-content: space-between;
   gap: 20px;
   padding: 20px;
-  background-color: #f5f7fa;
-  margin: 0 auto; /* Centra el contenedor horizontalmente */
-  width: 100%; /* Ocupa todo el ancho de la pantalla */
-  box-sizing: border-box; /* Incluye el padding en el ancho total */
+  background-color: #f7f9fc;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
 }
 
-.form-section, .preview-section {
-  width: 48%; /* Secciones equilibradas que ocupan el 48% cada una */
-  background: #ffffff;
-  border-radius: 8px;
+/* Formulario y Vista Previa */
+.form-section,
+.preview-section {
+  width: 48%;
+  background: white;
+  border-radius: 15px;
   padding: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.students-section {
+/* Títulos */
+h2,
+h3 {
+  font-family: 'Arial', sans-serif;
+  color: black;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Select */
+.select-box {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 2px solid #0056b3;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.select-box:focus {
+  border-color: #0056b3;
+  outline: none;
+}
+
+/* Tabla de Participantes */
+.students-table-container {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
+}
+
+.students-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.students-table th,
+.students-table td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.students-table th {
+  background-color: #0056b3;
+  color: white;
+  font-weight: bold;
+}
+
+.students-table th input[type="checkbox"] {
+  pointer-events: none;
+  opacity: 0;
+  height: 20px;
+  width: 20px;
+}
+
+.students-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.students-table tr:hover {
+  background-color: #f2f2f2;
+}
+
+.students-table input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* Botones de Acción */
+.action-buttons {
+  display: flex;
+  justify-content: space-around;
   margin-top: 20px;
 }
 
-.student-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+.action-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #0056b3;
+  color: white;
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
-.student-item button {
-  background-color: #007bff;
+.action-buttons button:hover {
+  transform: scale(1.05);
+  background-color: #003cff;
+}
+
+/* Vista Previa */
+.preview-section h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.pdf-preview-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 500px; /* Tamaño fijo para evitar cambios */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar Personalizado */
+.students-table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.students-table-container::-webkit-scrollbar-thumb {
+  background-color: #0056b3;
+  border-radius: 8px;
+}
+
+.students-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #003cff;
+}
+
+.students-table-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+/* Botones de Navegación PDF */
+.pdf-preview-container button {
+  background-color: #0056b3;
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 10px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.student-item button:hover {
-  background-color: #0056b3;
+.pdf-preview-container button:hover {
+  background-color: #003cff;
+  transform: scale(1.1);
 }
-
-.preview-section h3 {
-  margin-bottom: 15px;
-}
-
-.pdf-viewer {
-  height: 700px; /* Vista más grande del PDF */
-  width: 100%; /* Ocupa todo el ancho de la sección */
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-}
-.preview-section .buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 15px; /* Espacio entre los botones y el PDF */
-}
-
-.pdf-viewer {
-  height: 700px; /* Vista más grande del PDF */
-  width: 100%; /* Ocupa todo el ancho de la sección */
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-}
-/* Contenedor principal de la lista */
-.crear-lista-container {
-  padding: 30px;
-  font-family: 'Arial', sans-serif;
-  background-color: #f7f9fc; /* Fondo suave */
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-/* Título */
-h2 {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 600;
-  color: #003cff; /* Título en azul suave */
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* Sección de nombre de lista */
-.list-name-section {
-  margin-bottom: 25px;
-}
-
-/* Estilo de las etiquetas dentro de la sección de nombre */
-.list-name-section label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
-}
-
-/* Estilo de los inputs para el nombre de lista */
-.list-name-section input {
-  width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 30px; /* Bordes más redondeados */
-  background-color: #f2f9ff;
-  font-size: 16px;
-  color: #333;
-  transition: border 0.3s ease-in-out;
-}
-
-.list-name-section input:focus {
-  border-color: #0066cc;
-  outline: none;
-  background-color: #e6f0ff;
-}
-
-/* Sección de participantes */
-.participant-section {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
-}
-
-.form-left, .form-right {
+/* Mantener tamaños estáticos para los paneles */
+.form-section,
+.preview-section {
   width: 48%;
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  height: 600px; /* Altura fija */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
-
-/* Estilo para las etiquetas dentro de los formularios */
-.form-left label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
-}
-
-/* Estilo para los inputs dentro de form-left */
-.form-left input {
-  width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 15px;
-  border: 1px solid #003cff;
-  border-radius: 30px;
-  font-size: 16px;
-  color: #333;
-  transition: all 0.3s ease;
-}
-
-.form-left input:focus {
-  border-color: #0066cc;
-  outline: none;
-  background-color: #e6f0ff;
-}
-
-/* Estilo para los botones */
-button {
-  padding: 12px 25px;
+.action-buttons button {
+  padding: 10px 20px;
   border: none;
-  border-radius: 30px;
+  border-radius: 20px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  background-color: #0056b3;
+  color: white;
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #45a049;
-  transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+.action-buttons button:hover {
+  transform: scale(1.05);
+  background-color: #003cff;
 }
-
-/* Estilo para la tabla de participantes */
-
-
-/* Estilo para la cabecera de la tabla */
-.form-left table th {
-  background-color: #007bff; /* Azul como el de la imagen */
-  color: white; /* Texto blanco */
-  text-align: center; /* Centrar texto */
-  padding: 10px; /* Espaciado interno */
-  border-radius: 5px; /* Bordes redondeados */
-}
-
-/* Estilo para el cuerpo de la tabla */
-.form-left table td {
-  text-align: left; /* Alinear el texto a la izquierda */
-  padding: 10px; /* Espaciado interno */
-  border: 1px solid #ddd; /* Bordes ligeros */
-}
-
-/* Estilo para toda la tabla */
-.form-left table {
-  width: 100%; /* Ocupa todo el ancho disponible */
-  border-collapse: collapse; /* Quita los espacios entre celdas */
-}
-
-/* Para dar un efecto de zebra a las filas */
-.form-left table tr:nth-child(even) {
-  background-color: #f9f9f9; /* Fondo gris claro */
-}
-
-.form-left table tr:nth-child(odd) {
-  background-color: #ffffff; /* Fondo blanco */
-}
-
-/* Hacer que la tabla sea responsiva */
-.form-left table {
-  display: block;
-  max-width: 100%;
-}
-
-
-/* Encabezados de la tabla */
-.form-right table th {
-  background-color: #0d3662; /* Azul como el de la imagen */
-  color: white; /* Texto blanco */
-  text-align: center; /* Centrar texto */
-  padding: 10px; /* Espaciado interno */
-  border-radius: 5px; /* Bordes redondeados */
-}
-
-/* Estilo para el cuerpo de la tabla */
-.form-right table td {
-  text-align: left; /* Alinear el texto a la izquierda */
-  padding: 10px; /* Espaciado interno */
-  border: 1px solid #ddd; /* Bordes ligeros */
-}
-
-/* Estilo para toda la tabla */
-.form-right table {
-  width: 100%; /* Ocupa todo el ancho disponible */
-  border-collapse: collapse; /* Quita los espacios entre celdas */
-}
-
-/* Para dar un efecto de zebra a las filas */
-.form-right table tr:nth-child(even) {
-  background-color: #f9f9f9; /* Fondo gris claro */
-}
-
-.form-right table tr:nth-child(odd) {
-  background-color: #ffffff; /* Fondo blanco */
-}
-
-/* Hacer que la tabla sea responsiva */
-.form-right table {
-  
-  display: block;
-  max-width: 100%;
-}
-
-
-/* Efecto de hover en las filas de la tabla */
-.form-right tr:hover {
-  background-color: #f2f9ff;
-  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
-}
-
-/* Botón para crear lista */
-.create-list-button-container {
-  margin-top: 25px;
-  text-align: center;
-}
-
-/* Animación para suavizar la entrada */
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.crear-lista-container {
-  animation: fadeIn 1s ease-in-out;
-}
-.select-box {
-  position: relative;
-  display: block;
-  width: 100%;
-  
-  font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
-  font-size: 18px;
-  color: #60666d;
-  
-  @media (min-width: 768px) {
-    width: 70%;
-  }
-  
-  @media (min-width: 992px) {
-    width: 50%;
-  }
-  
-  @media (min-width: 1200px) {
-    width: 30%;
-  }
-  
-  &__current {
-    position: relative;
-    box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
-    cursor: pointer;
-    outline: none;
-    
-    &:focus {
-      & + .select-box__list {
-        opacity: 1;
-
-        
-
-        animation-name: none;
-        
-        .select-box__option {
-          cursor: pointer;
-        }
-      }
-      
-      .select-box__icon {
-        transform: translateY(-50%) rotate(180deg);
-      }
-    }
-  }
-  
-  &__icon {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    width: 20px;
-    opacity: 0.3;
-    transition: 0.2s ease;
-  }
-  
-  &__value {
-    display: flex;
-  }
-  
-  &__input {
-    display: none;
-    
-    &:checked + .select-box__input-text {
-      display: block;
-    }
-  }
-  
-  &__input-text {
-    display: none;
-    width: 100%;
-    margin: 0;
-    padding: 15px;
-    background-color: #fff;
-  }
-  
-  &__list {
-    position: absolute;
-    width: 100%;
-    padding: 0;
-    list-style: none;
-    opacity: 0;
-    
-    
-    animation-name: HideList;
-    animation-duration: 0.5s;
-    animation-delay: 0.5s;
-    animation-fill-mode: forwards;
-    animation-timing-function: step-start;
-    box-shadow: 0 15px 30px -10px transparentize(#000, 0.9);
-  }
-  
-  &__option {
-    display: block;
-    padding: 15px;
-    background-color: #fff;
-    
-    &:hover,
-    &:focus {
-      color: #546c84;
-      background-color: #fbfbfb;
-    }
-  }
-}
-.form-left table {
-  max-height: 400px; /* Define la altura máxima del contenedor */
-  overflow-y: auto; /* Habilita el scroll vertical */
-  display: block; /* Asegura que funcione el scroll */
-  width: 100%; /* Mantén el ancho completo */
-  border-collapse: collapse; /* Mantén el diseño limpio */
-}
-
-/* Contenedor con scrollbar para la tabla de form-right */
-.form-right table {
-  max-height: 300px; /* Define la altura máxima del contenedor */
-  overflow-y: auto; /* Habilita el scroll vertical */
-  display: block; /* Asegura que funcione el scroll */
-  width: 100%; /* Mantén el ancho completo */
-  border-collapse: collapse; /* Mantén el diseño limpio */
-}
-
-
