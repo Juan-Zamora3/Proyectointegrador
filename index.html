@@ -4,11 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/Proyectointegrador/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-    <script type="module" crossorigin src="/Proyectointegrador/assets/index-B7RVSu7-.js"></script>
-    <link rel="stylesheet" crossorigin href="/Proyectointegrador/assets/index-Dj9MDcfo.css">
+    <meta name="color-scheme" content="light">
+    <title>Proyecto Integrador</title>
+    <style>
+      /* Fuerza el esquema de color claro, ignorando el modo oscuro del sistema */
+      @media (prefers-color-scheme: dark) {
+          body {
+              background-color: white; /* Fondo claro siempre */
+              color: black; /* Texto oscuro siempre */
+          }
+      }
+
+      @media (prefers-color-scheme: light) {
+          body {
+              background-color: white; /* Fondo claro siempre */
+              color: black; /* Texto oscuro siempre */
+          }
+      }
+    </style>
+    <script type="module" crossorigin src="/Proyectointegrador/assets/index-CYE24Was.js"></script>
+    <link rel="stylesheet" crossorigin href="/Proyectointegrador/assets/index-i15QgzCL.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
