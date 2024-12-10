@@ -118,7 +118,7 @@ const Reportes = () => {
 
   return (
     <div className="reports-container">
-      <h2>Reportes de Cursos</h2>
+      <h2></h2>
 
       <label>Seleccionar Curso</label>
       <select

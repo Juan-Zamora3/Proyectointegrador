@@ -3,21 +3,41 @@
   --primary-hover: #0056b3;
   --secondary-color: #4caf50;
   --secondary-hover: #388e3c;
-  --danger-color: #f44336;
-  --danger-hover: #d32f2f;
+  --text-color: #333;
+  --background: #ffffff;
   --border-radius: 8px;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: 0.3s ease;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
 }
 
 .asistencia-container {
   width: 100%;
-  overflow: hidden; /* Evita el scroll horizontal */
-  margin-bottom: 1rem;
+  background-color: var(--background); /* Fondo blanco */
+  padding: 2rem; /* Espaciado interno */
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin: 0 auto;
+  min-height: 100vh; /* Ocupa toda la altura */
+  box-sizing: border-box; /* Incluye padding dentro del ancho total */
 }
 
+
+/* Elimina el texto "ASISTENCIAS" */
+.asistencia-title {
+  display: none;
+}
+
+/* Tarjetas */
 .asistencia-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
@@ -26,51 +46,75 @@
   padding: 20px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  transition: transform 0.3s ease;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .asistencia-card:hover {
   transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.actions {
-  margin-top: 10px;
+.asistencia-card h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
 }
 
-.btn-ver,
-.btn-eliminar {
-  padding: 8px 16px;
-  margin-right: 10px;
-  border: none;
+.asistencia-card p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+/* Quita los botones inferiores */
+.card-buttons {
+  display: none; /* Oculta completamente los botones */
+}
+
+/* Tabla Estilizada */
+.asistencia-table {
+  width: 100%;
+  max-width: 100%; /* Evita que se extienda fuera de la pantalla */
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
-  cursor: pointer;
+  overflow: hidden;
 }
 
-.btn-ver {
-  background-color: var(--secondary-color);
+.asistencia-table th,
+.asistencia-table td {
+  padding: 12px;
+  text-align: center; /* Centrar texto */
+  font-size: 0.95rem;
+  border: 1px solid #ddd; /* Líneas entre celdas */
+}
+
+.asistencia-table th {
+  background-color: var(--primary-color);
   color: white;
+  font-weight: bold;
 }
 
-.btn-ver:hover {
-  background-color: var(--secondary-hover);
+.asistencia-table td {
+  background-color: #f9f9f9;
+  color: var(--text-color);
+  text-transform: capitalize;
 }
 
-.btn-eliminar {
-  background-color: var(--danger-color);
-  color: white;
+.asistencia-table tr:hover td {
+  background-color: #f1f1f1;
 }
 
-.btn-eliminar:hover {
-  background-color: var(--danger-hover);
-}
-
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,133 +123,215 @@
 
 .modal-content {
   background-color: white;
-  padding: 20px;
   border-radius: var(--border-radius);
+  padding: 20px;
   width: 90%;
-  max-width: 800px;
-  max-height: 80vh;
+  max-width: 800px; /* Limita el tamaño del modal */
+  max-height: 80vh; /* Limita la altura del modal */
+  overflow-y: auto; /* Desplazamiento si el contenido es muy largo */
+  box-shadow: var(--box-shadow);
+}
+
+/* Scroll personalizado */
+.asistencia-table::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.asistencia-table::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.asistencia-table::-webkit-scrollbar-thumb:hover,
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+/* Estilo para los botones de las tarjetas */
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.card-actions .btn-ver,
+.card-actions .btn-eliminar {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.card-actions .btn-ver {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+}
+
+.card-actions .btn-ver:hover {
+  background-color: #0056b3;
+}
+
+.card-actions .btn-eliminar {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.card-actions .btn-eliminar:hover {
+  background-color: #d32f2f;
+}
+/* Botones estilizados */
+.card-actions .btn-ver,
+.card-actions .btn-eliminar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card-actions .btn-ver:hover,
+.card-actions .btn-eliminar:hover {
+  background-color: #0056b3;
+}
+
+.card-actions .btn-eliminar {
+  background-color: #f44336;
+}
+
+.card-actions .btn-eliminar:hover {
+  background-color: #d32f2f;
+}
+
+/* Scroll para la tabla */
+.table-scroll-container {
+  max-height: 300px;
   overflow-y: auto;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.asistencia-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.asistencia-table th,
+.asistencia-table td {
+  text-align: left;
+  padding: 10px;
+}
+
+.asistencia-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.asistencia-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Carrusel de imágenes */
+.image-carousel .carousel-image {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .image-item {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  max-height: 400px;
   overflow: hidden;
-  width: 100%;
-  max-height: 300px;
-  background-color: #f9f9f9;
 }
 
-.carousel-image {
+.image-item img {
   max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
+  height: auto;
 }
 
-.tabla-asistencia th, .tabla-asistencia td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+/* Modal */
+.modal-actions {
+  text-align: right;
+  margin-top: 20px;
+}
+body {
+  margin: 0; /* Elimina márgenes predeterminados */
+  padding: 0; /* Elimina paddings predeterminados */
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  overflow-x: hidden; /* Evita scroll horizontal */
 }
 
-.tabla-asistencia th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-.tabla-asistencia td {
-  background-color: #fff;
-}
-
-.asistencia-table,
-.estudiantes-table {
+.asistencia-container {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem;
+  max-width: 1200px; /* Define un ancho máximo */
+  background-color: var(--background);
+  padding: 2rem; /* Espaciado interno uniforme */
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin: 0 auto; /* Centra el contenedor */
+  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+  box-sizing: border-box; /* Incluye el padding dentro del ancho total */
 }
 
-.asistencia-table th,
-.asistencia-table td,
-.estudiantes-table th,
-.estudiantes-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+/* Grid de tarjetas */
+.asistencia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Columnas flexibles */
+  gap: 20px; /* Espaciado entre las tarjetas */
+  padding: 0; /* Sin padding adicional */
+  margin: 0; /* Sin márgenes */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  box-sizing: border-box; /* Incluye el padding y bordes dentro del ancho */
 }
 
-.asistencia-table th,
-.estudiantes-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+/* Tarjetas */
+.asistencia-card {
+  background-color: #e0f7fa;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.estudiantes-table td {
-  text-transform: capitalize;
+/* Ajustes específicos para pequeños espacios laterales */
+.asistencia-card:first-child {
+  margin-left: 0; /* Sin margen izquierdo para la primera tarjeta */
 }
 
-.asistencia-row:nth-child(even),
-.estudiante-row:nth-child(even) {
-  background-color: #f9f9f9;
+.asistencia-card:last-child {
+  margin-right: 0; /* Sin margen derecho para la última tarjeta */
 }
 
-.asistencia-row:hover,
-.estudiante-row:hover {
-  background-color: #f1f1f1;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5; /* Fondo gris */
+  overflow-x: hidden; /* Evita scroll horizontal */
 }
 
-.estudiantes-scroll-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.estudiantes-scroll-container::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
-}
-
-.estudiantes-scroll-container::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
-}
-
-.asistencia-table thead,
-.asistencia-table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed; /* Asegura alineación uniforme */
-}
-
-.asistencia-table thead {
-  position: sticky; /* Hace que el encabezado sea fijo */
-  top: 0; /* Fija el encabezado al principio */
-  z-index: 2;
-  background-color: #f2f2f2;
-}
-
-.asistencia-table tbody {
-  display: block; /* Permite el desplazamiento vertical */
-  max-height: 300px; /* Altura máxima del área desplazable */
-  overflow-y: auto;
-}
-
-.asistencia-table th,
-.asistencia-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.asistencia-table th {
-  font-weight: bold;
-}
-
-.asistencia-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.asistencia-table tbody tr:hover {
-  background-color: #f1f1f1;
+.asistencia-container {
+  max-width: 100vw; /* Ajusta el contenedor al ancho máximo del viewport */
+  background-color: var(--background); /* Fondo blanco */
+  padding: 2rem 1rem; /* Padding superior e inferior, y margen horizontal */
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin: 0 auto; /* Centra el contenedor */
+  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+  box-sizing: border-box; /* Asegura que padding no cause desbordamiento */
 }

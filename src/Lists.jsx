@@ -106,7 +106,7 @@ function Lists() {
         </div>
       ) : (
         <>
-          <h2 className="title-lists">Listas</h2>
+          <h2 className="title-lists"></h2>
           <div className="search-container">
             <input
               type="text"
@@ -115,20 +115,17 @@ function Lists() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
-            <button className="search-button">
-              <FontAwesomeIcon icon={faSearchPlus} /> Buscar
+            <button className="Add-Button"
+            onClick={() => {
+              setEditingList(null);
+              setShowForm(true);
+            }}
+               >
+              <FontAwesomeIcon icon={faPlus} /> Agregar Lista
             </button>
           </div>
           <div className="add-list-container">
-            <button
-              onClick={() => {
-                setEditingList(null);
-                setShowForm(true);
-              }}
-              className="add-list-button"
-            >
-              <FontAwesomeIcon icon={faPlus} /> Agregar Lista
-            </button>
+            
           </div>
           <div className="lists-grid">
             {lists

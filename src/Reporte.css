@@ -77,3 +77,100 @@
   background-color: #cccccc;
   cursor: not-allowed;
 }
+/* Estilo global */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff; /* Fondo blanco para todo el documento */
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor principal */
+.reports-container {
+  padding: 20px;
+  background-color: #ffffff; /* Fondo blanco */
+  width: 100%;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  box-sizing: border-box;
+  border: none; /* Quitar la línea azul */
+  border-radius: 0; /* Quitar bordes redondeados */
+  overflow-y: auto; /* Agregar desplazamiento vertical si es necesario */
+}
+
+/* Encabezado */
+.reports-container h2 {
+  text-align: center;
+  font-size: 26px;
+  color: #333333;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Inputs y selects */
+.reports-container label {
+  font-weight: 600;
+  color: #555555;
+}
+
+.reports-container select,
+.reports-container textarea,
+.reports-container input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #333333;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.reports-container select:focus,
+.reports-container textarea:focus,
+.reports-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.reports-container textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.reports-container input[type="number"] {
+  max-width: 120px;
+}
+
+/* Botón */
+.reports-container button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.reports-container button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.reports-container button:active {
+  background-color: #004080;
+  transform: translateY(0);
+}
+
+.reports-container button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

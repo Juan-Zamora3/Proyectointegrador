@@ -136,7 +136,7 @@ const Graficas = () => {
 
   return (
     <div className="graficas-container">
-      <h2>Gráficas de Cursos</h2>
+      <h2></h2>
       <div className="chart-section">
         <div className="chart-container">
           <h3>Duración de los Cursos</h3>

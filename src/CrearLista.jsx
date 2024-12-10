@@ -154,6 +154,7 @@ const CrearLista = ({ listaSeleccionada, onCancelar, onSave }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <select
+            className="select-box"
             value={filterCargo}
             onChange={(e) => setFilterCargo(e.target.value)}
           >

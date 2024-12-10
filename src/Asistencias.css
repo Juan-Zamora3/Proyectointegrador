@@ -210,3 +210,33 @@ body, html {
   min-height: 100vh;
   overflow: hidden;
 }
+/* Body y Root */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f0f0f0;
+  overflow: hidden; /* Desactiva el scroll en el body */
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden; /* Desactiva scroll del contenedor raíz */
+}
+
+/* Contenedor principal */
+.asistencias-container {
+  padding: 20px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  min-height: 100%; /* Ocupa toda la altura disponible */
+  width: 100%;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-y: auto; /* Scroll solo en este contenedor */
+}
