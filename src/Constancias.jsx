@@ -216,7 +216,8 @@ const Constancias = () => {
         <h2>Constancias</h2>
 
         <label>Seleccionar Curso</label>
-        <select onChange={handleCursoChange}>
+        <select onChange={handleCursoChange}
+        className="select-box">
           <option value="">Seleccione un curso</option>
           {cursos.map((curso) => (
             <option key={curso.id} value={curso.id}>

@@ -121,7 +121,7 @@ function Asistencias() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className="search-button">Buscar</button>
+        
         <button className="add-button" onClick={() => setIsModalOpen(true)}>
           Agregar Alumno
         </button>
