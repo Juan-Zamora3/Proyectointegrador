@@ -10,7 +10,7 @@ import Constancias from './Constancias';
 import Reportes from './Reportes';
 import Graficas from './Graficas';
 import Cuentas from './Cuentas';
-import './HomePage.css';
+import './HomePage.css' ;
 
 function HomePage() {
   const [selectedMenu, setSelectedMenu] = useState('');
