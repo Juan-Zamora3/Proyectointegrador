@@ -146,22 +146,23 @@ const Constancias = () => {
   
   const handleGuardarAsistencia = async () => {
     try {
+      // Estructura de la nueva asistencia a guardar
       const asistenciaData = {
         cursoId: selectedCurso,
         cursoNombre: selectedCursoNombre,
         fecha: new Date(),
         estudiantes: selectedStudents.map((index) => students[index]),
       };
-
+  
       const cursoDocRef = doc(db, 'Cursos', selectedCurso);
       const cursoData = await getDoc(cursoDocRef);
-
-      if (cursoData.exists) {
-        const currentAsistencia = cursoData.data().asistencia || [];
+  
+      if (cursoData.exists()) {
+        // Sobrescribir asistencia con los nuevos datos
         await updateDoc(cursoDocRef, {
-          asistencia: [...currentAsistencia, asistenciaData],
+          asistencia: [asistenciaData], // Se sobrescribe la asistencia previa
         });
-        alert('Asistencia guardada correctamente');
+        alert('La asistencia se ha sobrescrito correctamente.');
       } else {
         alert('El curso seleccionado no existe');
       }
@@ -169,6 +170,7 @@ const Constancias = () => {
       console.error('Error al guardar asistencia:', error);
     }
   };
+  
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % pdfBlobs.length);
