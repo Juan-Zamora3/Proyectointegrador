@@ -64,7 +64,7 @@ const Asistencia = () => {
     imagenesSheet.getRow(1).height = 150; // Ajustar la altura de las filas para las imágenes
     imagenesSheet.addRow(['Imágenes']);
 
-    const addImageToSheet = async (url, sheet, row, col, workbook) => {
+    const addImageToSheet = async (url, sheet, row, workbook) => {
       try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -75,13 +75,13 @@ const Asistencia = () => {
     
         // Agrega la imagen al workbook
         const imageId = workbook.addImage({
-          buffer: new Uint8Array(arrayBuffer), // Cambiar Buffer.from a Uint8Array
-          extension: url.split('.').pop().split('?')[0], // Extraer la extensión
+          buffer: new Uint8Array(arrayBuffer), // Usa Uint8Array
+          extension: url.split('.').pop().split('?')[0], // Extrae la extensión del archivo
         });
     
-        // Coloca la imagen en la hoja de Excel
+        // Agrega la imagen a la hoja de Excel
         sheet.addImage(imageId, {
-          tl: { col, row }, // Define la posición inicial (columna y fila)
+          tl: { col: 0, row }, // Top-left: posición inicial de la imagen
           ext: { width: 150, height: 150 }, // Dimensiones de la imagen
         });
       } catch (error) {
@@ -93,7 +93,7 @@ const Asistencia = () => {
 for (const reporte of selectedAsistencia.reportes || []) {
   for (const url of reporte.imagenes || []) {
     await addImageToSheet(url, imagenesSheet, row, workbook); // Asegúrate de pasar los parámetros correctamente
-    row++;
+    row+= 11;
   }
 }
     const convertBlobToBase64 = (blob) => {
