@@ -19,6 +19,7 @@ function Cuentas() {
   const [editEmail, setEditEmail] = useState('');
   const [editPassword, setEditPassword] = useState('');
 
+  // Método para cargar usuarios desde Firestore
   const fetchUsers = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Usuarios'));
@@ -29,24 +30,29 @@ function Cuentas() {
       setUsers(loadedUsers);
     } catch (error) {
       console.error('Error al cargar los usuarios:', error);
+      alert('Hubo un problema al cargar los usuarios.');
     }
   };
 
+  // Efecto para cargar usuarios solo si está autenticado
   useEffect(() => {
     if (isAuthenticated) {
       fetchUsers();
     }
   }, [isAuthenticated]);
 
+  // Método para iniciar sesión con credenciales administrativas
   const handleLogin = () => {
-    if (username === 'admin' && password === 'admin123') {
+    if (username.trim() === 'admin' && password === 'admin123') {
       setIsAuthenticated(true);
       setShowLoginPrompt(false);
+      fetchUsers();
     } else {
       alert('Credenciales incorrectas. Inténtalo nuevamente.');
     }
   };
 
+  // Método para manejar edición de usuario
   const handleEdit = (user) => {
     setEditingUser(user);
     setEditName(user.name || '');
@@ -54,6 +60,7 @@ function Cuentas() {
     setEditPassword(user.password || '');
   };
 
+  // Método para guardar los cambios en la edición de usuario
   const handleSaveEdit = async () => {
     if (editingUser) {
       try {
@@ -64,18 +71,23 @@ function Cuentas() {
         });
         fetchUsers();
         setEditingUser(null);
+        alert('Usuario actualizado correctamente.');
       } catch (error) {
         console.error('Error al guardar los cambios:', error);
+        alert('Hubo un problema al guardar los cambios.');
       }
     }
   };
 
+  // Método para crear un nuevo usuario
   const handleCreateUser = async () => {
     if (editName && editEmail && editPassword) {
       try {
         const userRef = doc(db, 'Usuarios', editEmail);
-        const userDoc = await getDocs(userRef);
-        if (userDoc.exists()) {
+        const userSnapshot = await getDocs(collection(db, 'Usuarios'));
+        const emailExists = userSnapshot.docs.some((doc) => doc.id === editEmail);
+
+        if (emailExists) {
           alert('El correo ya está en uso. Usa otro.');
           return;
         }
@@ -85,86 +97,91 @@ function Cuentas() {
           email: editEmail,
           password: editPassword,
         });
+
         fetchUsers();
         setCreatingUser(false);
         setEditName('');
         setEditEmail('');
         setEditPassword('');
+        alert('Usuario creado exitosamente.');
       } catch (error) {
         console.error('Error al crear el usuario:', error);
-        alert('Error al crear el usuario.');
+        alert('Hubo un problema al crear el usuario.');
       }
     } else {
       alert('Por favor completa todos los campos.');
     }
   };
 
+  // Método para eliminar un usuario
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este Usuario?');
+    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
     if (confirmDelete) {
       try {
         await deleteDoc(doc(db, 'Usuarios', id));
         fetchUsers();
+        alert('Usuario eliminado correctamente.');
       } catch (error) {
-        console.error('Error al eliminar el Usuario:', error);
+        console.error('Error al eliminar el usuario:', error);
+        alert('Hubo un problema al eliminar el usuario.');
       }
     }
   };
 
+  // Método para filtrar usuarios según el término de búsqueda
   const filteredUsers = users.filter((user) =>
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const handleCloseModal = () => {
+    setShowLoginPrompt(false); // Vuelve a mostrar el modal si fue ocultado.
+    setIsAuthenticated(false); // Asegura que el usuario no está autenticado.
+    setUsername(''); // Limpia el campo de usuario.
+    setPassword('');
+  };
 
   return (
     <div className="courses-container">
       {showLoginPrompt && !isAuthenticated ? (
+        // Modal para iniciar sesión administrativa
         <div className="login-overlay">
-        <div className="login-box">
-          <h2>Para acceder necesitas cuenta administrativa</h2>
-          <div className="login-form">
-            <div className="form-field">
-              <label htmlFor="username">Usuario</label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="login-input"
-                placeholder="Ingresa tu usuario"
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="login-input"
-                placeholder="Ingresa tu contraseña"
-              />
-            </div>
-            <div className="login-btn-container">
-              <button onClick={handleLogin} className="login-button">
-                Iniciar sesión
-              </button>
-              {/* Botón para cerrar el modal */}
-              <button
-                onClick={() => {
-                  setShowLoginPrompt(false);
-                  setUsername('');
-                  setPassword('');
-                }}
-                className="close-modal-button"
-              >
-                Cerrar
-              </button>
+          <div className="login-box">
+            <h2>Para acceder necesitas cuenta administrativa</h2>
+            <div className="login-form">
+              <div className="form-field">
+                <label htmlFor="username">Usuario</label>
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="login-input"
+                  placeholder="Ingresa tu usuario"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="password">Contraseña</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="login-input"
+                  placeholder="Ingresa tu contraseña"
+                />
+              </div>
+              <div className="login-btn-container">
+                <button onClick={handleLogin} className="login-button">
+                  Iniciar sesión
+                </button>
+                <button onClick={handleCloseModal} className="close-modal-button">
+                  Cerrar
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      ) : (
+      ) : isAuthenticated ? (
+        // Vista principal de "Cuentas" con buscador y botones
         <>
           <div className="courses-left">
             <div className="header-container">
@@ -199,7 +216,7 @@ function Cuentas() {
               ))}
             </div>
           </div>
-
+  
           {editingUser && (
             <div className="overlay">
               <div className="modal">
@@ -233,7 +250,7 @@ function Cuentas() {
               </div>
             </div>
           )}
-
+  
           {creatingUser && (
             <div className="overlay">
               <div className="modal">
@@ -267,7 +284,7 @@ function Cuentas() {
               </div>
             </div>
           )}
-
+  
           {selectedUser && (
             <div className="overlay">
               <div className="modal">
@@ -277,16 +294,23 @@ function Cuentas() {
                   onClick={() => setSelectedUser(null)}
                 />
                 <h2>Detalles del Usuario</h2>
-                <p><strong>Nombre:</strong> {selectedUser.name}</p>
-                <p><strong>Email:</strong> {selectedUser.email}</p>
-                <p><strong>Contraseña:</strong> {selectedUser.password}</p>
+                <p>
+                  <strong>Nombre:</strong> {selectedUser.name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedUser.email}
+                </p>
+                <p>
+                  <strong>Contraseña:</strong> {selectedUser.password}
+                </p>
               </div>
             </div>
           )}
         </>
-      )}
+      ) : null}
     </div>
   );
+  
 }
 
 export default Cuentas;
