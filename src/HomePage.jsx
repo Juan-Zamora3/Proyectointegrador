@@ -17,7 +17,7 @@ function HomePage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('Cuentas');
+    const storedUser = localStorage.getItem('user'); // Cambiar de 'Cuentas' a 'user'
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
