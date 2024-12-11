@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash, faEye, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { collection, getDocs, setDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import './Cuentas.css';
 
+
 function Cuentas() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingUser, setEditingUser] = useState(null);
@@ -132,11 +135,20 @@ function Cuentas() {
   const filteredUsers = users.filter((user) =>
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  
   const handleCloseModal = () => {
-    setShowLoginPrompt(false); // Vuelve a mostrar el modal si fue ocultado.
-    setIsAuthenticated(false); // Asegura que el usuario no está autenticado.
-    setUsername(''); // Limpia el campo de usuario.
-    setPassword('');
+    localStorage.removeItem('user');
+    setShowLoginPrompt(false); // Oculta el modal
+  setIsAuthenticated(false); // Asegura que el usuario no esté autenticado
+  setUsername(''); // Limpia el campo de usuario
+  setPassword(''); // Limpia el campo de contraseña
+
+    // Redirigir basado en la ruta actual
+    if (window.location.pathname.endsWith('/home')) {
+      navigate('/home'); // Redirige al inicio de la página principal
+    } else {
+      navigate('/'); // Redirige al login
+    }
   };
 
   return (
