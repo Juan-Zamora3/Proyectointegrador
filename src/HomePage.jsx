@@ -5,7 +5,7 @@ import { faBook, faList, faUserCheck, faChartPie, faFileAlt, faAward, faSignOutA
 import Courses from './courses';
 import Lists from './Lists';
 import Asistencia from './Asistencia';
-import Personal from './Asistencias'; // Componente reutilizado como "Personal"
+import Personal from './personal'; // Componente reutilizado como "Personal"
 import Constancias from './Constancias';
 import Reportes from './Reportes';
 import Graficas from './Graficas';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, deleteDoc, doc, addDoc, updateDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
-import './Asistencias.css';
+import './personal.css';
 
 function Asistencias() {
   const [students, setStudents] = useState([]);
