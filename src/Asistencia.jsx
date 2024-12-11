@@ -46,7 +46,7 @@ const Asistencia = () => {
   const getField = (obj, fieldName) => {
     if (!obj || !fieldName) return 'No disponible';
     const value = obj[fieldName] ?? 'No disponible';
-    if (['nombres', 'apellidoP', 'apellidoM'].includes(fieldName)) {
+    if (['Nombres', 'ApellidoP', 'ApellidoM'].includes(fieldName)) {
       return capitalize(value);
     }
     return value;

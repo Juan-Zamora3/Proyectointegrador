@@ -238,9 +238,11 @@ function Lists() {
                   onChange={(e) => setFilterCargo(e.target.value)}
                 >
                   <option value="Todos los cargos">Todos los cargos</option>
-                  <option value="Administrador">Administrador</option>
+                  <option value="Recursos Humanos">Recursos Humanos</option>
+                  <option value="Administracion">Administración</option>
                   <option value="Sistemas">Sistemas</option>
-                  <option value="Maestro">Maestro</option>
+                  <option value="Civil">Civil</option>
+                  <option value="Industrial">Industrial</option>
                   <option value="Otro">Otro</option>
                 </select>
                 <table>
