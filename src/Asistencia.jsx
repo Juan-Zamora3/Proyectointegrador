@@ -5,7 +5,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Navigation, Pagination } from 'swiper/modules';
 import './Asistencia.css';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
+import { Buffer } from 'buffer';
+
 
 const Asistencia = () => {
   const [cursos, setCursos] = useState([]);
@@ -15,48 +17,124 @@ const Asistencia = () => {
   useEffect(() => {
     fetchCursos();
   }, []);
-  const handleExportToExcel = () => {
-    if (!selectedAsistencia) return;
+  const getField = (obj, fieldName) => {
+    if (!obj || !fieldName) return 'No disponible';
+    const value = obj[fieldName] ?? 'No disponible';
   
-    const workbook = XLSX.utils.book_new();
+    // Si los campos son nombres propios, los capitalizamos.
+    if (['Nombres', 'ApellidoP', 'ApellidoM', 'cursoNombre', 'asesor'].includes(fieldName)) {
+      return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    }
   
-    // Crear la hoja de asistencia
-    const asistenciaData = [
-      ['Nombre', 'Apellido Paterno', 'Apellido Materno'],
-      ...selectedAsistencia.asistencia.flatMap((asistencia) =>
-        asistencia.estudiantes.map((estudiante) => [
-          estudiante.Nombres,
-          estudiante.ApellidoP,
-          estudiante.ApellidoM,
-        ])
-      ),
-    ];
-    const asistenciaSheet = XLSX.utils.aoa_to_sheet(asistenciaData);
-    XLSX.utils.book_append_sheet(workbook, asistenciaSheet, 'Asistencia');
-  
-    // Crear hoja de información general
-    const generalData = [
-      ['Curso', selectedAsistencia.cursoNombre || 'No disponible'],
-      ['Asesor', selectedAsistencia.asesor || 'No disponible'],
-      ['Fecha de Inicio', selectedAsistencia.fechaInicio || 'No disponible'],
-      ['Fecha de Finalización', selectedAsistencia.fechaFin || 'No disponible'],
-    ];
-    const generalSheet = XLSX.utils.aoa_to_sheet(generalData);
-    XLSX.utils.book_append_sheet(workbook, generalSheet, 'Información General');
-  
-    // Crear hoja de comentarios
-    const comentariosData = [
-      ['Comentario'],
-      ...(selectedAsistencia.reportes?.map((reporte) => [reporte.comentario]) || [
-        ['No hay comentarios disponibles'],
-      ]),
-    ];
-    const comentariosSheet = XLSX.utils.aoa_to_sheet(comentariosData);
-    XLSX.utils.book_append_sheet(workbook, comentariosSheet, 'Comentarios');
-  
-    // Descargar el archivo Excel
-    XLSX.writeFile(workbook, `Asistencia_${selectedAsistencia.cursoNombre}.xlsx`);
+    return value;
   };
+  
+
+  const handleExportToExcel = async () => {
+    if (!selectedAsistencia) return;
+
+    const workbook = new ExcelJS.Workbook();
+
+    // Crear hoja de asistencia
+    const asistenciaSheet = workbook.addWorksheet('Asistencia');
+    asistenciaSheet.addRow(['Nombre', 'Apellido Paterno', 'Apellido Materno']);
+    selectedAsistencia.asistencia.forEach((asistencia) =>
+      asistencia.estudiantes.forEach((estudiante) => {
+        asistenciaSheet.addRow([estudiante.Nombres, estudiante.ApellidoP, estudiante.ApellidoM]);
+      })
+    );
+
+    // Crear hoja de información general
+    const generalSheet = workbook.addWorksheet('Información General');
+    generalSheet.addRow(['Curso', selectedAsistencia.cursoNombre || 'No disponible']);
+    generalSheet.addRow(['Asesor', selectedAsistencia.asesor || 'No disponible']);
+    generalSheet.addRow(['Fecha de Inicio', selectedAsistencia.fechaInicio || 'No disponible']);
+    generalSheet.addRow(['Fecha de Finalización', selectedAsistencia.fechaFin || 'No disponible']);
+
+    // Crear hoja de comentarios
+    const comentariosSheet = workbook.addWorksheet('Comentarios');
+    comentariosSheet.addRow(['Comentario']);
+    (selectedAsistencia.reportes || []).forEach((reporte) => {
+      comentariosSheet.addRow([reporte.comentario || 'Sin comentario']);
+    });
+
+    // Crear hoja de imágenes
+    const imagenesSheet = workbook.addWorksheet('Imágenes');
+    imagenesSheet.getColumn(1).width = 40; // Ajustar el ancho de la columna para las imágenes
+    imagenesSheet.getRow(1).height = 150; // Ajustar la altura de las filas para las imágenes
+    imagenesSheet.addRow(['Imágenes']);
+
+    const addImageToSheet = async (url, sheet, row, col, workbook) => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`No se pudo cargar la imagen: ${response.statusText}`);
+        }
+        const blob = await response.blob();
+        const arrayBuffer = await blob.arrayBuffer();
+    
+        // Agrega la imagen al workbook
+        const imageId = workbook.addImage({
+          buffer: new Uint8Array(arrayBuffer), // Cambiar Buffer.from a Uint8Array
+          extension: url.split('.').pop().split('?')[0], // Extraer la extensión
+        });
+    
+        // Coloca la imagen en la hoja de Excel
+        sheet.addImage(imageId, {
+          tl: { col, row }, // Define la posición inicial (columna y fila)
+          ext: { width: 150, height: 150 }, // Dimensiones de la imagen
+        });
+      } catch (error) {
+        console.error(`Error al agregar la imagen desde ${url}:`, error);
+      }
+    };
+
+    let row = 2; // Inicia desde la fila 2 para las imágenes
+for (const reporte of selectedAsistencia.reportes || []) {
+  for (const url of reporte.imagenes || []) {
+    await addImageToSheet(url, imagenesSheet, row, workbook); // Asegúrate de pasar los parámetros correctamente
+    row++;
+  }
+}
+    const convertBlobToBase64 = (blob) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]); // Obtén solo los datos Base64
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    };
+    
+    const addImageToSheetAsBase64 = async (url, sheet, row) => {
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const base64Data = await convertBlobToBase64(blob);
+    
+        const imageId = workbook.addImage({
+          base64: base64Data,
+          extension: url.split('.').pop(),
+        });
+    
+        sheet.addImage(imageId, {
+          tl: { col: 0, row },
+          ext: { width: 150, height: 150 },
+        });
+      } catch (error) {
+        console.error('Error al agregar la imagen:', error);
+      }
+    };
+
+    // Descargar el archivo Excel
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Asistencia_${selectedAsistencia.cursoNombre}.xlsx`;
+    link.click();
+  };
+
   const fetchCursos = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
@@ -85,24 +163,11 @@ const Asistencia = () => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   };
 
-  const getField = (obj, fieldName) => {
-    if (!obj || !fieldName) return 'No disponible';
-    const value = obj[fieldName] ?? 'No disponible';
-    if (['Nombres', 'ApellidoP', 'ApellidoM'].includes(fieldName)) {
-      return capitalize(value);
-    }
-    return value;
-  };
-
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este curso?')) {
       try {
-        // Elimina el documento completo usando el ID
         await deleteDoc(doc(db, 'Cursos', id));
-  
-        // Actualiza el estado local eliminando el curso del arreglo
         setCursos((prevCursos) => prevCursos.filter((curso) => curso.id !== id));
-  
         alert('Curso eliminado con éxito.');
       } catch (error) {
         console.error('Error al eliminar el curso:', error);
@@ -182,18 +247,6 @@ const Asistencia = () => {
               )}
             </div>
 
-            <h4></h4>
-            {selectedAsistencia.reportes?.length > 0 ? (
-              selectedAsistencia.reportes.map((reporte, index) => (
-                <div key={`reporte-${index}`} className="comment-section">
-                  <p><strong>Comentario:</strong> {reporte.comentario || 'Sin comentario'}</p>
-             
-                </div>
-              ))
-            ) : (
-              <p>No hay comentarios registrados.</p>
-            )}
-
             <h4>Imágenes:</h4>
             {selectedAsistencia.reportes?.some((reporte) => reporte.imagenes?.length > 0) ? (
               <Swiper
@@ -227,8 +280,8 @@ const Asistencia = () => {
             )}
 
             <div className="modal-actions">
-            <button onClick={handleExportToExcel} className="btn-export">Exportar a Excel</button>
-            <button onClick={handleCloseModal} className="btn-close">Cerrar</button>
+              <button onClick={handleExportToExcel} className="btn-export">Exportar a Excel</button>
+              <button onClick={handleCloseModal} className="btn-close">Cerrar</button>
             </div>
           </div>
         </div>
