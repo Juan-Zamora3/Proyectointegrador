@@ -13,7 +13,7 @@ import Cuentas from './Cuentas';
 import './HomePage.css';
 
 function HomePage() {
-  const [selectedMenu, setSelectedMenu] = useState('');
+  const [selectedMenu, setSelectedMenu] = useState('Cursos');
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ function HomePage() {
           </ul>
         </nav>
         <div className="linea-settings"></div>
-        <div className="settings">
+        <nav className="navegacion">
           <ul>
             <li onClick={() => handleMenuClick('Cuentas')}>
               <Link to="#">
@@ -106,17 +106,19 @@ function HomePage() {
               </Link>
             </li>
           </ul>
-        </div>
-        <div className="settings">
-          <Link to="#" onClick={handleLogout}>
-            <FontAwesomeIcon icon={faSignOutAlt} />
-            <span>Cerrar Sesión</span>
-          </Link>
-        </div>
+          <ul>
+            <li onClick={handleLogout}>
+              <Link to="#" >
+              <FontAwesomeIcon icon={faSignOutAlt} />
+              <span>Cerrar Sesión</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </aside>
       <div className="content-wrapper">
         <div className="banner">
-          <h1 className="titulo-banner">{selectedMenu || 'Inicio'}</h1>
+          <h1 className="titulo-banner">{selectedMenu || ''}</h1>
         </div>
         <main className="main-content">
           <div className="content">

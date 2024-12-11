@@ -83,6 +83,10 @@ body, html, #root {
 /* Imagen en el contenedor derecho */
 .login-image {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: #004aad;
   background: url('./assets/Fondomorado.png') no-repeat center center;
   background-size: cover;
