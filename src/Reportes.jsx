@@ -157,7 +157,7 @@ const Reportes = () => {
         {previewImages.map((src, index) => (
           <div key={index} className="preview-item">
             <img src={src} alt={`preview-${index}`} />
-            <button onClick={() => handleRemoveImage(index)}>Eliminar</button>
+            <button onClick={() => handleRemoveImage(index)}>X</button>
           </div>
         ))}
       </div>
