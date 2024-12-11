@@ -219,3 +219,11 @@ h2 {
   transform: scale(1.05);
   background-color: #003cff;
 }
+
+.select-box option[value=""][disabled] {
+  display: none; /* Oculta del menú desplegable */
+}
+
+.select-box:invalid {
+  color: gray; /* Placeholder color */
+}

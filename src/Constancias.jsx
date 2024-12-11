@@ -182,14 +182,24 @@ const Constancias = () => {
     <div className="constancias-container">
       <div className="form-section">
         <h2>Cursos disponibles</h2>
-        <select onChange={handleCursoChange} className="select-box">
-          <option value="">Seleccione un curso</option>
-          {cursos.map((curso) => (
-            <option key={curso.id} value={curso.id}>
-              {curso.cursoNombre}
-            </option>
-          ))}
-        </select>
+        <label htmlFor="curso-select" className="select-label">
+    Seleccione un curso
+  </label>
+  <select
+    id="curso-select"
+    onChange={handleCursoChange}
+    className="select-box"
+    defaultValue=""
+  >
+    <option value="" disabled hidden>
+      -- Seleccione un curso --
+    </option>
+    {cursos.map((curso) => (
+      <option key={curso.id} value={curso.id}>
+        {curso.cursoNombre}
+      </option>
+    ))}
+  </select>
         <h3>Listas</h3>
         <p>{listasAsociadas.join(' / ') || 'No hay listas asociadas'}</p>
         <div className="students-table-container">
