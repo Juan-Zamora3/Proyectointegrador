@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { Navigation, Pagination } from 'swiper/modules';
 import './Asistencia.css';
+import * as XLSX from 'xlsx';
 
 const Asistencia = () => {
   const [cursos, setCursos] = useState([]);
@@ -14,7 +15,48 @@ const Asistencia = () => {
   useEffect(() => {
     fetchCursos();
   }, []);
-
+  const handleExportToExcel = () => {
+    if (!selectedAsistencia) return;
+  
+    const workbook = XLSX.utils.book_new();
+  
+    // Crear la hoja de asistencia
+    const asistenciaData = [
+      ['Nombre', 'Apellido Paterno', 'Apellido Materno'],
+      ...selectedAsistencia.asistencia.flatMap((asistencia) =>
+        asistencia.estudiantes.map((estudiante) => [
+          estudiante.Nombres,
+          estudiante.ApellidoP,
+          estudiante.ApellidoM,
+        ])
+      ),
+    ];
+    const asistenciaSheet = XLSX.utils.aoa_to_sheet(asistenciaData);
+    XLSX.utils.book_append_sheet(workbook, asistenciaSheet, 'Asistencia');
+  
+    // Crear hoja de información general
+    const generalData = [
+      ['Curso', selectedAsistencia.cursoNombre || 'No disponible'],
+      ['Asesor', selectedAsistencia.asesor || 'No disponible'],
+      ['Fecha de Inicio', selectedAsistencia.fechaInicio || 'No disponible'],
+      ['Fecha de Finalización', selectedAsistencia.fechaFin || 'No disponible'],
+    ];
+    const generalSheet = XLSX.utils.aoa_to_sheet(generalData);
+    XLSX.utils.book_append_sheet(workbook, generalSheet, 'Información General');
+  
+    // Crear hoja de comentarios
+    const comentariosData = [
+      ['Comentario'],
+      ...(selectedAsistencia.reportes?.map((reporte) => [reporte.comentario]) || [
+        ['No hay comentarios disponibles'],
+      ]),
+    ];
+    const comentariosSheet = XLSX.utils.aoa_to_sheet(comentariosData);
+    XLSX.utils.book_append_sheet(workbook, comentariosSheet, 'Comentarios');
+  
+    // Descargar el archivo Excel
+    XLSX.writeFile(workbook, `Asistencia_${selectedAsistencia.cursoNombre}.xlsx`);
+  };
   const fetchCursos = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'Cursos'));
@@ -185,7 +227,8 @@ const Asistencia = () => {
             )}
 
             <div className="modal-actions">
-              <button onClick={handleCloseModal} className="btn-close">Cerrar</button>
+            <button onClick={handleExportToExcel} className="btn-export">Exportar a Excel</button>
+            <button onClick={handleCloseModal} className="btn-close">Cerrar</button>
             </div>
           </div>
         </div>
