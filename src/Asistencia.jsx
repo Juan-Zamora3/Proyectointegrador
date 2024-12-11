@@ -127,9 +127,9 @@ const Asistencia = () => {
                     {selectedAsistencia.asistencia.map((asistencia, index) =>
                       asistencia.estudiantes.map((estudiante, estudianteIndex) => (
                         <tr key={`estudiante-${index}-${estudianteIndex}`}>
-                          <td>{capitalize(estudiante.nombres)}</td>
-                          <td>{capitalize(estudiante.apellidoP)}</td>
-                          <td>{capitalize(estudiante.apellidoM)}</td>
+                          <td>{capitalize(estudiante.Nombres)}</td>
+                          <td>{capitalize(estudiante.ApellidoP)}</td>
+                          <td>{capitalize(estudiante.ApellidoM)}</td>
                         </tr>
                       ))
                     )}
