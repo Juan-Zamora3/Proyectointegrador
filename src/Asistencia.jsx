@@ -91,7 +91,7 @@ const Asistencia = () => {
 
     let row = 2; // Inicia desde la fila 2 para las imágenes
 for (const reporte of selectedAsistencia.reportes || []) {
-  for (const url of reporte.imagenes || []) {
+  for (const url of reporte.imageneDs || []) {
     await addImageToSheet(url, imagenesSheet, row, workbook); // Asegúrate de pasar los parámetros correctamente
     row+= 11;
   }
@@ -213,12 +213,25 @@ for (const reporte of selectedAsistencia.reportes || []) {
 
       {isModalOpen && selectedAsistencia && (
         <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>{getField(selectedAsistencia, 'cursoNombre')}</h3>
-            <p><strong>Asesor:</strong> {getField(selectedAsistencia, 'asesor')}</p>
-            <p><strong>Fecha de inicio:</strong> {getField(selectedAsistencia, 'fechaInicio')}</p>
-            <p><strong>Fecha de finalización:</strong> {getField(selectedAsistencia, 'fechaFin')}</p>
-
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <h3>{getField(selectedAsistencia, 'cursoNombre')}</h3>
+          <p><strong>Asesor:</strong> {getField(selectedAsistencia, 'asesor')}</p>
+          <p><strong>Fecha de inicio:</strong> {getField(selectedAsistencia, 'fechaInicio')}</p>
+          <p><strong>Fecha de finalización:</strong> {getField(selectedAsistencia, 'fechaFin')}</p>
+    
+          {/* Sección de comentarios */}
+          <h4>Comentarios:</h4>
+          {selectedAsistencia.reportes?.length > 0 ? (
+            <ul className="comments-list">
+              {selectedAsistencia.reportes.map((reporte, index) => (
+                <li key={`comment-${index}`} className="comment-item">
+                  {reporte.comentario || 'Sin comentario'}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No hay comentarios disponibles.</p>
+          )}
             <h4>Lista de Asistencia:</h4>
             <div className="table-scroll-container">
               {selectedAsistencia.asistencia?.length > 0 ? (
